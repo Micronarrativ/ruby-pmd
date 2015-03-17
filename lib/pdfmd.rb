@@ -30,6 +30,11 @@
 #
 # === Changelog
 #
+# Version 1.3.1
+# - Corrected Email address (Gemspec)
+# - Corrected website address (Gemspec)
+# - No changes to script
+#
 # Version 1.3
 # - Small bugfix about special characters in filenames (author).
 # - Bugfix for the tag 'createdate' written as 'CreateDate' which did not 
