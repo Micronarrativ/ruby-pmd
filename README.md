@@ -1,8 +1,10 @@
-# ruby-pmd
-Pdf Meta data managing script
+# pdfmd
+Pdf Meta data managing script.
 
-I use the script `pmd.rb`/pdfmetadata (with a slightly different name) to manage my PDF documents and keep the naming in line.  
-Hidden deep in the directory structure of my disks I can quickly find the documents I need with a quick `find /document/path -type f -iname '*<keyword>*'`.
+I use the script `pdfmd.rb`/pdfmetadata (with a slightly different name) to manage my PDF documents and keep the naming in line.  
+Hidden deep in the directory structure of my disks I can quickly find the
+documents I need with a quick `find /document/path -type f -iname
+'*<keyword>*'` which matches some string in the filename.
 
 # Requirements
 
@@ -40,10 +42,10 @@ $ sudo yum install Perl-Image-Exiftool
 
 # Usage
 
-The usage is quite simple
+The usage is quite simple:
 
 ```
-$ ./pmd.rb [show|edit|rename|sort] [options] <filename>
+$ ./pdfmd.rb [show|edit|rename|sort] [options] <filename>
 ```
 
 The interface has been setup using Thor.  
@@ -51,11 +53,24 @@ So in order to get more information just run the required _help_ command:
 
 ```
 # Show general possibilities:
-$ pdfmetadata.rb 
+$ pdfmd.rb 
 
 # Show more information about <action>
-$ pdfmetadata.rb help <action>
+$ pdfmd.rb help <action>
 ```
+
+My usual workflow is like this:
+
+``` 
+$ pdfmd.rb show test.pdf
+$ pdfmd.rb edit -t all test.pdf
+  ...
+$ pdfmd.rb rename test.pdf
+$ mv 20150101-me-dok-testdocument.pdf /my/pdf/directory
+``` 
+
+There's an underlogic in the renaming and sorting of the files according to the metadata. Make sure you read at least the help-information before you use it.
+
 
 __HINT__: Before you start using the script, make sure you have a backup of your files or you know what you're doing. If you loose information/files I will not be able to help you.
 
