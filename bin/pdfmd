@@ -28,44 +28,6 @@
 # An overview about the actions can be seen when running the script without
 # any parameters
 #
-# === Changelog
-#
-# Version 1.3.1
-# - Corrected Email address (Gemspec)
-# - Corrected website address (Gemspec)
-# - No changes to script
-#
-# Version 1.3
-# - Small bugfix about special characters in filenames (author).
-# - Bugfix for the tag 'createdate' written as 'CreateDate' which did not 
-#   take the date then.
-# - Removed inactive code.
-# - Added paramter 'version'
-#
-# Version 1.2
-# - Small bugfix with the sort function and the logfile being created.
-#
-# Version 1.1
-# - Added Function to sort pdf documents into a directory structure based on
-#   the author of the document.
-# - Added dependency 'pathname'
-# - Added dependency 'logger'
-# - Added dependency 'i18n'
-# - Added method 'sort'
-# - Changing a tag will now output the old value in the edit dialog.
-# - Updated documentation and descriptions of methods
-#
-# Version 1.0
-# - Added documentation in long description of the commands
-# - Added method "explain" for further information
-#
-# Version 0.9
-# - Added 'rename' option to edit metatags
-# - Fixed some output strings
-#
-# Version 0.x
-# - All other stuff
-#
 # Check and set metadata of PDF documents
 # 
 # A complete set of metada contains
@@ -91,7 +53,7 @@
 # == Author
 #
 # Daniel Roos <daniel-git@micronarrativ.org>
-# Source: https://github.com/Micronarrativ/micronarrativ/tree/scripts
+# Source: https://github.com/Micronarrativ/ruby-pmd
 #
 require "thor"
 require "highline/import"
@@ -100,7 +62,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.3'
+VERSION = '1.3.2'
 #
 # Function to read the metadata from a given file
 # hash readMetadata(string)
