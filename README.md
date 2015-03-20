@@ -40,6 +40,13 @@ This is usually already in your os repositories
 $ sudo yum install Perl-Image-Exiftool
 ```
 
+2. [hiera](https://rubygems.org/gems/hiera) can be optionally used to configure
+some default settings (instead of a configuration file).
+
+```
+$ gem install hiera
+``` 
+
 # Usage
 
 The usage is quite simple:
@@ -73,6 +80,27 @@ There's an underlogic in the renaming and sorting of the files according to the 
 
 
 __HINT__: Before you start using the script, make sure you have a backup of your files or you know what you're doing. If you loose information/files I will not be able to help you.
+
+# Hiera
+
+In order for Hiera to provide (default) configuration data, setup a configuration hash e.g. inside the YAML backend:
+
+``` YAML
+pdfmd::config:
+  sort:
+    destination : /data/tmp
+    copy        : true
+    logfile     : /var/log/pdfmd.log
+    interactive : false
+```
+
+Information about which hiera configuration settings are available can be either found in `pdfmd help <command>` or `pdfmd explain hiera`.
+
+Test your hiera configuration with
+
+``` bash
+$ hiera pdfmd::config
+``` 
 
 # Contact
 

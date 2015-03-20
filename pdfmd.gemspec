@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'pdfmd'
-  s.version     = '1.3.2'
-  s.date        = '2015-03-19'
+  s.version     = '1.4.0'
+  s.date        = '2015-03-20'
   s.summary     = "pdfmd - pdf-meta-data management"
   s.description = 'Managing the common pdf metadata values and renaming the pdf file accordingly.'
   s.authors     = ['Daniel Roos']
