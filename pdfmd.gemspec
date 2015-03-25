@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.executable            = 'pdfmd'
   s.homepage              = 'https://github.com/Micronarrativ/ruby-pmd'
   s.license               = 'MIT'
-  s.add_dependency "thor", '0.19.1'
-  s.add_dependency 'highline', '1.7.1'
-  s.add_dependency 'fileutils', '0.7'
-  s.add_dependency 'i18n', '0.6.11'
+  s.add_dependency "thor", '>= 0.19.1'
+  s.add_dependency 'highline', '>= 1.7.1'
+  s.add_dependency 'fileutils', '>= 0.7'
+  s.add_dependency 'i18n', '>= 0.6.11'
 end
