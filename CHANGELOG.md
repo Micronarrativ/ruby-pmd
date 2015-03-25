@@ -1,3 +1,13 @@
+# Version 1.4.1
+- Bugfix: When in interactive sorting, choosing the default and 'y' did not have the same effect.
+- Renamed paramter '--:all-keywords' to '--allkeywords' (rename method).
+- Bugfix: Method 'rename', Renaming a file puts it in the input directory, not in the current working directory.
+- Bugfix: Method 'show', Listing single tags works now.
+- Moved 'explain'-text into separate files.
+- Moved commands into separate files under './lib/pdfmd'.
+- Bugfix: Method 'show', Paramter '-t' is now case insensitive
+- Added option 'outputdir' to command 'rename'.
+
 # Version 1.4.0
 - Added Hiera support for 'sort' command to define some standards (less typing)
 - Added interactive parameter to 'sort' command
