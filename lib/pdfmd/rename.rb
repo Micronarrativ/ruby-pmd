@@ -24,14 +24,14 @@ metadata = readMetadata(filename).each do |key,value|
 end
 
 date   = metadata['createdate'].gsub(/\ \d{2}\:\d{2}\:\d{2}.*$/,'').gsub(/\:/,'')
-author = metadata['author'].gsub(/\./,'_').gsub(/\-/,'').gsub(/\s/,'_')
+author = metadata['author'].gsub(/\./,'_').gsub(/\-/,'').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
 I18n.enforce_available_locales = false
 author = I18n.transliterate(author) # Normalising
 
 keywords_preface = ''
 # This statement can probably be optimised
 case metadata['title']
-when /(Tilbudt|Angebot)/i
+when /(Tilbudt|Angebot|Offer)/i
   doktype = 'til'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /Orderbekrefelse/i
@@ -39,6 +39,12 @@ when /Orderbekrefelse/i
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /faktura/i
   doktype = 'fak'
+  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /invoice/i
+  doktype = 'inv'
+  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /rechnung/i
+  doktype = 'rec'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /order/i
   doktype = 'ord'

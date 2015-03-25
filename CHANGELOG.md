@@ -1,3 +1,9 @@
+# Version 1.4.3
+- Bugfix: Commata in author field showed up in the filename after renaming.
+
+# Version 1.4.2
+- Only changed the Date of the Gem
+
 # Version 1.4.1
 - Bugfix: When in interactive sorting, choosing the default and 'y' did not have the same effect.
 - Renamed paramter '--:all-keywords' to '--allkeywords' (rename method).
