@@ -1,9 +1,15 @@
+#
+# == File: sort.rb
+#
+# Actions for the sort command
+#
 inputDir = ENV.fetch('PDFMD_INPUTDIR')
 
 require_relative('./methods.rb')
 require 'fileutils'
 
 opt_destination = ENV.fetch('PDFMD_DESTINATION')
+opt_dryrun      = ENV.fetch('PDFMD_DRYRUN') == 'true' ? true : false
 opt_copy        = ENV.fetch('PDFMD_COPY')
 opt_log         = ENV.fetch('PDFMD_LOG')
 opt_interactive = ENV.fetch('PDFMD_INTERACTIVE')
@@ -50,7 +56,7 @@ logenable ? $logger = Logger.new(logfile) : ''
 
 # Input validation
 !File.exist?(inputDir) ? abort('Input directory does not exist. Abort.'): ''
-File.directory?(inputDir) ? '' : abort('Input is a single file')
+File.directory?(inputDir) ? '' : abort('Input is a single file. Not implemented yet. Abort.')
 File.file?(destination) ? abort("Output '#{destination}' is an existing file. Cannot create directory with the same name. Abort") : ''
 unless File.directory?(destination)
   FileUtils.mkdir_p(destination)
@@ -80,15 +86,16 @@ Dir[inputDir.chomp('/') +  '/*.pdf'].sort.each do |file|
 
     filedestination                 = destination.chomp('/') + '/' + author + '/' + Pathname.new(file).basename.to_s
 
+
     # Final check before touching the filesystem
     if not File.exist?(filedestination)
       $logger.info("File '#{file}' => '#{filedestination}'")
 
       # Move/Copy the file
-      if copyAction
-        FileUtils.cp(file, filedestination)
-      else
-        FileUtils.mv(file,filedestination)
+      if copyAction and not opt_dryrun
+        #FileUtils.cp(file, filedestination)
+      elsif not opt_dryrun
+        #FileUtils.mv(file,filedestination)
       end
 
     else
@@ -96,5 +103,6 @@ Dir[inputDir.chomp('/') +  '/*.pdf'].sort.each do |file|
     end
   else
     logenable ? $logger.warn("Missing tag 'Author' for file '#{file}'. Skipping.") : (puts "Missing tag 'Author' for file '#{file}'. Skipping")
+    next
   end
 end

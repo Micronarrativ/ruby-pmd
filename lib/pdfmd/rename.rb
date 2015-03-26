@@ -1,7 +1,6 @@
 #
 # Thor command 'rename'
 #
-# TODO: Define outputdir from Hiera
 # TODO: Add option for copy when renaming
 # TODO: Add option to create outputdir if not existing
 # TODO: Define option to create outputdir via Hiera
@@ -11,6 +10,8 @@ allkeywords     = ENV.fetch('PDFMD_ALLKEYWORDS')
 outputdir       = ENV.fetch('PDFMD_OUTPUTDIR') == 'false' ? false : ENV.fetch('PDFMD_OUTPUTDIR')
 dryrun          = ENV.fetch('PDFMD_DRYRUN') == 'false' ? false : true
 numberKeywords  = ENV.fetch('PDFMD_NUMBERKEYWORDS').to_i
+opt_copy        = ENV['PDFMD_COPY'].nil? ? false : true
+hieraConfig     = queryHiera('pdfmd::config')
 
 metadata = readMetadata(filename).each do |key,value|
 
@@ -141,12 +142,18 @@ if outputdir
     exit 1
   end
 else
-  # Output to Inputdir
-  outputdir = File.dirname(filename)
+
+  # Try to get the outputdir from hiera
+  outputdir = (not hieraConfig['rename'].nil? and not hieraConfig['rename']['destination'].nil?) ? hieraConfig['rename']['destination'] : File.dirname(filename)
+
 end
 
 if not dryrun and filename != newFilename.downcase
-  `mv -v '#{filename}' '#{outputdir}/#{newFilename.downcase}'`
+
+  # Copy of me the file to the new name
+  command = opt_copy ? 'cp' : 'mv'
+  `#{command} -v '#{filename}' '#{outputdir}/#{newFilename.downcase}'`
+
 else
-  puts filename + "\n   => " + newFilename.downcase
+  puts filename + "\n   => " + outputdir + '/' + newFilename.downcase
 end

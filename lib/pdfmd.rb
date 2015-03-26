@@ -43,7 +43,6 @@
 # TODO: Enable logging in more functions than only "sort"
 # TODO: Read this: http://lostechies.com/derickbailey/2011/04/29/writing-a-thor-application/
 # TODO: ... and this: http://blog.paracode.com/2012/05/17/building-your-tools-with-thor/
-# TODO: Create Gem: http://yehudakatz.com/2010/04/02/using-gemspecs-as-intended/
 # gs \
 #   -o repaired.pdf \
 #   -sDEVICE=pdfwrite \
@@ -379,6 +378,7 @@ class DOC < Thor
   method_option :copy, :aliases => '-c', :required => false, :type => :boolean, :desc => 'Copy files instead of moving them'
   method_option :log, :aliases => '-l', :required => false, :type => :boolean, :desc => 'Enable/Disable creation of log files', :default => true
   method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sort'
+  method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something', :default => false
   def sort(inputDir)
 
     ENV['PDFMD_INPUTDIR']     = inputDir
@@ -386,6 +386,7 @@ class DOC < Thor
     ENV['PDFMD_COPY']         = options[:copy].to_s
     ENV['PDFMD_LOG']          = options[:log].to_s
     ENV['PDFMD_INTERACTIVE']  = options[:interactive].to_s
+    ENV['PDFMD_DRYRUN']       = options['dryrun'].to_s
     require_relative('./pdfmd/sort.rb')
 
   end
@@ -414,6 +415,9 @@ class DOC < Thor
 
   --outputdir, -o
   \x5 Rename the file and move it to the directory defined in '--outputdir'.
+
+  --copy, -c
+  \x5 Copy the file instead of moving it to the new name or destination.
 
   The directory must exist at runtime.
 
@@ -505,6 +509,7 @@ class DOC < Thor
   method_option :allkeywords, :type => :boolean, :aliases => '-a', :desc => 'Add all keywords (no limit)', :default => false, :required => false
   method_option :keywords, :type => :numeric, :aliases => '-k', :desc => 'Number of keywords to include (Default: 3)', :default => 3, :required => false
   method_option :outputdir, :aliases => '-o', :type => :string, :desc => 'Speficy output directory', :default => :false, :required => :false
+  method_option :copy, :aliases => '-c', :type => :boolean, :desc => 'Copy instead of moving the file when renaming', :default => false
   def rename(filename)
 
     ENV['PDFMD_FILENAME']       = filename
@@ -512,6 +517,7 @@ class DOC < Thor
     ENV['PDFMD_ALLKEYWORDS']    = options[:allkeywords].to_s
     ENV['PDFMD_OUTPUTDIR']      = options[:outputdir].to_s
     ENV['PDFMD_NUMBERKEYWORDS'] = options[:keywords].to_s
+    ENV['PDFMD_COPY']           = options[:copy].to_s
     require_relative('./pdfmd/rename.rb')
 
   end

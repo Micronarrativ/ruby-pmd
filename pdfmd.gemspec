@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                  = 'pdfmd'
-  s.version               = '1.4.3'
+  s.version               = '1.5.0'
   s.date                  = Time.now.strftime("%Y-%m-%d").to_s
   s.summary               = "pdfmd - pdf-meta-data management"
   s.description           = <<-EOF
