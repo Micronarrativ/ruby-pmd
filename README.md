@@ -90,8 +90,12 @@ pdfmd::config:
   sort:
     destination : /data/tmp
     copy        : true
+    log         : true
     logfile     : /var/log/pdfmd.log
     interactive : false
+  rename:
+    destination : /data/tmp
+
 ```
 
 Information about which hiera configuration settings are available can be either found in `pdfmd help <command>` or `pdfmd explain hiera`.

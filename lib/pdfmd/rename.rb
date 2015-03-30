@@ -1,17 +1,18 @@
 #
 # Thor command 'rename'
 #
-# TODO: Add option for copy when renaming
 # TODO: Add option to create outputdir if not existing
 # TODO: Define option to create outputdir via Hiera
 #
-filename        = ENV.fetch('PDFMD_FILENAME')
-allkeywords     = ENV.fetch('PDFMD_ALLKEYWORDS')
-outputdir       = ENV.fetch('PDFMD_OUTPUTDIR') == 'false' ? false : ENV.fetch('PDFMD_OUTPUTDIR')
-dryrun          = ENV.fetch('PDFMD_DRYRUN') == 'false' ? false : true
-numberKeywords  = ENV.fetch('PDFMD_NUMBERKEYWORDS').to_i
-opt_copy        = ENV['PDFMD_COPY'].nil? ? false : true
-hieraConfig     = queryHiera('pdfmd::config')
+require_relative '../string_extend'
+
+filename            = ENV.fetch('PDFMD_FILENAME')
+opt_allkeywords     = ENV.fetch('PDFMD_ALLKEYWORDS')
+outputdir           = ENV.fetch('PDFMD_OUTPUTDIR') == 'false' ? false : ENV.fetch('PDFMD_OUTPUTDIR')
+dryrun              = ENV.fetch('PDFMD_DRYRUN') == 'false' ? false : true
+opt_numberKeywords  = ENV.fetch('PDFMD_NUMBERKEYWORDS')
+opt_copy            = ENV.fetch('PDFMD_COPY')
+hieraDefaults       = queryHiera('pdfmd::config')
 
 metadata = readMetadata(filename).each do |key,value|
 
@@ -23,6 +24,63 @@ metadata = readMetadata(filename).each do |key,value|
   end
 
 end
+
+
+# Determine the status of allkeywords
+# Default value is false
+if opt_allkeywords == 'true'
+  opt_allkeywords = true
+elsif opt_allkeywords.blank? and 
+  not hieraDefaults['rename'].nil? and
+  not hieraDefaults['rename']['allkeywords'].nil?
+
+  opt_allkeywords = hieraDefaults['rename']['allkeywords']
+
+elsif opt_allkeywords == 'false' or
+  opt_allkeywords.blank?
+
+  opt_allkeywords = false
+
+end
+
+#
+# Determine the number of keywords
+# Default value is 3
+if opt_numberKeywords.blank? and
+  not hieraDefaults['rename'].nil? and
+  not hieraDefaults['rename']['keywords'].nil?
+
+  opt_numberKeywords = hieraDefaults['rename']['keywords']
+
+elsif opt_numberKeywords.to_i.is_a? Integer and
+  opt_numberKeywords.to_i > 0
+
+  opt_numberKeywords = opt_numberKeywords.to_i
+
+else
+
+  opt_numberKeywords = 3
+
+end
+
+#
+# Determine the status of the copy parameter
+if opt_copy.blank? and
+  not hieraDefaults['rename'].nil? and
+  not hieraDefaults['rename']['copy'].nil?
+
+  opt_copy = hieraDefaults['rename']['copy']
+
+elsif opt_copy == 'true'
+
+  opt_copy = true
+
+else
+
+  opt_copy = false
+
+end
+
 
 date   = metadata['createdate'].gsub(/\ \d{2}\:\d{2}\:\d{2}.*$/,'').gsub(/\:/,'')
 author = metadata['author'].gsub(/\./,'_').gsub(/\-/,'').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
@@ -99,8 +157,8 @@ if not metadata['keywords'].empty?
 
     # Exit condition limits the number of keywords used in the filename
     # unless all keywords shall be added
-    if not allkeywords.empty?
-      counter > numberKeywords-1 ? break : counter = counter + 1
+    if not opt_allkeywords
+      counter >= opt_numberKeywords-1 ? break : counter = counter + 1
     end
     if value.match(/(kvi|fak|ord|kdn)/i)
       keywords == '' ? keywords = '-' + value : keywords = value + '-' + keywords
@@ -108,6 +166,7 @@ if not metadata['keywords'].empty?
       keywords == '' ? keywords = '-' + value : keywords.concat('-' + value)
     end
   end
+
   # Normalise the keywords as well
   #
   I18n.enforce_available_locales = false
@@ -137,14 +196,16 @@ newFilename = date + '-' +
 
 # Output directory checks
 if outputdir 
+
   if not File.exist?(outputdir)
     puts "Error: output dir '#{outputdir}' not found. Abort."
     exit 1
   end
+
 else
 
   # Try to get the outputdir from hiera
-  outputdir = (not hieraConfig['rename'].nil? and not hieraConfig['rename']['destination'].nil?) ? hieraConfig['rename']['destination'] : File.dirname(filename)
+  outputdir = (not hieraDefaults['rename'].nil? and not hieraDefaults['rename']['outputdir'].nil?) ? hieraDefaults['rename']['outputdir'] : File.dirname(filename)
 
 end
 

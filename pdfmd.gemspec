@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                  = 'pdfmd'
-  s.version               = '1.5.0'
+  s.version               = `grep -m 1 VERSION lib/pdfmd.rb | awk -F"'" '{ print $2 '}`
   s.date                  = Time.now.strftime("%Y-%m-%d").to_s
   s.summary               = "pdfmd - pdf-meta-data management"
   s.description           = <<-EOF
@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.executable            = 'pdfmd'
   s.homepage              = 'https://github.com/Micronarrativ/ruby-pmd'
   s.license               = 'MIT'
-  s.add_dependency "thor", '>= 0.19.1'
-  s.add_dependency 'highline', '>= 1.7.1'
-  s.add_dependency 'fileutils', '>= 0.7'
-  s.add_dependency 'i18n', '>= 0.6.11'
+  s.add_dependency "thor", '~>0.19', '>= 0.19.1'
+  s.add_dependency 'highline', '~>1.7', '>= 1.7.1'
+  s.add_dependency 'fileutils', '~>0.7','>= 0.7'
+  s.add_dependency 'i18n', '~>0.6', '>= 0.6.11'
 end

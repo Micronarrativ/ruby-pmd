@@ -41,6 +41,7 @@
 # TODO: Include password protected PDF documents as well
 # TODO: Fix broken PDF files automatically
 # TODO: Enable logging in more functions than only "sort"
+# TODO: command 'hiera' to show the current settings
 # TODO: Read this: http://lostechies.com/derickbailey/2011/04/29/writing-a-thor-application/
 # TODO: ... and this: http://blog.paracode.com/2012/05/17/building-your-tools-with-thor/
 # gs \
@@ -61,7 +62,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.4.2'
+VERSION = '1.5.0'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')
@@ -317,6 +318,10 @@ class DOC < Thor
   \x5 Disable/Enable the logging.
   \x5 Default: enabled.
 
+  [*logfilepath|p*]
+  \x5 Set an alternate path for the logfile. If not path is chosen, the logfile
+  is being created in the current working directory as `pdfmd.log`.
+
   [*interactive|i*]
   \x5 Disable/Enable interactive sorting. This will ask for confirmation for
   \x5   each sorting action.
@@ -355,10 +360,11 @@ class DOC < Thor
   \x5  Specifies the default output directory (root-directory). Either this or the
     command line parameter for destinations must be set.
 
-  [*logfile*]
-  \x5  Specifies the default path for the logfile output. If this is not
-    specfied a logfile with the scriptname + '.log' will be created in the
-    current working directory.
+  [*logfilepath*]
+  \5x Specifes the default path for the logfile. If no path is set and logging is enable,
+  the logfile will be created in the current working directory.
+
+  Default is the current working directory with the filename `pdfmd.log`
 
   [*interactive*]
   \x5  If set to true, each file must be acknowledged to be processed when
@@ -376,17 +382,20 @@ class DOC < Thor
   LONGDESC
   method_option :destination, :aliases => '-d', :required => false, :type => :string, :desc => 'Defines the output directory'
   method_option :copy, :aliases => '-c', :required => false, :type => :boolean, :desc => 'Copy files instead of moving them'
-  method_option :log, :aliases => '-l', :required => false, :type => :boolean, :desc => 'Enable/Disable creation of log files', :default => true
-  method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sort'
-  method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something', :default => false
+  method_option :log, :aliases => '-l', :required => false, :type => :boolean, :desc => 'Enable/Disable creation of log files'
+  method_option :logfilepath, :aliases => '-p', :required => false, :type => :string, :desc => 'Change the default logfilepath'
+  method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sorting'
+  method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something'
   def sort(inputDir)
 
     ENV['PDFMD_INPUTDIR']     = inputDir
     ENV['PDFMD_DESTINATION']  = options[:destination].to_s
     ENV['PDFMD_COPY']         = options[:copy].to_s
     ENV['PDFMD_LOG']          = options[:log].to_s
+    ENV['PDFMD_LOGFILEPATH']  = options[:logfilepath].to_s
     ENV['PDFMD_INTERACTIVE']  = options[:interactive].to_s
     ENV['PDFMD_DRYRUN']       = options['dryrun'].to_s
+    ENV['PDFMD']              = __FILE__
     require_relative('./pdfmd/sort.rb')
 
   end
@@ -409,15 +418,30 @@ class DOC < Thor
   --all-keywords, -a
   \x5 Use all keywords from the meta information in the file name and ignore the limit.
 
+  Hiera parameter: allkeywords [true|false]
+
+  Default: false
+
   --keywwords, -k
   \x5 Set the number of keywords used in the filename to a new value.
-  \x5 Default: 3
+
+  Hiera parameter: keywords <integer>
+
+  Default: 3 
 
   --outputdir, -o
   \x5 Rename the file and move it to the directory defined in '--outputdir'.
 
+  Hiera parameter: outputdir </file/path/>
+
+  Default: current file directory
+
   --copy, -c
   \x5 Copy the file instead of moving it to the new name or destination.
+
+  Hiera parameter: copy [true|false]
+
+  Default: false
 
   The directory must exist at runtime.
 
@@ -506,10 +530,10 @@ class DOC < Thor
 
   LONGDESC
   method_option :dryrun, :type => :boolean, :aliases => '-n', :desc => 'Run without making changes', :default => false, :required => false
-  method_option :allkeywords, :type => :boolean, :aliases => '-a', :desc => 'Add all keywords (no limit)', :default => false, :required => false
-  method_option :keywords, :type => :numeric, :aliases => '-k', :desc => 'Number of keywords to include (Default: 3)', :default => 3, :required => false
-  method_option :outputdir, :aliases => '-o', :type => :string, :desc => 'Speficy output directory', :default => :false, :required => :false
-  method_option :copy, :aliases => '-c', :type => :boolean, :desc => 'Copy instead of moving the file when renaming', :default => false
+  method_option :allkeywords, :type => :boolean, :aliases => '-a', :desc => 'Add all keywords (no limit)', :required => false
+  method_option :keywords, :type => :numeric, :aliases => '-k', :desc => 'Number of keywords to include (Default: 3)', :required => false
+  method_option :outputdir, :aliases => '-o', :type => :string, :desc => 'Speficy output directory', :default => false, :required => :false
+  method_option :copy, :aliases => '-c', :type => :boolean, :desc => 'Copy instead of moving the file when renaming'
   def rename(filename)
 
     ENV['PDFMD_FILENAME']       = filename

@@ -1,3 +1,17 @@
+# Version 1.5.0
+- Added option 'dryrun' to command 'sort'.
+- Added option 'logfilepath' to command 'sort'
+- Added more Hiera support to command 'sort'.
+- Added logfilepath to command 'sort'.
+- Added logentry for the answer of the interaction with the command 'sort' (parameter -i).
+- Bugfix: logic for parameters was not working correctly.
+- Change: Default value for logging is not 'false'.
+- Bugfix: Entry in Logfile shows now if the file is moved or copied.
+- Bugfix: Error message when logging and the logfile did not exist yet. File is now created correctly when necessary.
+- Added Hiera support to command 'rename'.
+- Command 'rename': Changed hiera parameter 'destination' to 'outputdir'.
+- Added Tests for 'sort','rename' and 'show'
+
 # Version 1.4.3
 - Bugfix: Commata in author field showed up in the filename after renaming.
 
