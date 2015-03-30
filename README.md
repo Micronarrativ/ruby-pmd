@@ -60,24 +60,27 @@ So in order to get more information just run the required _help_ command:
 
 ```
 # Show general possibilities:
-$ pdfmd.rb 
+$ pdfmd 
 
 # Show more information about <action>
-$ pdfmd.rb help <action>
+$ pdfmd help <action>
 ```
 
 My usual workflow is like this:
 
 ``` 
-$ pdfmd.rb show test.pdf
-$ pdfmd.rb edit -t all test.pdf
+$ pdfmd show test.pdf
+$ pdfmd edit -t all test.pdf
   ...
-$ pdfmd.rb rename test.pdf
+$ pdfmd rename test.pdf
 $ mv 20150101-me-dok-testdocument.pdf /my/pdf/directory
+  ...
+$ pdfmd sort .
 ``` 
 
 There's an underlogic in the renaming and sorting of the files according to the metadata. Make sure you read at least the help-information before you use it.
 
+It's also usefull to define some default settings in Hiera to avoid unnecessary typing.
 
 __HINT__: Before you start using the script, make sure you have a backup of your files or you know what you're doing. If you loose information/files I will not be able to help you.
 
@@ -91,10 +94,13 @@ pdfmd::config:
     destination : /data/tmp
     copy        : true
     log         : true
-    logfile     : /var/log/pdfmd.log
+    logfilepath : /var/log/pdfmd.log # Needs create/write rights on this file
     interactive : false
   rename:
-    destination : /data/tmp
+    #allkeywords : true # Does not make sense in combination with _keywords_
+    keywords    : 2
+    outputdir   : /data/output/sorted
+    copy        : true
 
 ```
 

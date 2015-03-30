@@ -12,7 +12,14 @@ Configure default settings in hiera:
   ---
   pdfmd::config:
     sort:
-      destination : /tmp/output
+      destination : /data/output
       copy        : true
-      logfile     : /var/log/pdfmd.log
+      log         : true
+      logfilepath : /var/log/pdfmd.log
+      interactive : true
+    rename:
+      allkeywords : true
+      keywords    : 4
+      outputdir   : /data/output/sorted
+      copy        : true
 

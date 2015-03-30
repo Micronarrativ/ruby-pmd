@@ -316,16 +316,22 @@ class DOC < Thor
 
   [*log|l*]
   \x5 Disable/Enable the logging.
-  \x5 Default: enabled.
+
+  Default: enabled.
+
+  [*logfilepath|p*]
+  \x5 Set an alternate path for the logfile. If not path is chosen, the logfile is being created in the current working directory as `pdfmd.log`.
 
   [*logfilepath|p*]
   \x5 Set an alternate path for the logfile. If not path is chosen, the logfile
   is being created in the current working directory as `pdfmd.log`.
 
   [*interactive|i*]
-  \x5 Disable/Enable interactive sorting. This will ask for confirmation for
-  \x5   each sorting action.
-  \x5 Default: disabled.
+  \x5 Disable/Enable interactive sorting. This will ask for confirmation for each sorting action.
+
+  Default: disabled.
+
+
 
   === Replacement rules
 
@@ -347,18 +353,23 @@ class DOC < Thor
   \x5sort:
   \x5  key: value
 
+  See the README file for an example how to define the values in Hiera.
+
   === Hiera defaults
 
-  The following values can be influenced by the hiera configuration in the
-    section 'sort'. Commandline parameter will overwrite the defaults coming
-    from hiera unless otherwise notet.
+  The following values can be influenced by the hiera configuration in the section 'sort'. Commandline parameter will overwrite the defaults coming from hiera unless otherwise notet.
 
   [*copy*]
   \x5  If set to true copies the files from the source directory instead of moving them.
 
   [*destination*]
-  \x5  Specifies the default output directory (root-directory). Either this or the
-    command line parameter for destinations must be set.
+  \x5  Specifies the default output directory (root-directory). Either this or the command line parameter for destinations must be set.
+
+  [*log*]
+  \x5 Enables (true) or disables (false) logging.
+
+  [*logfilepath*]
+  \x5 Specifes the default path for the logfile. If no path is set and logging is enable, the logfile will be created in the current working directory.
 
   [*logfilepath*]
   \5x Specifes the default path for the logfile. If no path is set and logging is enable,
@@ -367,8 +378,7 @@ class DOC < Thor
   Default is the current working directory with the filename `pdfmd.log`
 
   [*interactive*]
-  \x5  If set to true, each file must be acknowledged to be processed when
-    running the script.
+  \x5 If set to true, each file must be acknowledged to be processed when running the script.
 
   === Example
 
