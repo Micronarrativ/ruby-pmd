@@ -1,8 +1,7 @@
 #
 # Thor command 'rename'
 #
-# TODO: Add option to create outputdir if not existing
-# TODO: Define option to create outputdir via Hiera
+# TODO: align keyword abbreviations for all languages
 #
 require_relative '../string_extend'
 
@@ -12,7 +11,54 @@ outputdir           = ENV.fetch('PDFMD_OUTPUTDIR') == 'false' ? false : ENV.fetc
 dryrun              = ENV.fetch('PDFMD_DRYRUN') == 'false' ? false : true
 opt_numberKeywords  = ENV.fetch('PDFMD_NUMBERKEYWORDS')
 opt_copy            = ENV.fetch('PDFMD_COPY')
+opt_log             = ENV.fetch('PDFMD_LOG')
+opt_logfile         = ENV.fetch('PDFMD_LOGFILE')
 hieraDefaults       = queryHiera('pdfmd::config')
+
+if (opt_log.blank? and not hieraDefaults['rename'].nil? and not hieraDefaults['rename']['log'].nil? and hieraDefaults['rename']['log'] == true) or
+  opt_log == 'false' or
+  opt_log.blank? 
+
+  logenable = false
+
+else
+
+  logenable = true
+
+end
+
+if logenable
+
+  if opt_logfile.blank? and
+    ( hieraDefaults['rename']['logfilepath'].nil? or
+     hieraDefaults['rename']['logfilepath'].blank? or
+     hieraDefaults['rename'].nil? )
+
+    logfile = Dir.pwd.chomp('/') + '/' + File.basename(ENV['PDFMD'], '.*') + '.log'
+
+  elsif not opt_logfile.blank?
+
+    if File.directory? opt_logfile
+      abort('Logfilepath is a directory. Abort.')
+      exit 1
+    end
+
+    logfile = opt_logfile
+
+  elsif opt_logfile.blank? and
+    not hieraDefaults['rename']['logfilepath'].blank?
+
+    logfile = hieraDefaults['rename']['logfilepath']
+
+  else
+
+    logfile = Dir.pwd.chomp('/') + '/' + File.basename(ENV['PDFMD'], '.*') + '.log'
+
+  end
+
+  $logger = Logger.new(logfile)
+
+end
 
 metadata = readMetadata(filename).each do |key,value|
 
@@ -83,7 +129,7 @@ end
 
 
 date   = metadata['createdate'].gsub(/\ \d{2}\:\d{2}\:\d{2}.*$/,'').gsub(/\:/,'')
-author = metadata['author'].gsub(/\./,'_').gsub(/\-/,'').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
+author = metadata['author'].gsub(/\./,'_').gsub(/\&/,'').gsub(/\-/,'').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
 I18n.enforce_available_locales = false
 author = I18n.transliterate(author) # Normalising
 
@@ -93,8 +139,11 @@ case metadata['title']
 when /(Tilbudt|Angebot|Offer)/i
   doktype = 'til'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
-when /Orderbekrefelse/i
+when /Orderbekreftelse/i
   doktype = 'odb'
+  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /Auftragsbestätigung/i
+  doktype = 'abg'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /faktura/i
   doktype = 'fak'
@@ -107,6 +156,9 @@ when /rechnung/i
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /order/i
   doktype = 'ord'
+  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /bestilling/i
+  doktype = 'bes'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /(kontrakt|avtale|vertrag|contract)/i
   doktype = 'avt'
@@ -211,10 +263,14 @@ end
 
 if not dryrun and filename != newFilename.downcase
 
+  logenable ? $logger.info(filename + ' => ' + outputdir + '/' + newFilename.downcase): ''
+
   # Copy of me the file to the new name
   command = opt_copy ? 'cp' : 'mv'
   `#{command} -v '#{filename}' '#{outputdir}/#{newFilename.downcase}'`
 
 else
-  puts filename + "\n   => " + outputdir + '/' + newFilename.downcase
+
+  logenable ? $logger.info('Dryrun: ' + filename + ' => ' + outputdir + '/' + newFilename.downcase): ''
+
 end

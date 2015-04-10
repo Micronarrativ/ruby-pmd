@@ -1,3 +1,13 @@
+# Version 1.6.0
+- Added command 'config'
+- Added dependency 'yaml'
+- Added logging to command 'rename'
+- Bugfix for comand 'rename' with settings in Hiera.
+- Added Batchmode for command 'edit'
+- Bugfix: value '00' not longer accepted for a month in 'createdate'
+- Added logging to command 'edit'
+- Bugfix: Removing the ampersand (&) from authornames as well now.
+
 # Version 1.5.0
 - Added option 'dryrun' to command 'sort'.
 - Added option 'logfilepath' to command 'sort'

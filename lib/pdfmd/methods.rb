@@ -107,7 +107,7 @@ end
 def identifyDate(datestring)
   identifiedDate = ''
   year    = '[1-2][90][0-9][0-9]'
-  month   = '0[0-9]|10|11|12'
+  month   = '0[1-9]|10|11|12'
   day     = '[1-9]|0[1-9]|1[0-9]|2[0-9]|3[0-1]'
   hour    = '[0-1][0-9]|2[0-3]|[1-9]'
   minute  = '[0-5][0-9]'

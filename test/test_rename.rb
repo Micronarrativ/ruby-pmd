@@ -1,7 +1,7 @@
 # Standard renaming
 # Test 001
 initTmpDir
-commandparameter = " rename -o #{TMPDIR}"
+commandparameter = " rename -o #{TMPDIR} -c false "
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 1 and
@@ -45,7 +45,7 @@ $testResults.store('003', {:result => result, :command => commandparameter })
 # Test 004
 # Testing all keywords (-a)
 initTmpDir
-commandparameter = " rename -a -o #{TMPDIR}"
+commandparameter = " rename -a -o #{TMPDIR} -c false"
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 1 and
@@ -60,7 +60,7 @@ $testResults.store('004', {:result => result, :command => commandparameter })
 # Testing number of keywords
 # this might be buggy
 initTmpDir
-commandparameter = " rename -k 1 -o #{TMPDIR}"
+commandparameter = " rename -k 1 -o #{TMPDIR} -c false"
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 1 and
@@ -70,3 +70,19 @@ else
   result = 'failed'
 end
 $testResults.store('005', {:result => result, :command => commandparameter })
+
+# Test 006
+# Testing logging enabled
+initTmpDir
+commandparameter = " rename -l -p #{TMPDIR}/pdfmd.log -c false"
+`#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
+files = readFilesInDir(TMPDIR)
+if files.size == 1 and
+  File.basename(files.keys[0]) == '19700101-example_author-dok-some_keywords-kdn1111111-test_subject.pdf' and
+  `tail -n 1 #{TMPDIR}/pdfmd.log | wc -l`.to_i == 1
+  result = 'OK'
+else
+  result = 'failed'
+end
+$testResults.store('006', {:result => result, :command => commandparameter })
+

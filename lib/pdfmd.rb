@@ -1,6 +1,4 @@
 #!/usr/bin/env ruby
-# == Version 1.3
-#
 # == File: pdfmd.rb
 #
 # Show and edit Metadata of PDF files and rename the files accordingly.
@@ -40,8 +38,7 @@
 #
 # TODO: Include password protected PDF documents as well
 # TODO: Fix broken PDF files automatically
-# TODO: Enable logging in more functions than only "sort"
-# TODO: command 'hiera' to show the current settings
+# TODO: Enable logging in 'edit'
 # TODO: Read this: http://lostechies.com/derickbailey/2011/04/29/writing-a-thor-application/
 # TODO: ... and this: http://blog.paracode.com/2012/05/17/building-your-tools-with-thor/
 # gs \
@@ -62,7 +59,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.5.0'
+VERSION = '1.6.0'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')
@@ -79,6 +76,7 @@ class DOC < Thor
   desc 'show', 'Show metadata of a file'
   method_option :all, :type => :boolean, :aliases => '-a', :desc => 'Show all metatags', :default => false, :required => false
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Show specific tag(s), comma separated', :required => false
+  #method_option :format, :type => :string, :aliases => '-f', :desc => 'Define output format', :required => false
   long_desc <<-LONGDESC
   == General
 
@@ -129,6 +127,21 @@ class DOC < Thor
   end
 
   #
+  # Show current settings
+  #
+  desc 'config', 'Show config defaults'
+  long_desc <<-LONGDESC
+
+  LONGDESC
+  method_option :show, :type => :boolean, :aliases => '-s', :required => false
+  def config
+
+    ENV['PDFMD_SHOW'] = options[:show].to_s
+    require_relative('./pdfmd/config.rb')
+
+  end
+
+  #
   # Change a MetaTag Attribute
   #
   # TODO: keywords are added differently according to the documentation
@@ -141,7 +154,7 @@ class DOC < Thor
   specified or 'all'.
 
   The command will invoke an interactive user input and request the values
-  for the metatag.
+  for the metatag if no value is provided.
 
   Additionally the file can be renamed at the end according to the new meta
     tags. See `$ #{__FILE__} help rename` for details.
@@ -150,6 +163,8 @@ class DOC < Thor
 
   --tag, -t
   \x5 Names or list of names of Metatag fields to set, separated by commata.
+
+  If a value is provided, the current Value will be replaced by the new value.
 
   --rename, -r
   \x5 Rename file after updating the meta tag information according to the fields.
@@ -164,9 +179,11 @@ class DOC < Thor
   # Edit tag 'Author' and set new value interactive.
   \x5>CLI edit -t author example.pdf
 
-  # Edit mulitple Tags and set a new value.
+  # Edit multiple Tags and set a new value interactive.
   \x5>CLI edit -t tag1,tag2,tag3 <filename>
 
+  # Edit multiple Tags and set a new value in batch mode.
+  \x5 CLI edit -t tag1='value1',tag2='value2' <filename>
 
   == Multiple Tags
 
@@ -178,8 +195,13 @@ class DOC < Thor
   \x5>CLI edit -t author,title,subject example.pdf`
 
   # Set tags 'Author', 'Title', 'Subject', 'CreateDate', 'Keywords' in
-  example.pdf interactive.
+  example.pdf interactive:
   \x5>CLI edit -t all example.pdf
+
+  # Set tags 'Author', 'CreateDate' in example.pdf in batch mode (non-interactive:
+
+  CLI edit -t author='Me',createdate='1970:00:00 01:01:01' example.pdf
+  CLI edit -t author='Me',Createdate=19700000 example.pdf
 
   == Tag: CreateDate
 
@@ -217,12 +239,17 @@ class DOC < Thor
   LONGDESC
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Name of the Tag(s) to Edit', :default => false, :required => true
   method_option :rename, :type => :boolean, :aliases => '-r', :desc => 'Rename file after changing meta-tags', :default => false, :required => false
+  method_option :log, :aliases => '-l', :type => :boolean, :desc => 'Enable logging'
+  method_option :logfile, :aliases => '-p', :type => :string, :desc => 'Define path to logfile'
   def edit(filename)
 
     ENV['PDFMD_FILENAME'] = filename
     ENV['PDFMD_TAG']      = options[:tag]
     ENV['PDFMD_RENAME']   = options[:rename].to_s
     ENV['PDFMD']          = __FILE__
+    ENV['PDFMD_LOG']      = options[:log].to_s
+    ENV['PDFMD_LOGFILE']  = options[:logfile]
+
     require_relative('./pdfmd/edit.rb')
 
   end
@@ -455,6 +482,16 @@ class DOC < Thor
 
   The directory must exist at runtime.
 
+  --log, -l
+  \x5 Enable logging.
+
+  Values: true|false
+
+  --logfile, -p
+  \x5 Define logfile path
+
+  Default: current working-dir/pdfmd.log
+
   == Example
 
   # Rename the file according to the metatags
@@ -544,6 +581,8 @@ class DOC < Thor
   method_option :keywords, :type => :numeric, :aliases => '-k', :desc => 'Number of keywords to include (Default: 3)', :required => false
   method_option :outputdir, :aliases => '-o', :type => :string, :desc => 'Speficy output directory', :default => false, :required => :false
   method_option :copy, :aliases => '-c', :type => :boolean, :desc => 'Copy instead of moving the file when renaming'
+  method_option :log, :aliases => '-l', :type => :boolean, :desc => 'Enable logging'
+  method_option :logfile, :aliases => '-p', :type => :string, :desc => 'Define path to logfile'
   def rename(filename)
 
     ENV['PDFMD_FILENAME']       = filename
@@ -552,6 +591,9 @@ class DOC < Thor
     ENV['PDFMD_OUTPUTDIR']      = options[:outputdir].to_s
     ENV['PDFMD_NUMBERKEYWORDS'] = options[:keywords].to_s
     ENV['PDFMD_COPY']           = options[:copy].to_s
+    ENV['PDFMD_LOG']            = options[:log].to_s
+    ENV['PDFMD_LOGFILE']        = options[:logfile].to_s
+    ENV['PDFMD']                = __FILE__
     require_relative('./pdfmd/rename.rb')
 
   end
