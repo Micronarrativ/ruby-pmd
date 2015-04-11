@@ -30,6 +30,35 @@ $ gem install pathname
 $ gem install logger
 ```
 
+## Platforms
+### Fedora 21/CentOS 7
+* Install the depencies (required to install the rmagick gem)
+
+```
+$ sudo yum install -y rubygems rubygems-devel gcc ImageMagick ruby-devel ImageMagick-devel
+```
+
+* Install Gem
+
+``` 
+$ gem install pdfmd
+```
+
+### Ubuntu 14.04 LTS
+
+* Install the dependencies
+
+```
+$ sudo apt-get install -y rubygems-integration imagemagick libmagickwand-dev ruby-dev
+``` 
+
+* Install gem
+
+``` 
+$ sudo gem install pdfmd
+``` 
+
+
 ## Applications
 
 1. [exiftools](http://www.sno.phy.queensu.ca/~phil/exiftool/)

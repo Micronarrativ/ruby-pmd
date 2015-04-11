@@ -1,3 +1,11 @@
+# Version 1.6.1
+- Bugfix with the sorting command and the logging
+- Added additional log messages for sorting.
+- Removed ampersand from target directory when sorting
+- Changed the parameter 'logfilepath' to 'logfile' for the command 'sort'. Now it should be identical in all commands.
+- Fixed command 'explain'. That was only working from inside the git repository, but not elsewhere.
+- Added installation instructions for Fedora/Ubuntu/CentOS to README.md
+
 # Version 1.6.0
 - Added command 'config'
 - Added dependency 'yaml'

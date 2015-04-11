@@ -59,7 +59,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.6.0'
+VERSION = '1.6.1'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')
@@ -346,10 +346,7 @@ class DOC < Thor
 
   Default: enabled.
 
-  [*logfilepath|p*]
-  \x5 Set an alternate path for the logfile. If not path is chosen, the logfile is being created in the current working directory as `pdfmd.log`.
-
-  [*logfilepath|p*]
+  [*logfile|p*]
   \x5 Set an alternate path for the logfile. If not path is chosen, the logfile
   is being created in the current working directory as `pdfmd.log`.
 
@@ -395,12 +392,8 @@ class DOC < Thor
   [*log*]
   \x5 Enables (true) or disables (false) logging.
 
-  [*logfilepath*]
+  [*logfile*]
   \x5 Specifes the default path for the logfile. If no path is set and logging is enable, the logfile will be created in the current working directory.
-
-  [*logfilepath*]
-  \5x Specifes the default path for the logfile. If no path is set and logging is enable,
-  the logfile will be created in the current working directory.
 
   Default is the current working directory with the filename `pdfmd.log`
 
@@ -420,7 +413,7 @@ class DOC < Thor
   method_option :destination, :aliases => '-d', :required => false, :type => :string, :desc => 'Defines the output directory'
   method_option :copy, :aliases => '-c', :required => false, :type => :boolean, :desc => 'Copy files instead of moving them'
   method_option :log, :aliases => '-l', :required => false, :type => :boolean, :desc => 'Enable/Disable creation of log files'
-  method_option :logfilepath, :aliases => '-p', :required => false, :type => :string, :desc => 'Change the default logfilepath'
+  method_option :logfile, :aliases => '-p', :required => false, :type => :string, :desc => 'Change the default logfile path'
   method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sorting'
   method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something'
   def sort(inputDir)
@@ -429,7 +422,7 @@ class DOC < Thor
     ENV['PDFMD_DESTINATION']  = options[:destination].to_s
     ENV['PDFMD_COPY']         = options[:copy].to_s
     ENV['PDFMD_LOG']          = options[:log].to_s
-    ENV['PDFMD_LOGFILEPATH']  = options[:logfilepath].to_s
+    ENV['PDFMD_LOGFILEPATH']  = options[:logfile].to_s
     ENV['PDFMD_INTERACTIVE']  = options[:interactive].to_s
     ENV['PDFMD_DRYRUN']       = options['dryrun'].to_s
     ENV['PDFMD']              = __FILE__

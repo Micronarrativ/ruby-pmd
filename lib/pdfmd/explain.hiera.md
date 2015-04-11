@@ -15,7 +15,7 @@ Configure default settings in hiera:
       destination : /data/output
       copy        : true
       log         : true
-      logfilepath : /var/log/pdfmd.log
+      logfile     : /var/log/pdfmd.log
       interactive : true
     rename:
       allkeywords : true

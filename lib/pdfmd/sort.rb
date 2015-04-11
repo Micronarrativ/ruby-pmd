@@ -62,8 +62,8 @@ end
 if logenable
 
   if opt_logfilepath.blank? and 
-    ( hieraDefaults['sort']['logfilepath'].nil? or
-     hieraDefaults['sort']['logfilepath'].blank? or
+    ( hieraDefaults['sort']['logfile'].nil? or
+     hieraDefaults['sort']['logfile'].blank? or
      hieraDefaults['sort'].nil? )
 
     logfile = Dir.pwd.chomp('/') + '/' + File.basename(ENV['PDFMD'], '.*') + '.log'
@@ -78,9 +78,9 @@ if logenable
     logfile = opt_logfilepath
 
   elsif opt_logfilepath.blank? and
-    not hieraDefaults['sort']['logfilepath'].blank? 
+    not hieraDefaults['sort']['logfile'].blank? 
 
-    logfile = hieraDefaults['sort']['logfilepath']
+    logfile = hieraDefaults['sort']['logfile']
 
   else
 
@@ -95,9 +95,17 @@ end
 !File.exist?(inputDir) ? abort('Input directory does not exist. Abort.'): ''
 File.directory?(inputDir) ? '' : abort('Input is a single file. Not implemented yet. Abort.')
 File.file?(destination) ? abort("Output '#{destination}' is an existing file. Cannot create directory with the same name. Abort") : ''
-unless File.directory?(destination)
-  FileUtils.mkdir_p(destination)
-  logenable ? $logger.info("Destination '#{destination}' has been created.") : ''
+
+if not File.directory?(destination)
+
+  # Do nothing on a dry-run
+  if opt_dryrun
+    logenable ? $logger.info("Dryrun: Destination '#{destination}' has been created.") : ''
+  else
+    FileUtils.mkdir_p(destination)
+    logenable ? $logger.info("Destination '#{destination}' has been created.") : ''
+  end
+
 end
 
 # Iterate through all files
@@ -111,18 +119,28 @@ Dir[inputDir.chomp('/') +  '/*.pdf'].sort.each do |file|
   end
 
   metadata = readMetadata(file)
+
+  # The author information is used to create a subdirectory
+  # where all the files will end up in.
   if metadata['author'] and not metadata['author'].empty?
-    author                          = metadata['author'].gsub(' ','_').gsub('.','_')
+    author                          = metadata['author'].gsub(' ','_').gsub('.','_').gsub('&','').gsub('__','_')
     I18n.enforce_available_locales  = false # Serialize special characters
     author                          = I18n.transliterate(author).downcase
     folderdestination               = destination.chomp('/') + '/' + author
 
-    unless File.directory?(folderdestination)
-      FileUtils.mkdir_p(folderdestination)
-      logenable ? $logger.info("Folder '#{folderdestination}' has been created."): ''
+    if not File.directory?(folderdestination)
+
+      # Do nothing when it's a dry-run
+      if opt_dryrun
+        logenable ? $logger.info("Dryrun: Folder '#{folderdestination}' has been created."): ''
+      else
+        FileUtils.mkdir_p(folderdestination)
+        logenable ? $logger.info("Folder '#{folderdestination}' has been created."): ''
+      end
+
     end
 
-    filedestination                 = destination.chomp('/') + '/' + author + '/' + Pathname.new(file).basename.to_s
+    filedestination = destination.chomp('/') + '/' + author + '/' + Pathname.new(file).basename.to_s
 
 
     # Final check before touching the filesystem
@@ -130,15 +148,28 @@ Dir[inputDir.chomp('/') +  '/*.pdf'].sort.each do |file|
 
       # Move/Copy the file
       if copyAction 
-        opt_dryrun ? '' : FileUtils.cp(file, filedestination)
-        logenable ? $logger.info("File copied '#{file}' => '#{filedestination}'") : ''
+        if opt_dryrun
+          logenable ? $logger.info("Dryrun: File copied '#{file}' => '#{filedestination}'") : ''
+        else
+          FileUtils.cp(file, filedestination)
+          logenable ? $logger.info("File copied '#{file}' => '#{filedestination}'") : ''
+        end
+
       else
-        opt_dryrun ? '' : FileUtils.mv(file,filedestination)
-        logenable ? $logger.info("File moved '#{file}' => '#{filedestination}'") : ''
+
+        if opt_dryrun
+          logenable ? $logger.info("Dryrun: File moved '#{file}' => '#{filedestination}'") : ''
+        else
+          FileUtils.mv(file,filedestination)
+          logenable ? $logger.info("File moved '#{file}' => '#{filedestination}'") : ''
+        end
+
       end
 
     else
+
       logenable ? $logger.warn("File '#{filedestination}' already exists. Ignoring.") : ''
+
     end
   else
     logenable ? $logger.warn("Missing tag 'Author' for file '#{file}'. Skipping.") : (puts "Missing tag 'Author' for file '#{file}'. Skipping")
