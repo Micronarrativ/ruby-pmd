@@ -142,9 +142,6 @@ when /(Tilbudt|Angebot|Offer)/i
 when /Orderbekreftelse/i
   doktype = 'odb'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
-when /Auftragsbestätigung/i
-  doktype = 'abg'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /faktura/i
   doktype = 'fak'
   keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))

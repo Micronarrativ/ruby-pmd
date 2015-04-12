@@ -59,7 +59,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.6.1'
+VERSION = '1.6.2'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')

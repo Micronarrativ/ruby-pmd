@@ -1,3 +1,6 @@
+# Version 1.6.2
+- Invalid Byte character in Rename command
+
 # Version 1.6.1
 - Bugfix with the sorting command and the logging
 - Added additional log messages for sorting.
