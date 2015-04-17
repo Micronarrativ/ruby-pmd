@@ -1,3 +1,6 @@
+# Version 1.6.3
+- Added hiera option 'rename' for command 'edit'
+
 # Version 1.6.2
 - Invalid Byte character in Rename command
 

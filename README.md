@@ -130,6 +130,8 @@ pdfmd::config:
     keywords    : 2
     outputdir   : /data/output/sorted
     copy        : true
+  edit:
+    rename      : true
 
 ```
 

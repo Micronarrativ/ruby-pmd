@@ -1,19 +1,29 @@
 #
 # Thor command 'edit' for changing the common
 # ExifTags within the PDF file
-# TODO: Put rename into Hiera
-# TODO: Back backup file/path into hiera and options
+# TODO: backup file/path into hiera and options
 #
 
 require_relative '../string_extend'
 
 filename    = ENV.fetch('PDFMD_FILENAME')
 optTag      = ENV['PDFMD_TAG'] || nil
-optRename   = ENV['PDFMD_RENAME'] == 'true' ? true : false
+opt_rename  = ENV['PDFMD_RENAME']
 pdfmd       = ENV['PDFMD']
 opt_log     = ENV['PDFMD_LOG']
 opt_logfile = ENV['PDFMD_LOGFILE']
 hieraDefaults = queryHiera('pdfmd::config')
+
+# Rename or not
+if opt_rename == 'true'
+  opt_rename = true
+elsif (not hieraDefaults['edit'].nil? and
+       not hieraDefaults['edit']['rename'].nil? and
+       hieraDefaults['edit']['rename'] == true)
+  opt_rename = true
+else
+  opt_rename = false
+end
 
 # Define logging state
 if ( hieraDefaults['edit'].nil? or
@@ -112,8 +122,7 @@ end
 # If required, run the renaming task afterwards
 # This is not pretty, but seems to be the only way to do this in THOR
 #
-if optRename
+if opt_rename
   logenable ? $logger.info("#{filename}: Trigger file renaming.") : ''
   `#{pdfmd} rename '#{filename}'`
 end
-

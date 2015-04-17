@@ -59,7 +59,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.6.2'
+VERSION = '1.6.3'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')
@@ -171,6 +171,8 @@ class DOC < Thor
 
   This parameter is identical to running `> CLI rename <filename>`
 
+  Hiera parameter: rename
+
   General example:
 
   # Edit tag 'TAG' and set a new value interactive.
@@ -235,6 +237,8 @@ class DOC < Thor
   \x5> CLI edit -t author -r example.pdf
 
   See `> CLI help rename` for details about renaming.
+
+  To enable this feature in hiera add the key 'rename' into the section 'edit' with the value 'true'.
 
   LONGDESC
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Name of the Tag(s) to Edit', :default => false, :required => true
