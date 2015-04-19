@@ -5,6 +5,7 @@ case term
 when ''
   puts 'Available subjects:'
   puts '- author'
+  puts '- csv'
   puts '- createdate'
   puts '- hiera'
   puts '- keywords'

@@ -17,6 +17,8 @@ hieraDefaults = queryHiera('pdfmd::config')
 # Rename or not
 if opt_rename == 'true'
   opt_rename = true
+elsif opt_rename == 'false'
+  opt_rename = false
 elsif (not hieraDefaults['edit'].nil? and
        not hieraDefaults['edit']['rename'].nil? and
        hieraDefaults['edit']['rename'] == true)

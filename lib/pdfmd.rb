@@ -59,7 +59,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.6.3'
+VERSION = '1.7.0'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')
@@ -69,14 +69,13 @@ class DOC < Thor
   #
   # Show the current metadata tags
   #
-  # TODO: format output as JSON and YAML
   # TODO: Enable additional options
-  # TODO: Add command to show current settings (from hiera)
   #
   desc 'show', 'Show metadata of a file'
   method_option :all, :type => :boolean, :aliases => '-a', :desc => 'Show all metatags', :default => false, :required => false
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Show specific tag(s), comma separated', :required => false
-  #method_option :format, :type => :string, :aliases => '-f', :desc => 'Define output format', :required => false
+  method_option :format, :type => :string, :aliases => '-f', :desc => 'Define output format', :required => false
+  method_option :includepdf, :type => :boolean, :aliases => '-i', :desc => 'Include the filename in output', :required => false
   long_desc <<-LONGDESC
   == General
 
@@ -97,10 +96,35 @@ class DOC < Thor
 
   Relevant tags are Author,Creator, CreateDate, Title, Subject, Keywords.
 
+  This is the default action.
+
   --tag, -t
   \x5 Specify the metatag to show. The selected metatag must be one of the relevant tags. Other tags are ignored and nothing is returned.
 
   The value for the parameter is case insensitive: 'Author' == 'author'
+
+  Multiple Tags can be specificed, separated by a comma. 
+
+  If multiple tags are specified in a different order than the default order, the specified order will be used. This has an impact on the order of the fields when e.g. the output is exported in CSV format.
+
+  Hiera parameter: tag
+
+  --format, -f
+
+  Specify a different output format.
+
+  Available formats are json,yaml,csv,hash
+
+  The default output format is a human readable format.
+
+  Hiera parameter: format
+
+  --includepdf, -i
+
+  Include the filename of the PDF document in the output if this option is set to true.
+  Per default the filename is not included.
+
+  Hiera parameter: includepdf (boolean)
 
   == Example
 
@@ -116,12 +140,24 @@ class DOC < Thor
   # Show value for metatags 'Author','Title' for the file example.pdf
   \x5>CLI show -t author,title example.pdf
 
+  == Hiera
+
+  Here is an example configuration for hiera:
+
+  pdfmd::config
+    show:
+      format    : yaml
+      tag       : author,subject
+      includepdf: true
+
   LONGDESC
   def show(filename)
 
-    ENV['PDFMD_FILENAME'] = filename
-    ENV['PDFMD_TAGS']     = options[:tag]
-    ENV['PDFMD_ALL']      = options[:all].to_s
+    ENV['PDFMD_FILENAME']   = filename
+    ENV['PDFMD_TAGS']       = options[:tag]
+    ENV['PDFMD_ALL']        = options[:all].to_s
+    ENV['PDFMD_FORMAT']     = options[:format]
+    ENV['PDFMD_INCLUDEPDF'] = options[:includepdf].to_s
     require_relative('./pdfmd/show.rb')
 
   end
@@ -242,7 +278,7 @@ class DOC < Thor
 
   LONGDESC
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Name of the Tag(s) to Edit', :default => false, :required => true
-  method_option :rename, :type => :boolean, :aliases => '-r', :desc => 'Rename file after changing meta-tags', :default => false, :required => false
+  method_option :rename, :type => :boolean, :aliases => '-r', :desc => 'Rename file after changing meta-tags', :required => false
   method_option :log, :aliases => '-l', :type => :boolean, :desc => 'Enable logging'
   method_option :logfile, :aliases => '-p', :type => :string, :desc => 'Define path to logfile'
   def edit(filename)
