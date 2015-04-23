@@ -54,6 +54,12 @@ end
 # Function to read the metadata from a given file
 # hash readMetadata(string)
 #
+# Besides the fields from the exif-fields two additional fields can be set:
+#
+# error: is being set with a string in case exiftools returns a warning field
+# password: is being set when a password has been necessary to access the
+#   protected fields.
+#
 def readMetadata(pathFile = false) 
   metadata = Hash.new 
   metadata['keywords']    = ''
@@ -62,6 +68,8 @@ def readMetadata(pathFile = false)
   metadata['author']      = ''
   metadata['creator']     = ''
   metadata['createdate']  = ''
+  metadata['password']    = ''
+  metadata['error']       = ''
   if not File.file?(pathFile)
     puts "Cannot access file #{pathFile}. Abort"
     abort
@@ -69,10 +77,43 @@ def readMetadata(pathFile = false)
 
   # Fetch the Metada with the help of exiftools (unless something better is
   # found
-  metaStrings = `exiftool '#{pathFile}' | egrep -i '^Creator\s+\:|^Author|Create Date|Subject|Keywords|Title'`
+  tags        = '^Creator\s+\:|^Author|Create Date|Subject|Keywords|Title|^Warning'
+  metaStrings = `exiftool '#{pathFile}' | egrep -i '#{tags}'`
 
-  # Time to cherrypick the available data
+  # Create an array of all data
   entries = metaStrings.split("\n")
+
+  # If this matches, the file is password protected.
+  # Grep the password from hiera or from the user
+  if entries.index{ |x| x.match(/Document is password protected/) } 
+
+    # Grep data from hiera
+    hieraDefaults = queryHiera('pdfmd::config')
+
+    # Use Hiera default PW if possible
+    if not hieraDefaults['default'].nil? and
+      not hieraDefaults['default']['password'].nil? and
+      not hieraDefaults['default']['password'] == ''
+
+      documentPassword = hieraDefaults['default']['password']
+
+    # Ask the user for a password
+    else
+
+      documentPassword = readUserInput('Please provide user password: ')
+
+    end
+
+    # Try to get the metadata again, this time with the password
+    metaStrings = `exiftool -password '#{documentPassword}' '#{pathFile}' | egrep -i '#{tags}'`
+    # Add the password to the metadata and make it available to the other procedures
+    metadata['password'] = documentPassword
+
+    # Create an array of all entries
+    entries = metaStrings.split("\n")
+
+  end
+
   entries.each do |entry|
     values = entry.split(" : ")
     values[0].match(/Creator/) and metadata['creator'] == '' ? metadata['creator'] = values[1]: metadata['creator'] = ''
@@ -81,7 +122,17 @@ def readMetadata(pathFile = false)
     values[0].match(/Subject/) and metadata['subject'] == '' ? metadata['subject'] = values[1]: metadata['subject'] = ''
     values[0].match(/Keywords/) and metadata['keywords'] == '' ? metadata['keywords'] = values[1]: metadata['keywords'] =''
     values[0].match(/Title/) and metadata['title'] == '' ? metadata['title'] = values[1]: metadata['title'] =''
+
+    if values[0].match(/Warning/) and values[1].match(/Document is password protected/)
+      puts 'Document is protected'
+    end
+
+    # Password is not correct. Abort
+    if values[0].match(/Warning/) and values[1].match(/Incorrect password/)
+      abort values[1] + '. Abort!'
+    end
   end
+
   return metadata
 end
 
@@ -90,7 +141,20 @@ end
 # Read user input
 #
 def readUserInput(textstring = 'Enter value: ')
-  return ask textstring
+
+  # if there is a password mentioned, hide the input
+  if textstring.match(/password/i)
+
+    print textstring
+    userinput =  STDIN.noecho(&:gets).chomp
+    puts ''
+    return userinput
+
+  else
+
+    return ask textstring
+
+  end
 end
 
 

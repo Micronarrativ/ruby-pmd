@@ -77,6 +77,14 @@ end
 
 metadata = readMetadata(filename)
 
+# Set the password for the exiftool if available
+if metadata['password'].size > 0
+  logenable ? $logger.info("#{filename}: Using PDF password to edit metadata.") : ''
+  exifPdfPassword = "-password '#{metadata['password']}'"
+else
+  exifPdfPassword = ''
+end
+
 if optTag == 'all'
   tags = ['author','title','subject','createdate','keywords']
 else
@@ -97,7 +105,9 @@ tags.each do |currentTag|
     end
 
     logenable ? $logger.info("#{filename}: Setting value for tag '#{tag.downcase}': '#{value}'") : ''
-    `exiftool -#{tag.downcase}='#{value}' -overwrite_original '#{filename}'`
+
+    # Running the exiftool with optional PDF password parameter on the original file
+    `exiftool #{exifPdfPassword} -#{tag.downcase}='#{value}' -overwrite_original '#{filename}'`
 
   else
 
@@ -115,7 +125,9 @@ tags.each do |currentTag|
     end
     puts "Changing value for #{currentTag}: '#{metadata[currentTag]}' => #{answer}"
     logenable ? $logger.info("#{filename}: Setting value for tag '#{currentTag.downcase}': '#{answer}'") : ''
-    `exiftool -#{currentTag.downcase}='#{answer}' -overwrite_original '#{filename}'`
+
+    # Running the exiftool with optional PDF password parameter on the original file
+    `exiftool #{exifPdfPassword} -#{currentTag.downcase}='#{answer}' -overwrite_original '#{filename}'`
   
   end # If interactive/batch mode
 end

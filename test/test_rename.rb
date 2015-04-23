@@ -5,7 +5,7 @@ commandparameter = " rename -o #{TMPDIR} -c false "
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 1 and
-  File.basename(files.keys[0]) == '19700101-example_author-dok-some_keywords-kdn1111111-test_subject.pdf'
+  File.basename(files.keys[0]) == '19700101-example_author-dok-cno1111111-kdn1111111-test_subject.pdf'
   result = 'OK'
 else
   result = 'failed'
@@ -20,7 +20,7 @@ commandparameter = " rename -c -o #{TMPDIR}"
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 2 and
-  File.basename(files.keys[0]) == '19700101-example_author-dok-some_keywords-kdn1111111-test_subject.pdf' and
+  File.basename(files.keys[0]) == '19700101-example_author-dok-cno1111111-kdn1111111-test_subject.pdf' and
   File.basename(files.keys[1]) == 'test_default.pdf'
   result = 'OK'
 else
@@ -49,7 +49,7 @@ commandparameter = " rename -a -o #{TMPDIR} -c false"
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 1 and
-  File.basename(files.keys[0]) == '19700101-example_author-dok-some_keywords-kdn1111111-test_subject-author-some_feature-customernumber_1111111.pdf'
+  File.basename(files.keys[0]) == '19700101-example_author-dok-cno1111111-kdn1111111-test_subject-some_keywords-author-some_feature.pdf'
   result = 'OK'
 else
   result = 'failed'
@@ -78,7 +78,7 @@ commandparameter = " rename -l -p #{TMPDIR}/pdfmd.log -c false"
 `#{PDFMD} #{commandparameter} #{TARGETPDF}`.chomp
 files = readFilesInDir(TMPDIR)
 if files.size == 1 and
-  File.basename(files.keys[0]) == '19700101-example_author-dok-some_keywords-kdn1111111-test_subject.pdf' and
+  File.basename(files.keys[0]) == '19700101-example_author-dok-cno1111111-kdn1111111-test_subject.pdf' and
   `tail -n 1 #{TMPDIR}/pdfmd.log | wc -l`.to_i == 1
   result = 'OK'
 else

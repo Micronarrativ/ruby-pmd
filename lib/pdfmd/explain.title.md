@@ -3,3 +3,5 @@
 
   Can be chosen freely, but some keywords are treated special when creating
   the filename.
+
+  Check the _keywords_ file for more information.
