@@ -1,19 +1,31 @@
 #
 # Thor command 'edit' for changing the common
 # ExifTags within the PDF file
-# TODO: Put rename into Hiera
-# TODO: Back backup file/path into hiera and options
+# TODO: backup file/path into hiera and options
 #
 
 require_relative '../string_extend'
 
 filename    = ENV.fetch('PDFMD_FILENAME')
 optTag      = ENV['PDFMD_TAG'] || nil
-optRename   = ENV['PDFMD_RENAME'] == 'true' ? true : false
+opt_rename  = ENV['PDFMD_RENAME']
 pdfmd       = ENV['PDFMD']
 opt_log     = ENV['PDFMD_LOG']
 opt_logfile = ENV['PDFMD_LOGFILE']
 hieraDefaults = queryHiera('pdfmd::config')
+
+# Rename or not
+if opt_rename == 'true'
+  opt_rename = true
+elsif opt_rename == 'false'
+  opt_rename = false
+elsif (not hieraDefaults['edit'].nil? and
+       not hieraDefaults['edit']['rename'].nil? and
+       hieraDefaults['edit']['rename'] == true)
+  opt_rename = true
+else
+  opt_rename = false
+end
 
 # Define logging state
 if ( hieraDefaults['edit'].nil? or
@@ -65,6 +77,14 @@ end
 
 metadata = readMetadata(filename)
 
+# Set the password for the exiftool if available
+if metadata['password'].size > 0
+  logenable ? $logger.info("#{filename}: Using PDF password to edit metadata.") : ''
+  exifPdfPassword = "-password '#{metadata['password']}'"
+else
+  exifPdfPassword = ''
+end
+
 if optTag == 'all'
   tags = ['author','title','subject','createdate','keywords']
 else
@@ -85,7 +105,9 @@ tags.each do |currentTag|
     end
 
     logenable ? $logger.info("#{filename}: Setting value for tag '#{tag.downcase}': '#{value}'") : ''
-    `exiftool -#{tag.downcase}='#{value}' -overwrite_original '#{filename}'`
+
+    # Running the exiftool with optional PDF password parameter on the original file
+    `exiftool #{exifPdfPassword} -#{tag.downcase}='#{value}' -overwrite_original '#{filename}'`
 
   else
 
@@ -103,7 +125,9 @@ tags.each do |currentTag|
     end
     puts "Changing value for #{currentTag}: '#{metadata[currentTag]}' => #{answer}"
     logenable ? $logger.info("#{filename}: Setting value for tag '#{currentTag.downcase}': '#{answer}'") : ''
-    `exiftool -#{currentTag.downcase}='#{answer}' -overwrite_original '#{filename}'`
+
+    # Running the exiftool with optional PDF password parameter on the original file
+    `exiftool #{exifPdfPassword} -#{currentTag.downcase}='#{answer}' -overwrite_original '#{filename}'`
   
   end # If interactive/batch mode
 end
@@ -112,8 +136,7 @@ end
 # If required, run the renaming task afterwards
 # This is not pretty, but seems to be the only way to do this in THOR
 #
-if optRename
+if opt_rename
   logenable ? $logger.info("#{filename}: Trigger file renaming.") : ''
   `#{pdfmd} rename '#{filename}'`
 end
-

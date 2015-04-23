@@ -11,6 +11,8 @@ Configure default settings in hiera:
   YAML
   ---
   pdfmd::config:
+    default:
+      password    : secretpassword
     sort:
       destination : /data/output
       copy        : true
@@ -22,4 +24,6 @@ Configure default settings in hiera:
       keywords    : 4
       outputdir   : /data/output/sorted
       copy        : true
+    edit:
+     rename       : true
 

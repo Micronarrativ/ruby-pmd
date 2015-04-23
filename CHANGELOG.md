@@ -1,3 +1,21 @@
+# Version 1.8.0
+- Added Support for password protected pdf files in command 'show' and 'edit'
+- Cleaned up renaming key-string and added all string for NO,EN an DE language.
+- Cleaned the output of `pdfmd config`. 
+- Removed some TODOs
+- Bugfix in the rename command
+- Updated Tests
+- Removed special characters in subject when used in the filename (bug)
+
+# Version 1.7.0
+- Rename option in command 'edit' on the Shell now overwrites the hiera setting.
+- The command 'show' supports multiple output formats.
+- Added hiera support for parameter 'format' and 'tag' for the command 'show'.
+- Added parameter 'includepdf' with Hiera for command 'show'.
+
+# Version 1.6.3
+- Added hiera option 'rename' for command 'edit'
+
 # Version 1.6.2
 - Invalid Byte character in Rename command
 

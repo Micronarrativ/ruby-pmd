@@ -87,38 +87,47 @@ $ ./pdfmd.rb [show|edit|rename|sort] [options] <filename>
 The interface has been setup using Thor.  
 So in order to get more information just run the required _help_ command:
 
-```
-# Show general possibilities:
-$ pdfmd 
-
-# Show more information about <action>
-$ pdfmd help <action>
+``` 
+$ pdfmd               # General information
+$ pdfmd help <action> # Command specific help
 ```
 
 My usual workflow is like this:
 
 ``` 
-$ pdfmd show test.pdf
-$ pdfmd edit -t all test.pdf
-  ...
-$ pdfmd rename test.pdf
-$ mv 20150101-me-dok-testdocument.pdf /my/pdf/directory
-  ...
-$ pdfmd sort .
+$ cd /my/pdf/directory            # Step 1
+$ pdfmd show test.pdf             # Step 2
+$ pdfmd edit -t all -r test.pdf   # Step 3
+$ pdfmd sort .                    # Step 4
 ``` 
 
-There's an underlogic in the renaming and sorting of the files according to the metadata. Make sure you read at least the help-information before you use it.
+* _Step 1_: Change into the directory with the mess of pdf documents. Here all the files from the scanning before end up.
+* _Step 2_: A quick look at the currently set metadata does not hurt. If I find the metadata already in order, I skip this document.
+* _Step 3_: For each document I update the PDF metadata to the settings I prefer. The command `pdfmd explain <topic>` explains what the value are used for. Some parameters like _-r_ are actually ommited on my systems, because they have been set by Hiera.
+* _Step 4_: In the end I sort all documents according to their metadata into correct subdirectories. The parameter _-d_ is being set from Hiera and makes sure the files end up where they are supposed to be.
+
+
+There's an underlying logic in the renaming and sorting of the files according to the metadata. Make sure you read at least the help-information before you use it or it might be confusing.
 
 It's also usefull to define some default settings in Hiera to avoid unnecessary typing.
 
 __HINT__: Before you start using the script, make sure you have a backup of your files or you know what you're doing. If you loose information/files I will not be able to help you.
 
-# Hiera
 
+## Password protected files
+
+_pdfmd_ recognises if a pdf file is password protected and will ask for the password.  
+A password string can be defined in hiera that will be used per default.
+
+
+# Hiera
+ 
 In order for Hiera to provide (default) configuration data, setup a configuration hash e.g. inside the YAML backend:
 
 ``` YAML
 pdfmd::config:
+  default:
+    password    : xxxxxxxxxx
   sort:
     destination : /data/tmp
     copy        : true
@@ -130,6 +139,8 @@ pdfmd::config:
     keywords    : 2
     outputdir   : /data/output/sorted
     copy        : true
+  edit:
+    rename      : true
 
 ```
 

@@ -1,7 +1,7 @@
 #
 # Thor command 'rename'
 #
-# TODO: align keyword abbreviations for all languages
+# TODO: Make keywords abbreviations configurable from Hiera
 #
 require_relative '../string_extend'
 
@@ -134,67 +134,88 @@ I18n.enforce_available_locales = false
 author = I18n.transliterate(author) # Normalising
 
 keywords_preface = ''
-# This statement can probably be optimised
+# Determine the document type from the title.
+# Languages: DE|NO|EN
 case metadata['title']
-when /(Tilbudt|Angebot|Offer)/i
+when /Tilbudt/i
   doktype = 'til'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /Offer/i
+  doktype = 'off'
+when /Angebot/i
+  doktype = 'ang'
 when /Orderbekreftelse/i
   doktype = 'odb'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /faktura/i
   doktype = 'fak'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /invoice/i
   doktype = 'inv'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /rechnung/i
   doktype = 'rec'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /order/i
   doktype = 'ord'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /bestilling/i
   doktype = 'bes'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
-when /(kontrakt|avtale|vertrag|contract)/i
+when /(kontrakt|avtale)/i
   doktype = 'avt'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /vertrag/i
+  doktype = 'ver'
+when /contract/i
+  doktype = 'con'
 when /kvittering/i
   doktype = 'kvi'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 when /manual/i
   doktype = 'man'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
-when /(billett|ticket)/i
+when /billett/i
   doktype = 'bil'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+when /ticket/i
+  doktype = 'tik'
 when /(informasjon|information)/i
   doktype = 'inf'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 else
   doktype = 'dok'
-  keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 end
+# Set the preface from the doktype
+keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
+
 if not metadata['keywords'].empty? 
   keywords_preface == '' ? keywords = '' : keywords = keywords_preface
   keywordsarray    = metadata['keywords'].split(',')
 
   #
   # Sort array
+  # and replace key-strings with the abbreviations
+  #   in combination with the titel information
+  # I need to make this one better and make it configurable from
+  #   Hiera. But not right now.
   #
   keywordssorted = Array.new
   keywordsarray.each_with_index do |value,index|
     value = value.lstrip.chomp
-    value = value.gsub(/(Faktura|Rechnungs)(nummer)? /i,'fak')
-    value = value.gsub(/(Kunde)(n)?(nummer)? /i,'kdn')
-    value = value.gsub(/(Kunde)(n)?(nummer)?-/i,'kdn')
-    value = value.gsub(/(Ordre|Bestellung)(s?nummer)? /i,'ord')
-    value = value.gsub(/(Kvittering|Quittung)(snummer)? /i,'kvi')
-    value = value.gsub(/\s/,'_')
-    value = value.gsub(/\//,'_')
+    
+    # Invoices
+    value = value.gsub(/Faktura(nummer)? /i,'fak')
+    value = value.gsub(/Rechnung(snummer)? /i, 'rec')
+    value = value.gsub(/Invoice(number)? /i, 'inv')
+
+    # Customernumbers
+    value = value.gsub(/Kunde(n)?(nummer)? /i,'kdn')
+    value = value.gsub(/Customer(number)? /i, 'cno')
+
+    # Ordernumbers
+    value = value.gsub(/Bestellung(s?nummer)? /i,'bes')
+    value = value.gsub(/(Ordre)(nummer)? /i,'ord')
+    value = value.gsub(/Bestilling(snummer)? /i,'bst')
+
+    # Receiptnumbers
+    value = value.gsub(/(Kvittering)(snummer)? /i,'kvi')
+    value = value.gsub(/Quittung(snummer)? /i,'qui')
+    value = value.gsub(/Receipt(number)? /i, 'rpt')
+
+    # Remove special characters from string
+    value = value.gsub(/\s|\/|\-|\./,'_')
+
     keywordsarray[index] = value
-    if value.match(/^(fak|kdn|ord|kvi)/)
+    if value.match(/^(fak|rec|inv|cno|kdn|bes|ord|bst|kvi|qui|rpt)/)
       keywordssorted.insert(0, value)
     else
       keywordssorted.push(value)
@@ -209,7 +230,7 @@ if not metadata['keywords'].empty?
     if not opt_allkeywords
       counter >= opt_numberKeywords-1 ? break : counter = counter + 1
     end
-    if value.match(/(kvi|fak|ord|kdn)/i)
+    if value.match(/^(fak|rec|inv|cno|kdn|bes|ord|bst|kvi|qui|rpt)/)
       keywords == '' ? keywords = '-' + value : keywords = value + '-' + keywords
     else
       keywords == '' ? keywords = '-' + value : keywords.concat('-' + value)
