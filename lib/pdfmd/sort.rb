@@ -3,6 +3,8 @@
 #
 # Actions for the sort command
 #
+# TODO: Put in file overwrite parameter
+#
 inputDir = ENV.fetch('PDFMD_INPUTDIR')
 
 require_relative('./methods.rb')
@@ -20,14 +22,22 @@ hieraDefaults   = queryHiera('pdfmd::config')
 # Determin the setting for the copy/move action when sorting
 # Use HieraDefaults if nothing has been set.
 copyAction  = opt_copy
-if copyAction.blank? and hieraDefaults['sort']['copy'] == true
+if copyAction.blank? and 
+  !hieraDefaults.nil? and
+  !hieraDefaults['sort'].nil? and
+  !hieraDefaults['sort']['copy'].nil? and
+  hieraDefaults['sort']['copy'] == true
   copyAction = true
 elsif copyAction.blank? or copyAction == 'false'
   copyAction = false
 end
 
 # Determine the setting for interaction
-if opt_interactive.blank? and hieraDefaults['sort']['interactive'] == true
+if opt_interactive.blank? and 
+  !hieraDefaults.nil? and
+  !hieraDefaults['sort'].nil? and
+  !hieraDefaults['sort']['interactive'].nil? and
+  hieraDefaults['sort']['interactive'] == true
   puts 'Setting interactive from hiera'
   interactiveAction = true
 elsif opt_interactive == 'true'
@@ -41,7 +51,9 @@ destination = opt_destination
 if destination.nil? or destination == ''
 
   hieraHash = queryHiera('pdfmd::config')
-  if !hieraHash['sort']['destination'].nil?
+  if !hieraHash.nil? and
+    !hieraHash['sort'].nil? and
+    !hieraHash['sort']['destination'].nil?
     destination = hieraHash['sort']['destination']
   else
     puts 'No information about destination found.'
@@ -52,7 +64,11 @@ if destination.nil? or destination == ''
 end
 
 # Determine the state of the logging
-if (opt_log.blank? and hieraDefaults['sort']['log'] == true) or
+if (opt_log.blank? and
+    !hieraDefaults.nil? and
+    !hieraDefaults['sort'].nil? and
+    !hieraDefaults['sort']['log'].nil? and
+    hieraDefaults['sort']['log'] == true) or
   opt_log == 'true'
   logenable = true
 elsif opt_log.blank? or opt_log == 'false'
@@ -91,9 +107,12 @@ if logenable
   $logger = Logger.new(logfile)
 end
 
+# Create array of Files to iterate through
+pdfDocuments = File.directory?(inputDir) ? Dir[inputDir.chomp('/') + '/*.pdf'].sort : inputDir.split
+
+
 # Input validation
-!File.exist?(inputDir) ? abort('Input directory does not exist. Abort.'): ''
-File.directory?(inputDir) ? '' : abort('Input is a single file. Not implemented yet. Abort.')
+!File.exist?(inputDir) ? abort('Input does not exist. Abort.'): ''
 File.file?(destination) ? abort("Output '#{destination}' is an existing file. Cannot create directory with the same name. Abort") : ''
 
 if not File.directory?(destination)
@@ -109,7 +128,7 @@ if not File.directory?(destination)
 end
 
 # Iterate through all files
-Dir[inputDir.chomp('/') +  '/*.pdf'].sort.each do |file|
+pdfDocuments.each do |file|
 
   if interactiveAction
     answer = readUserInput("Process '#{file}' ([y]/n): ")
@@ -141,6 +160,8 @@ Dir[inputDir.chomp('/') +  '/*.pdf'].sort.each do |file|
     end
 
     filedestination = destination.chomp('/') + '/' + author + '/' + Pathname.new(file).basename.to_s
+
+    puts filedestination
 
 
     # Final check before touching the filesystem

@@ -19,18 +19,20 @@ if opt_rename == 'true'
   opt_rename = true
 elsif opt_rename == 'false'
   opt_rename = false
-elsif (not hieraDefaults['edit'].nil? and
-       not hieraDefaults['edit']['rename'].nil? and
-       hieraDefaults['edit']['rename'] == true)
+elsif (!hieraDefaults.nil? and
+  !hieraDefaults['edit'].nil? and
+  ! hieraDefaults['edit']['rename'].nil? and
+  hieraDefaults['edit']['rename'] == true)
   opt_rename = true
 else
   opt_rename = false
 end
 
 # Define logging state
-if ( hieraDefaults['edit'].nil? or
-     hieraDefaults['edit']['log'].nil? or
-     not hieraDefaults['edit']['log'] == true ) and
+if (hieraDefaults.nil? or
+  hieraDefaults['edit'].nil? or
+  hieraDefaults['edit']['log'].nil? or
+  !hieraDefaults['edit']['log'] == true ) and
   (opt_log == 'false' or opt_log.blank?)
 
   logenable = false

@@ -2,16 +2,7 @@
 #
 # Test 001
 # Testing Abort when running on a single file
-initTmpDir
-commandparameter = " sort -d #{TMPDIR}/target "
-`#{PDFMD} #{commandparameter} #{TARGETPDF} 2>/dev/null`
-if $?.to_s.match(/.*exit 1/)
-  result = 'OK'
-else
-  result = 'failed'
-end
-$testResults = { '001' => {:result => result, :command => commandparameter }}
-
+# Disabled since single file support in version 1.9.0
 
 # Test 002
 # Testing Sorting on a dir

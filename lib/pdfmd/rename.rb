@@ -1,8 +1,6 @@
 #
 # Thor command 'rename'
 #
-# TODO: Make keywords abbreviations configurable from Hiera
-#
 require_relative '../string_extend'
 
 filename            = ENV.fetch('PDFMD_FILENAME')
@@ -15,24 +13,28 @@ opt_log             = ENV.fetch('PDFMD_LOG')
 opt_logfile         = ENV.fetch('PDFMD_LOGFILE')
 hieraDefaults       = queryHiera('pdfmd::config')
 
-if (opt_log.blank? and not hieraDefaults['rename'].nil? and not hieraDefaults['rename']['log'].nil? and hieraDefaults['rename']['log'] == true) or
-  opt_log == 'false' or
-  opt_log.blank? 
-
+if opt_log == 'false'
   logenable = false
-
-else
-
+elsif opt_log == 'true'
   logenable = true
-
+elsif opt_log.blank? and
+  !hieraDefaults.nil? and
+  !hieraDefaults['rename'].nil? and
+  !hieraDefaults['rename']['log'].nil? and
+   hieraDefaults['rename']['log'] == true
+  logenable = true
+else
+  logenable = true
 end
 
 if logenable
 
   if opt_logfile.blank? and
-    ( hieraDefaults['rename']['logfilepath'].nil? or
-     hieraDefaults['rename']['logfilepath'].blank? or
-     hieraDefaults['rename'].nil? )
+    (
+     !hieraDefaults.nil? and
+     hieraDefaults['rename'].nil? and 
+     (hieraDefaults['rename']['logfile'].nil? or
+     hieraDefaults['rename']['logfile'].blank?))
 
     logfile = Dir.pwd.chomp('/') + '/' + File.basename(ENV['PDFMD'], '.*') + '.log'
 
@@ -46,9 +48,12 @@ if logenable
     logfile = opt_logfile
 
   elsif opt_logfile.blank? and
-    not hieraDefaults['rename']['logfilepath'].blank?
+    !hieraDefaults.nil? and
+    !hieraDefaults['rename'].nil? and
+    !hieraDefaults['rename']['logfile'].nil? and
+    not hieraDefaults['rename']['logfile'].blank?
 
-    logfile = hieraDefaults['rename']['logfilepath']
+    logfile = hieraDefaults['rename']['logfile']
 
   else
 
@@ -77,7 +82,8 @@ end
 if opt_allkeywords == 'true'
   opt_allkeywords = true
 elsif opt_allkeywords.blank? and 
-  not hieraDefaults['rename'].nil? and
+  !hieraDefaults.nil? and
+  !hieraDefaults['rename'].nil? and
   not hieraDefaults['rename']['allkeywords'].nil?
 
   opt_allkeywords = hieraDefaults['rename']['allkeywords']
@@ -93,8 +99,9 @@ end
 # Determine the number of keywords
 # Default value is 3
 if opt_numberKeywords.blank? and
-  not hieraDefaults['rename'].nil? and
-  not hieraDefaults['rename']['keywords'].nil?
+  !hieraDefaults.nil? and
+  !hieraDefaults['rename'].nil? and
+  !hieraDefaults['rename']['keywords'].nil?
 
   opt_numberKeywords = hieraDefaults['rename']['keywords']
 
@@ -112,8 +119,9 @@ end
 #
 # Determine the status of the copy parameter
 if opt_copy.blank? and
-  not hieraDefaults['rename'].nil? and
-  not hieraDefaults['rename']['copy'].nil?
+  !hieraDefaults.nil? and
+  !hieraDefaults['rename'].nil? and
+  !hieraDefaults['rename']['copy'].nil?
 
   opt_copy = hieraDefaults['rename']['copy']
 
@@ -127,6 +135,29 @@ else
 
 end
 
+# Use a default set for the keywords or (if provided) the keywords from hiera
+# The default set is only in english
+if !hieraDefaults.nil? and
+  !hieraDefaults['rename'].nil? and 
+  !hieraDefaults['rename']['keys'].nil? and
+  hieraDefaults['rename']['keys'] != ''
+
+  keymappings = hieraDefaults['rename']['keys']
+
+else
+  keymappings = {
+    'cno' => ['Customer','Customernumber'],
+    'con' => ['Contract'],
+    'inf' => ['Information'],
+    'inv' => ['Invoice', 'Invoicenumber'],
+    'man' => ['Manual'],
+    'off' => ['Offer', 'Offernumber'],
+    'ord' => ['Order', 'Ordernumber'],
+    'rec' => ['Receipt', 'Receiptnumber'],
+    'tic' => ['Ticket'],
+    }
+end
+
 
 date   = metadata['createdate'].gsub(/\ \d{2}\:\d{2}\:\d{2}.*$/,'').gsub(/\:/,'')
 author = metadata['author'].gsub(/\./,'_').gsub(/\&/,'').gsub(/\-/,'').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
@@ -135,129 +166,99 @@ author = I18n.transliterate(author) # Normalising
 
 keywords_preface = ''
 # Determine the document type from the title.
-# Languages: DE|NO|EN
-case metadata['title']
-when /Tilbudt/i
-  doktype = 'til'
-when /Offer/i
-  doktype = 'off'
-when /Angebot/i
-  doktype = 'ang'
-when /Orderbekreftelse/i
-  doktype = 'odb'
-when /faktura/i
-  doktype = 'fak'
-when /invoice/i
-  doktype = 'inv'
-when /rechnung/i
-  doktype = 'rec'
-when /order/i
-  doktype = 'ord'
-when /bestilling/i
-  doktype = 'bes'
-when /(kontrakt|avtale)/i
-  doktype = 'avt'
-when /vertrag/i
-  doktype = 'ver'
-when /contract/i
-  doktype = 'con'
-when /kvittering/i
-  doktype = 'kvi'
-when /manual/i
-  doktype = 'man'
-when /billett/i
-  doktype = 'bil'
-when /ticket/i
-  doktype = 'tik'
-when /(informasjon|information)/i
-  doktype = 'inf'
+
+# Default docment type
+if !hieraDefaults.nil? and
+  !hieraDefaults['rename'].nil? and
+  !hieraDefaults['rename']['defaultdoctype'].nil? and
+  hieraDefaults['rename']['defaultdoctype'].empty?
+
+  doktype = hieraDefaults['rename']['defaultdoctype']
 else
-  doktype = 'dok'
+  doktype = 'doc'
 end
+
+
+## Iterate through the keymappings and try to find a matching doktype
+keymappings.each do |key,value|
+  value.kind_of?(String) ? value = value.split : ''
+  value.each do |keyword|
+    metadata['title'].match(/#{keyword}/i) ? doktype = key : ''
+  end
+end
+
 # Set the preface from the doktype
+# This must be added to the beginning of the hash when generating
+# the filename so it will come first after the doktype
 keywords_preface = setKeywordsPreface(metadata,doktype.gsub(/\-/,''))
 
 if not metadata['keywords'].empty? 
-  keywords_preface == '' ? keywords = '' : keywords = keywords_preface
+  keywords = ''
+  #keywords_preface == '' ? keywords = '' : keywords = keywords_preface
   keywordsarray    = metadata['keywords'].split(',')
 
   #
   # Sort array
   # and replace key-strings with the abbreviations
-  #   in combination with the titel information
-  # I need to make this one better and make it configurable from
-  #   Hiera. But not right now.
-  #
+  #   in combination with the titel information for the filename
+  # BTW: When the value is identical with the title, then it should be 
+  # the first keyword IMHO. TODO
   keywordssorted = Array.new
   keywordsarray.each_with_index do |value,index|
     value = value.lstrip.chomp
+
+   # Replace strings for the filename with abbreviations 
+   keymappings.each do |abbreviation,keyvaluesarray|
+     keyvaluesarray.kind_of?(String) ? keyvaluesarray = keyvaluesarray.split : ''
+     keyvaluesarray.each do |keystring|
+       value = value.gsub(/#{keystring.lstrip.chomp} /i, abbreviation.to_s)
+     end
+   end 
     
-    # Invoices
-    value = value.gsub(/Faktura(nummer)? /i,'fak')
-    value = value.gsub(/Rechnung(snummer)? /i, 'rec')
-    value = value.gsub(/Invoice(number)? /i, 'inv')
-
-    # Customernumbers
-    value = value.gsub(/Kunde(n)?(nummer)? /i,'kdn')
-    value = value.gsub(/Customer(number)? /i, 'cno')
-
-    # Ordernumbers
-    value = value.gsub(/Bestellung(s?nummer)? /i,'bes')
-    value = value.gsub(/(Ordre)(nummer)? /i,'ord')
-    value = value.gsub(/Bestilling(snummer)? /i,'bst')
-
-    # Receiptnumbers
-    value = value.gsub(/(Kvittering)(snummer)? /i,'kvi')
-    value = value.gsub(/Quittung(snummer)? /i,'qui')
-    value = value.gsub(/Receipt(number)? /i, 'rpt')
-
     # Remove special characters from string
     value = value.gsub(/\s|\/|\-|\./,'_')
 
     keywordsarray[index] = value
-    if value.match(/^(fak|rec|inv|cno|kdn|bes|ord|bst|kvi|qui|rpt)/)
+
+    # If the current values matches some of the replacement-abbreviations,
+    # put the keyword on the top of the array to be listed first later on 
+    # in the filename
+    if value.match(/^#{keymappings.keys.join('|')} /i)
       keywordssorted.insert(0, value)
     else
       keywordssorted.push(value)
     end
+
   end
 
-  counter = 0
-  keywordssorted.each_with_index do |value,index|
+  # Insert the document preface in the beginning when it's available
+  if not keywords_preface.empty?
+    keywordssorted.insert(0, keywords_preface) 
+  end
 
-    # Exit condition limits the number of keywords used in the filename
-    # unless all keywords shall be added
-    if not opt_allkeywords
-      counter >= opt_numberKeywords-1 ? break : counter = counter + 1
-    end
-    if value.match(/^(fak|rec|inv|cno|kdn|bes|ord|bst|kvi|qui|rpt)/)
-      keywords == '' ? keywords = '-' + value : keywords = value + '-' + keywords
-    else
-      keywords == '' ? keywords = '-' + value : keywords.concat('-' + value)
-    end
+  # all keywords as a string 
+  if not opt_allkeywords
+    keywords = keywordssorted.values_at(*(0..opt_numberKeywords-1)).join('-')
+  else
+    keywords = keywordssorted.join('-')
   end
 
   # Normalise the keywords as well
-  #
   I18n.enforce_available_locales = false
   keywords = I18n.transliterate(keywords)
 
-  # There are no keywords
-  # Rare, but it happens
 else
 
   # There are no keywords.
   # we are using the title and the subject
-  if keywords_preface != '' 
-    keywords = keywords_preface
-  end
+  keywords_preface != '' ? keywords = keywords_preface : ''
 
 end
+
 extension   = 'pdf'
 if keywords != nil and keywords[0] != '-'
   keywords = '-' + keywords
 end
-keywords == nil ? keywords = '' : ''
 newFilename = date + '-' +
   author + '-' +
   doktype +
@@ -275,7 +276,7 @@ if outputdir
 else
 
   # Try to get the outputdir from hiera
-  outputdir = (not hieraDefaults['rename'].nil? and not hieraDefaults['rename']['outputdir'].nil?) ? hieraDefaults['rename']['outputdir'] : File.dirname(filename)
+  outputdir = (!hieraDefaults.nil? and !hieraDefaults['rename'].nil? and !hieraDefaults['rename']['outputdir'].nil?) ? hieraDefaults['rename']['outputdir'] : File.dirname(filename)
 
 end
 

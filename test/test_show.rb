@@ -1,3 +1,9 @@
+def show_content(actualContent,expectedContent)
+  puts "Expteced: \n #{expectedContent}"
+  puts '---'
+  puts "Got     : \n #{showContent}"
+end
+
 # Standard Show
 # Test 001
 initTmpDir
@@ -13,6 +19,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults = { '001' => {:result => result, :command => commandparameter }}
 
@@ -26,6 +33,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults.store('002', {:result => result, :command => commandparameter })
 
@@ -40,6 +48,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults.store('003', {:result => result, :command => commandparameter })
 
@@ -55,6 +64,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults.store('004', {:result => result, :command => commandparameter })
 
@@ -68,6 +78,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults.store('005', {:result => result, :command => commandparameter })
 
@@ -81,6 +92,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults.store('006', {:result => result, :command => commandparameter })
 
@@ -94,6 +106,7 @@ if showContent == expectedContent
   result = 'OK'
 else
   result = 'failed'
+  show_content(showContent,expectedContent)
 end
 $testResults.store('007', {:result => result, :command => commandparameter })
 

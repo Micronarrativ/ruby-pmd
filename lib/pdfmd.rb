@@ -57,7 +57,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.8.0'
+VERSION = '1.9.0'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')
@@ -166,11 +166,28 @@ class DOC < Thor
   desc 'config', 'Show config defaults'
   long_desc <<-LONGDESC
 
+  Shows the current default configuration as available in Hiera.
+
+  == Usage
+
+  Example: `pdfmd config [<command>]`
+
+
+  == Parameter
+
+  [<commandname>]
+
+  Shows only the default configuration from hiera for the specified command.
+  The command parameter is not case-sensitive.
+
+  Example: `pdfmd config edit`
+
   LONGDESC
   method_option :show, :type => :boolean, :aliases => '-s', :required => false
-  def config
+  def config(subcommand = '')
 
-    ENV['PDFMD_SHOW'] = options[:show].to_s
+    ENV['PDFMD_SHOW']     = options[:show].to_s
+    ENV['PDFMD_COMMAND']  = subcommand
     require_relative('./pdfmd/config.rb')
 
   end
@@ -362,7 +379,7 @@ class DOC < Thor
 
   When using this action a logfile with all actions will be generated in the
   current working directory with the same name as the script and the ending
-  '.log'. This can be disabled with the parameter 'log' if required.
+  '.log'. This can be disabled with the parameter 'log' if required or adjusted to write the logfile to a different location.
 
   If a document does not have an entry in the meta tag 'author', the file will
   not be processed. This can be seen in the output of the logfile as well.
@@ -392,8 +409,6 @@ class DOC < Thor
   \x5 Disable/Enable interactive sorting. This will ask for confirmation for each sorting action.
 
   Default: disabled.
-
-
 
   === Replacement rules
 
@@ -446,6 +461,9 @@ class DOC < Thor
    \x5 3. Copy the files instead of moving them.
    \x5 4. Disable the logging.
    \x5> CLI sort -d /tmp/test -c -l false ./documents
+
+   # Sort only a single file
+   \x5> CLI sort -d /tmp/test -c -l false ./documents/test.pdf
 
   LONGDESC
   method_option :destination, :aliases => '-d', :required => false, :type => :string, :desc => 'Defines the output directory'
@@ -534,6 +552,15 @@ class DOC < Thor
   # Simulate renaming example.pdf according to the metatags (dry-run)
   \x5> CLI rename -n example.pdf
 
+  == Hiera
+
+  There are Hiera settings available, that cannot be addressed by a commandline parameter.
+
+  defaultdoctype: Defines the appreviation for the default document type. This one isused when no other document type could be determined from the metadata-field 'title'. Default value is 'doc'.
+
+  For details on how to set the parameter, see 'pdfmd explain hiera'.
+
+
   == Rules
 
   There are some rules regarding how documents are being renamed
@@ -542,34 +569,40 @@ class DOC < Thor
 
   <yyyymmdd>-<author>-<type>-<additionalInformation>.<extension>
 
-  \x5 # <yyyymmdd>: Year, month and day identival to the meta information in the
-  document.
+  \x5 # <yyyymmdd>: Year, month and day identical to the meta information in the document.
   \x5 # <author>: Author of the document, identical to the meta information
   in the document. Special characters and whitespaces are replaced.
   \x5 # <type>: Document type, is being generated from the title field in the metadata of the document. Document type is a three character abbreviation following the following logic:
 
-  \x5 til => Tilbudt|Angebot
-  \x5 odb => Orderbekreftelse
-  \x5 fak => Faktura
-  \x5 ord => Order
-  \x5 avt => Kontrakt|Avtale|Vertrag|contract
-  \x5 kvi => Kvittering
+  \x5 con => Contract
+  \x5 inv => Invoice
+  \x5 inf => Information
   \x5 man => Manual
-  \x5 bil => Billett|Ticket
-  \x5 inf => Informasjon|Information
-  \x5 dok => unknown
+  \x5 off => Offer
+  \x5 ord => Order
+  \x5 rpt => Receipt
+  \x5 tic => Ticket
 
   If the dokument type can not be determined automatically, it defaults to 'dok'.
+
+  This default behavior got introduced with version 1.8.1 and can be overwritten by hiera.
+  See `pdfmd explain hiera-keys` for information on how to do this.
 
   # <additionalInformation>: Information generated from the metadata fields
   'title', 'subject' and 'keywords'. 
 
-  If 'Title' or 'Keywords' contains one of the following keywords, the will be replaced with the corresponding abbreviation followed by the specified value separated by a whitespace:
+  If 'Title' or 'Keywords' contains one of the following keywords, they will be replaced with the corresponding abbreviation followed by the specified value:
 
-  \x5 fak => Faktura|Fakturanummer|Rechnung|Rechnungsnummer
-  \x5 kdn => Kunde|Kundenummer|Kunde|Kundennummer
-  \x5 ord => Ordre|Ordrenummer|Bestellung|Bestellungsnummer
-  \x5 kvi => Kvittering|Kvitteringsnummer|Quittung|Quittungsnummer
+  \x5 Contract    => con
+  \x5 Invoice     => inv
+  \x5 Information => inf
+  \x5 Manual      => man
+  \x5 Offer       => off 
+  \x5 Order       => ord
+  \x5 Receipt     => rpt
+  \x5 Ticket      => tic
+
+  This setting will be overwritten as well by defining the 'keys' hash in Hiera.
 
   Rule 2: The number of keywords used in the filename is defined by the parameter '-k'. See the section of that parameter for more details and the default value.
 
@@ -625,7 +658,7 @@ class DOC < Thor
     ENV['PDFMD_LOG']            = options[:log].to_s
     ENV['PDFMD_LOGFILE']        = options[:logfile].to_s
     ENV['PDFMD']                = __FILE__
-    require_relative('./pdfmd/rename.rb')
+    require_relative('pdfmd/rename.rb')
 
   end
 

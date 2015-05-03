@@ -6,7 +6,8 @@ Installation:
 $ gem install hiera
 ```
 
-Configure default settings in hiera:
+Configure default settings for pdfmd in hiera:
+
 
   YAML
   ---
@@ -14,16 +15,18 @@ Configure default settings in hiera:
     default:
       password    : secretpassword
     sort:
-      destination : /data/output
       copy        : true
+      destination : /data/output
+      interactive : true
       log         : true
       logfile     : /var/log/pdfmd.log
-      interactive : true
     rename:
       allkeywords : true
+      copy        : true
+      defaultdoctype: doc
       keywords    : 4
       outputdir   : /data/output/sorted
-      copy        : true
     edit:
      rename       : true
+
 

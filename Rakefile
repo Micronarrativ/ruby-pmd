@@ -43,6 +43,30 @@ def initTmpDir
 end
 
 #
+# Build a new version
+#
+desc 'Build new gem file, optionally install it'
+task :build, :arg1 do |t, args|
+
+  args.with_defaults(:arg1 => '')
+
+  installoutput = `gem build pdfmd.gemspec`
+
+  if args[:arg1] == 'install'
+
+    installoutput.each_line do |line|
+
+      if line.match(/File\:\s/)
+        filename = line.split(': ')
+        puts `gem install #{filename[1]}`
+      end
+    end
+
+  end
+
+end
+
+#
 # Testing command 'sort'
 #
 def sort

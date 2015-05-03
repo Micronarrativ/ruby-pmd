@@ -15,11 +15,21 @@ def queryHiera(keyword,facts = 'UNSET')
 
   # If hiera isn't found, return false
   # otherwise return the hash
-  if !system('which hiera > /dev/null 2>&1')
+  if !system('which hiera > /dev/null 2>&1') 
     puts 'Cannot find "hiera" command in $path.'
-    return false
+    return eval('{}')
+  # elsif system('which hiera > /dev/null 2>&1') and
+  #   !File.exists?('/etc/hiera.yaml')
+  #   puts 'here too'
+  #   return eval('{}')
   else
-    return eval(`hiera #{keyword} #{facts}`)
+    commandreturn = ''
+    commandreturn = `hiera #{keyword} #{facts} 2>/dev/null`
+    if $?.exitstatus == 1
+      return eval('{}')
+    else
+      return eval(commandreturn)
+    end
   end
 
 end
@@ -34,7 +44,8 @@ end
 # replaced with underscores
 #
 def setKeywordsPreface(metadata, doktype)
-  if metadata['subject'].match(/^\d+[^+s]+.*/)
+  if metadata['subject'].match(/^\d+[^+s]+.*/) and
+    doktype != 'dok'
     return doktype + metadata['subject']
   else
     subject = metadata['subject']

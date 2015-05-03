@@ -29,6 +29,7 @@ end
 
 # Determine format from Hiera if possible
 if opt_format.nil? and
+  !hieraDefaults.nil? and
   not hieraDefaults['show'].nil? and
   not hieraDefaults['show']['format'].nil? and
   hieraDefaults['show']['format'] != ''
@@ -40,8 +41,9 @@ end
 
 # Determine tags from Hiera if possible
 if optTag.nil? and
-  not hieraDefaults['show'].nil? and
-  not hieraDefaults['show']['tag'].nil? and
+  !hieraDefaults.nil? and
+  !hieraDefaults['show'].nil? and
+  !hieraDefaults['show']['tag'].nil? and
   hieraDefaults['show']['tag'] != ''
 
   optTag = hieraDefaults['show']['tag']

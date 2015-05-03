@@ -1,3 +1,16 @@
+# Version 1.9.0
+- Added explain 'hiera-keys'
+- Added parameter to command 'config'
+- Added single file sort support for command 'sort'
+- Bugfix: Fixed to run commands without Hiera.
+- Bugfix: Logfile parameter was not correctly recognized when renaming.
+- Bugfix: Renaming dry-run ran into an error in developement mode.
+- Key-abbreviations are now configureable from Hiera.
+- Keywords matching the document type will now be listed first in the document name if the subject is meaningful.
+- Simplyfied the renaming command code.
+- Updated Documentation
+- Updated Tests
+
 # Version 1.8.0
 - Added Support for password protected pdf files in command 'show' and 'edit'
 - Cleaned up renaming key-string and added all string for NO,EN an DE language.
