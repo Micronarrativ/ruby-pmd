@@ -18,10 +18,6 @@ def queryHiera(keyword,facts = 'UNSET')
   if !system('which hiera > /dev/null 2>&1') 
     puts 'Cannot find "hiera" command in $path.'
     return eval('{}')
-  # elsif system('which hiera > /dev/null 2>&1') and
-  #   !File.exists?('/etc/hiera.yaml')
-  #   puts 'here too'
-  #   return eval('{}')
   else
     commandreturn = ''
     commandreturn = `hiera #{keyword} #{facts} 2>/dev/null`

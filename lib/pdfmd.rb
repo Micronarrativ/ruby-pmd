@@ -37,6 +37,7 @@
 # * Keywords (optional)
 #
 # TODO: Fix broken PDF files automatically
+# TODO: Implement check that exifdata has been updated
 # TODO: Read this: http://lostechies.com/derickbailey/2011/04/29/writing-a-thor-application/
 # TODO: ... and this: http://blog.paracode.com/2012/05/17/building-your-tools-with-thor/
 # gs \
@@ -57,7 +58,7 @@ require "i18n"
 require 'pathname'
 require 'logger'
 
-VERSION = '1.9.0'
+VERSION = '1.9.1'
 
 # Include general usage methods
 require_relative('pdfmd/methods.rb')

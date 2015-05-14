@@ -1,3 +1,6 @@
+# Version 1.9.1
+- Removed some inactive Code
+
 # Version 1.9.0
 - Added explain 'hiera-keys'
 - Added parameter to command 'config'
