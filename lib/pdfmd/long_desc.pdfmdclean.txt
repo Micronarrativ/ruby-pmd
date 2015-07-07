@@ -1,0 +1,28 @@
+== General
+
+Clean metatags of a PDF document.
+
+== Usage
+
+Example: `pdfmd clean <file>`
+
+
+
+== Parameter
+
+
+  <file>
+
+
+  Path to file to work with.
+
+  
+  --tags, -t <list_of_tags>
+
+  Tags to remove from the file. If no tag is provided, all tags are assumed (all Tags managed by pdfmd, not really all available tags ;) ).
+  Tags are listed as a comma separated string.
+  Additionally the value 'all' is allowed.
+
+  Example: `pdfmd clean -t author,title example.pdf`
+
+

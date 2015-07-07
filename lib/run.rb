@@ -3,7 +3,7 @@ require './pdfmd.rb'
 require './pdfmd/pdfmdstat.rb'
 require "thor"
 
-VERSION = '2.0.0'
+VERSION = '2.1.0'
 NAME    = 'pdfmd'
 
 #
@@ -49,16 +49,47 @@ class DOC < Thor
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Show specific tag(s), comma separated', :required => false
   method_option :format, :type => :string, :aliases => '-f', :desc => 'Define output format', :required => false
   method_option :includepdf, :type => :boolean, :aliases => '-i', :desc => 'Include the filename in output', :required => false
-  def show(filename)
+  def show(*filename)
 
-    pdfdoc           = Pdfmdshow.new filename
-    format           = pdfdoc.determineValidSetting(options[:format], 'show:format')
-    show_filename    = pdfdoc.determineValidSetting(options[:includepdf], 'show:includepdf')
-    show_tags        = pdfdoc.determineValidSetting(options[:tag], 'show:tags')
-    pdfdoc.set_outputformat format
-    pdfdoc.show_filename show_filename
-    pdfdoc.set_tags show_tags
-    puts pdfdoc.show_metatags
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/) ? next : ''
+
+      pdfdoc            = Pdfmdshow.new current_file
+      format            = pdfdoc.determineValidSetting(options[:format], 'show:format')
+      show_filename     = pdfdoc.determineValidSetting(options[:includepdf], 'show:includepdf')
+      show_tags         = pdfdoc.determineValidSetting(options[:tag], 'show:tags')
+      pdfdoc.set_outputformat format
+      pdfdoc.show_filename show_filename
+      pdfdoc.set_tags show_tags
+      puts pdfdoc.show_metatags
+
+      pdfdoc            = ''
+
+    end
+  end
+
+  # Clean all metadata from a document
+  #
+  desc 'clean', 'Clean metadata from file'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdclean.txt'
+  method_option :tags, :aliases => '-t', :type => :string, :required => false
+  def clean(*filename)
+
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/) ? next : ''
+
+      pdfdoc      = Pdfmdclean.new current_file
+      pdfdoc.tags = options[:tags]
+      pdfdoc.run
+
+      # Unset
+      pdfdoc      = ''
+
+    end
   end
 
 
@@ -82,22 +113,32 @@ class DOC < Thor
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Name of the Tag(s) to Edit', :required => true, :lazy_default => 'all'
   method_option :rename, :type => :boolean, :aliases => '-r', :desc => 'Rename file after changing meta-tags', :required => false
   method_option :opendoc, :type => :boolean, :aliases => '-o', :desc => 'Open the PDF document in a separate window.', :required => false, :lazy_default => true
-  def edit(filename)
+  def edit(*filename)
 
-    pdfdoc            = Pdfmdedit.new filename
-    tags              = pdfdoc.determineValidSetting(options[:tag],'edit:tags')
-    pdfdoc.opendoc    = pdfdoc.determineValidSetting(options[:opendoc], 'edit:opendoc')
-    pdfdoc.pdfviewer  = pdfdoc.determineValidSetting(nil, 'edit:pdfviewer')
-    pdfdoc.set_tags tags
-    pdfdoc.update_tags
-    pdfdoc.write_tags filename
+    filename.each do |current_file|
 
-    # If the file shall be renamed at the same time, trigger the other task
-    if pdfdoc.determineValidSetting(options[:rename], 'edit:rename')
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/) ? next : ''
 
-      #rename filename
-      pdfdoc.log('info', 'Running rename command.')
-      rename filename
+      pdfdoc            = Pdfmdedit.new current_file
+      tags              = pdfdoc.determineValidSetting(options[:tag],'edit:tags')
+      pdfdoc.opendoc    = pdfdoc.determineValidSetting(options[:opendoc], 'edit:opendoc')
+      pdfdoc.pdfviewer  = pdfdoc.determineValidSetting(nil, 'edit:pdfviewer')
+      pdfdoc.set_tags tags
+      pdfdoc.update_tags
+      pdfdoc.write_tags current_file
+
+      # If the file shall be renamed at the same time, trigger the other task
+      if pdfdoc.determineValidSetting(options[:rename], 'edit:rename')
+
+        #rename filename
+        pdfdoc.log('info', 'Running rename command.')
+        rename current_file
+
+      end
+
+      # Unset the object
+      pdfdoc = ''
 
     end
 
@@ -200,17 +241,27 @@ class DOC < Thor
   method_option :nrkeywords, :type => :string, :aliases => '-k', :desc => 'Number of keywords to include (Default: 3)', :required => false
   method_option :outputdir, :aliases => '-o', :type => :string, :desc => 'Specify output directory', :required => false
   method_option :copy, :aliases => '-c', :type => :boolean, :desc => 'Copy instead of moving the file when renaming', :lazy_default => true
-  def rename(filename)
+  def rename(*filename)
 
-    pdfdoc                = Pdfmdrename.new filename
-    pdfdoc.dryrun         = pdfdoc.determineValidSetting(options[:dryrun],'rename:dryrun')
-    pdfdoc.allkeywords    = pdfdoc.determineValidSetting(options[:allkeywords],'rename:allkeywords')
-    pdfdoc.outputdir      = pdfdoc.determineValidSetting(options[:outputdir], 'rename:outputdir')
-    if nrkeywords = pdfdoc.determineValidSetting(options[:nrkeywords], 'rename:nrkeywords' )
-      pdfdoc.nrkeywords = nrkeywords
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/) ? next : ''
+
+      pdfdoc                = Pdfmdrename.new current_file
+      pdfdoc.dryrun         = pdfdoc.determineValidSetting(options[:dryrun],'rename:dryrun')
+      pdfdoc.allkeywords    = pdfdoc.determineValidSetting(options[:allkeywords],'rename:allkeywords')
+      pdfdoc.outputdir      = pdfdoc.determineValidSetting(options[:outputdir], 'rename:outputdir')
+      if nrkeywords = pdfdoc.determineValidSetting(options[:nrkeywords], 'rename:nrkeywords' )
+        pdfdoc.nrkeywords = nrkeywords
+      end
+      pdfdoc.copy           = pdfdoc.determineValidSetting(options[:copy], 'rename:copy')
+      pdfdoc.rename
+
+      # Unset
+      pdfdoc                = ''
+
     end
-    pdfdoc.copy           = pdfdoc.determineValidSetting(options[:copy], 'rename:copy')
-    pdfdoc.rename
 
   end
 

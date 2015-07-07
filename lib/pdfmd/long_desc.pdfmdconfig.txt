@@ -31,10 +31,3 @@ Enables/Disables logging.
 
  Default: true
 
-
-
- --logfile, -p
-
-
-Path to the logfile. Default: `./.pdfmd.log`
-  

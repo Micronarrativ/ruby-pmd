@@ -47,6 +47,11 @@ class Pdfmdrename < Pdfmd
     newFilename[:extension] = @fileextension
     newFilename[:outputdir] = get_outputdir(@outputdir)
 
+    # Verify that all data is available for renaming and fail otherwise
+    if !verifyDocumentData(newFilename)
+      abort 'Document metadata not complete. Abort renaming.'
+    end
+
     command = @copy ? 'cp' : 'mv'
 
     filetarget  = get_filename(newFilename)
@@ -71,6 +76,30 @@ class Pdfmdrename < Pdfmd
 
     end
   end
+
+  # 
+  # Data verification
+  # returns false is any metatadag is missing
+  # other than keywords
+  def verifyDocumentData(filedata = {})
+
+    @@default_tags.each do |current_tag|
+
+      if not @@metadata[current_tag].nil? and not @@metadata[current_tag] == ''
+
+        # Skip over keywords (optional tag)
+        current_tag.match(/keywords/) ? next : ''
+
+      else
+
+        return false
+
+      end
+
+    end
+
+  end
+
 
   #
   # Return the filename from the available filedata
@@ -200,7 +229,7 @@ class Pdfmdrename < Pdfmd
     end
 
     if !filedata[:subject].nil? and !filedata[:subject].empty? and
-      !filedata[:doctype] == @defaultDoctype
+      filedata[:doctype] != @defaultDoctype
 
       I18n.transliterate(filedata[:subject])
 
@@ -235,7 +264,7 @@ class Pdfmdrename < Pdfmd
   # Get the author from the metatags and
   # normalize the string
   def get_author()
-    author = @@metadata['author'].gsub(/\./,'_').gsub(/\&/,'').gsub(/\-/,'').gsub(/\s|\//,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
+    author = @@metadata['author'].gsub(/\./,'_').gsub(/\&/,'').gsub(/\-/,'_').gsub(/\s|\//,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
     I18n.enforce_available_locales = false
     I18n.transliterate(author).downcase # Normalising
   end

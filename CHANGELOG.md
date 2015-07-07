@@ -1,3 +1,10 @@
+# Version 2.1.0
+- Added command 'clean' to delete values for Metatags
+- Added multiple file support for commands 'clean', 'edit', 'rename', 'show'
+- Bugfix: Renaming
+- Bugfix: Sorting
+- Added abort when renaming a file with incomplete metadata.
+
 # Version 2.0.0
 - Rewritten the gem using classes.
 - Shorter Code (optimizing)
@@ -16,7 +23,7 @@
 - Added parameter '-r' which shows the revision of the gem.
 - Bug: Renaming files with a '/' in the metadatafield 'author'.
 - Bug: Renaming files with spaces in the metadatafield 'subject'.
-- Collected Todo's in `TODO.mkd`.
+- Collected Todos in `TODO.mkd`.
 
 # Version 1.9.1
 - Removed some inactive Code

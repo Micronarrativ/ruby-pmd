@@ -3,17 +3,11 @@
 ## pdfmd.rb
 * The logfile is a bit annoying. It should be possible to configure the logfile to be placed whereever convenient without creating double log files.
 * Replace system copy command with fileutils.copy.
-* Run commands on multiple PDF documents as one.
-* Method for removing all metadata from a PDF document.
 
 ### Method: _stat_
 * Parameter to ignore differences in upper and lowercase
 * Parameter to disable percentage output
 * Parameter to set output format: json,yaml, hash
-
-## pdfmdrename.rb
-
-* Refuse renaming if values are missing for either: author, title, subject or createdate. Keywords are optional.
 
 ## pdfmdedit.rb
 

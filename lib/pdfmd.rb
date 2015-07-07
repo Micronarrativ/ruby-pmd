@@ -21,6 +21,7 @@ class Pdfmd
   require_relative 'pdfmd/pdfmdrename.rb'
   require_relative 'pdfmd/pdfmdsort.rb'
   require_relative 'pdfmd/string_extend.rb'
+  require_relative 'pdfmd/pdfmdclean.rb'
   require 'logger'
 
   @@default_tags      = ['createdate', 'author', 'title', 'subject', 'keywords']

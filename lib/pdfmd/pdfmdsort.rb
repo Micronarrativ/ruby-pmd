@@ -39,7 +39,7 @@ class Pdfmdsort < Pdfmd
     if not self.check_metatags('author')
       return false
     end
-    author = @@metadata['author'].gsub(/\./,'_').gsub(/\&/,'').gsub(/\-/,'').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
+    author = @@metadata['author'].gsub(/\./,'_').gsub(/\&/,'').gsub(/\-/,'_').gsub(/\s/,'_').gsub(/\,/,'_').gsub(/\_\_/,'_')
     I18n.enforce_available_locales = false
     I18n.transliterate(author).downcase # Normalising
   end
