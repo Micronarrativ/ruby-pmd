@@ -1,0 +1,166 @@
+== General
+
+Command will edit the metadata of a PDF document. Multiple values can be
+specified or 'all'.
+
+The command will invoke an interactive user input and request the values
+for the metatag if no value is provided.
+
+Additionally the file can be renamed at the end according to the new meta
+  tags. See `pdfmd help rename` for details.
+
+== Parameter
+
+--log, -l
+
+Enables/Disables the logging. Default: true
+
+
+
+--logfile, -p
+
+Path to the standard logfile. Default: ./.pdfmd.log
+
+
+
+--tag, -t
+
+Names or list of names of Metatag fields to set, separated by commata.
+
+If a value is provided, the current Value will be replaced by the new value.
+
+This parameter has no sibling in Hiera and needs to be specified on the command line.
+
+
+
+--rename, -r
+
+Rename file after updating the meta tag information according to the fields.
+
+This parameter is identical to running `pdfmd rename <filename>`.
+
+
+
+== Hiera
+
+      --- #YAML</br>
+        pdfmd::config:
+          edit:
+            rename    : true|false
+            log       : true|false
+            logfile   : /var/log/pdfmd.log
+            opendoc   : true|false
+            pdfviewer : evince
+
+
+opendoc:
+
+If set to true the command will try to start a the pdfviewer specified in 'pdfviewer' and display the PDF document while editing. If all values are being specified to the tags (e.g.: 'author:John Doe'), the pdf viewer will not be started. Only if some user interaction is requested.
+
+The PID of the view process started will be automatically killed when the editing of the document has been finished.
+
+There is no aquivalent command line parameter for this.
+
+
+
+pdfviewer:
+
+Command to run the pdf viewer on the system. Default: evince
+
+There is no aquivalent command line parameter for this.
+
+
+
+== General example:
+
+# Edit tag 'TAG' and set a new value interactive.
+
+$ pdfmd edit -t TAG <filename>
+
+# Edit tag 'Author' and set new value interactive.
+
+$ pdfmd edit -t author example.pdf
+
+# Edit multiple Tags and set a new value interactive.
+
+$ pdfmd edit -t tag1,tag2,tag3 <filename>
+
+# Edit multiple Tags and set a new value in batch mode.
+
+$ pdfmd edit -t tag1:'value1',tag2:'value2' <filename>
+
+
+
+
+== Multiple Tags
+
+For setting multiple tags list the tags comma separated.
+
+For setting all tags (Author, Title, Subject, CreateDate, Keywords) use the keyword 'all' as tagname.
+
+# Set tags 'Author', 'Title', 'Subject' in example.pdf interactivly.
+
+$ pdfmd edit -t author,title,subject example.pdf`
+
+# Set tags 'Author', 'Title', 'Subject', 'CreateDate', 'Keywords' in example.pdf interactive:
+
+$ pdfmd edit -t all example.pdf
+
+# Set tags 'Author', 'CreateDate' in example.pdf in batch mode (non-interactive:
+
+pdfmd edit -t author:'Me',createdate:'1970:00:00 01:01:01' example.pdf
+
+pdfmd edit -t author:'Me',Createdate:19700000 example.pdf
+
+
+
+== Tag: CreateDate
+
+In order to enter a value for the 'CreateDate' field, some internal matching is going on in order to make it easier and faster to enter dates and times.
+
+The following formats are identified/matched:
+
+yyyymmdd
+
+yyyymmd
+
+yyyymmddHHMMSS
+
+yyyy-mm-dd HH:MM:SS
+
+yyyy:mm:dd HH:MM:SS
+
+yyyy.mm.dd HH:MM:SS
+
+yyyy-mm-d
+
+yyyy-mm-dd
+
+yyyy.mm.d
+
+yyyy.mm.dd
+
+yyyy:mm:d
+
+yyyy:mm:dd
+
+- If HH:MM:SS or HHMMSS is not provided, those values are automatically set to zero.
+
+- The output format of every timestamp is <yyyy:mm:dd HH:MM:SS>
+
+- When providing and invalid date, the incorrect date is rejected and the user asked to provide the correct date.
+
+
+
+== Rename file
+
+In addition to setting the tags the current file can be renamed according to
+the new metadata.
+
+# Set tag 'Author' and rename file example.pdf
+
+$ pdfmd edit -t author -r example.pdf
+
+See `pdfmd help rename` for details about renaming.
+
+To enable this feature in hiera add the key 'rename' into the section 'edit' with the value 'true'.

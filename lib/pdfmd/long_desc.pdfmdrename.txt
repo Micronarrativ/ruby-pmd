@@ -1,0 +1,206 @@
+== General
+
+Rename a file with the meta tags in the document.
+
+== Parameter
+
+--dry-run, -n
+
+Simulate the renaming process and show the result without changing the file. Default: false
+
+
+
+--dryrun, -n
+
+Simulate what would be done without actually doing it. Default: false
+
+
+
+--allkeywords, -a
+
+Use all keywords from the meta information in the file name and ignore the limit. Default: false
+
+
+
+--nrkeywwords, -k
+
+Set the number of keywords used in the filename to a new value. Default: 3
+
+
+
+--outputdir, -o
+
+Rename the file and move it to the directory defined in '--outputdir'. Default: ./
+
+
+
+--copy, -c
+
+Copy the file instead of moving it to the new name or destination. Default: false
+
+
+
+--log, -l
+
+Enable logging. Default: true
+
+
+
+--logfile, -p
+
+Define logfile path. Default: ./.pdfmd.log
+
+
+
+== Hiera
+
+--- #YAML
+pdfmd::config:
+  rename:
+    dryrun      : true|false
+    allkeywords : true|false
+    outputdir   : /tmp
+    nrkeywords  : 3
+    copy        : true|false
+    log         : true|false
+    logfile     : /var/log/pdfmd.log
+
+
+
+== Example
+
+# Rename the file according to the metatags
+
+$ pdfmd rename <filename>
+
+# Rename example.pdf according to the metatags
+
+$ pdfmd rename example.pdf
+
+# Simulate renaming example.pdf according to the metatags (dry-run)
+$ pdfmd rename -n example.pdf
+
+
+
+== Hiera
+
+There are Hiera settings available, that cannot be addressed by a commandline parameter.
+
+defaultdoctype: Defines the appreviation for the default document type. This one isused when no other document type could be determined from the metadata-field 'title'. Default value is 'doc'.
+
+For details on how to set the parameter, see 'pdfmd explain hiera'.
+
+
+== Rules
+
+There are some rules regarding how documents are being renamed
+
+Rule 1: All documents have the following filenaming structure:
+
+<yyyymmdd>-<author>-<type>-<additionalInformation>.<extension>
+
+# <yyyymmdd>: Year, month and day identical to the meta information in the document.
+
+# <author>: Author of the document, identical to the meta information
+in the document. Special characters and whitespaces are replaced.
+
+# <type>: Document type, is being generated from the title field in the metadata of the document. Document type is a three character abbreviation following the following logic:
+
+con => Contract
+
+inv => Invoice
+
+inf => Information
+
+man => Manual
+
+off => Offer
+
+ord => Order
+
+rpt => Receipt
+
+tic => Ticket
+
+If the dokument type can not be determined automatically, it defaults to 'dok'.
+
+This default behavior got introduced with version 1.8.1 and can be overwritten by hiera.
+See `pdfmd explain hiera-keys` for information on how to do this.
+
+# <additionalInformation>: Information generated from the metadata fields
+'title', 'subject' and 'keywords'. 
+
+If 'Title' or 'Keywords' contains one of the following keywords, they will be replaced with the corresponding abbreviation followed by the specified value:
+
+Contract    => con
+
+Invoice     => inv
+
+Information => inf
+
+Manual      => man
+
+Offer       => off
+
+Order       => ord
+
+Receipt     => rpt
+
+Ticket      => tic
+
+
+This setting will be overwritten as well by defining the 'keys' hash in Hiera.
+
+Rule 2: The number of keywords used in the filename is defined by the parameter '-k'. See the section of that parameter for more details and the default value.
+
+Rule 3: Keywords matching 'kvi','fak','ord','kdn' are prioritised.
+
+Rule 4: Special characters and whitespaces are replaced: 
+
+' ' => '_'
+
+'/' => '_'
+
+Rule 5: The new filename has only lowercase characters.
+
+
+
+== Example (detailed)
+
+# Example PDF with following MetaTags:
+
+Filename   : example.pdf
+
+Author     : John
+
+Subject    : new Product
+
+Title      : Presentation
+
+CreateDate : 1970:01:01 01:00:00
+
+Keywords   : John Doe, Jane Doe, Mister Doe
+
+
+# Renaming the file
+
+$ pdfmd rename example.pdf
+
+example.pdf => 19700101-john-dok-new_product-john_doe-jane_doe.pdf
+
+
+
+# Simulation to rename the file (no actual change)
+
+pdfmd rename -n example.pdf
+
+example.pdf => 19700101-john-dok-new_product-john_doe-jane_doe.pdf
+
+
+
+# Renaming the file with all keywords
+
+$ pdfmd rename -n -a example.pdf
+
+example.pdf => 19700101-john-dok-new_product-john_doe-jane_doe-mister_doe.pdf
+

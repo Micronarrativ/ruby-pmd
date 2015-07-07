@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name                  = 'pdfmd'
-  s.version               = `grep -m 1 VERSION lib/pdfmd.rb | awk -F"'" '{ print $2 '}`
+  s.version               = `grep -m 1 VERSION bin/pdfmd | awk -F"'" '{ print $2 '}`
   s.date                  = Time.now.strftime("%Y-%m-%d").to_s
   s.summary               = "pdfmd - pdf-meta-data management"
   s.description           = <<-EOF
@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
     Sets common tags like 'author', 'createdate', 'title', 'subject' and 'keywords'
     and re-uses them for renaming the file with to a human-readable identifier.
   EOF
-  s.post_install_message  = 'Run `pdfmd` to see the command help.'
+  s.post_install_message  = '. Run `pdfmd` to see the command help.'
   s.authors               = ['Daniel Roos']
   s.email                 = 'pdfmd@micronarrativ.org'
   s.require_paths         = ['lib']
@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.files                 = `git ls-files`.split("\n")
   s.executable            = 'pdfmd'
   s.homepage              = 'https://github.com/Micronarrativ/ruby-pmd'
+  s.metadata              = { 'created' => Time.now.strftime("%Y-%m-%d %H:%M:%S"), 'revision' => Time.now.strftime("%Y%m%d%H%M%S") }
   s.license               = 'MIT'
   s.add_dependency "thor", '~>0.19', '>= 0.19.1'
   s.add_dependency 'highline', '~>1.7', '>= 1.7.1'

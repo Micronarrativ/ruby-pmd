@@ -131,8 +131,6 @@ pdfmd::config:
   sort:
     destination : /data/tmp
     copy        : true
-    log         : true
-    logfilepath : /var/log/pdfmd.log # Needs create/write rights on this file
     interactive : false
   rename:
     #allkeywords : true # Does not make sense in combination with _keywords_
@@ -145,6 +143,8 @@ pdfmd::config:
 ```
 
 Information about which hiera configuration settings are available can be either found in `pdfmd help <command>` or `pdfmd explain hiera`.
+
+**PDFMD** expects currently the hiera configuration file to be at `/etc/hiera.yaml`. With Hiera2 the default location has changed to `/etc/puppetlabs/code/hiera.yaml`. This might be addressed in a future version. Currently you have to create at least a symlink to `/etc/hiera.yaml`.
 
 Test your hiera configuration with
 

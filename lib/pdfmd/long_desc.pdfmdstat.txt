@@ -1,0 +1,23 @@
+Show statistics about the metadata of the PDF documents in a directory.
+
+== Usage
+
+Example: `pdfmd stat <directory>`
+
+
+== Parameter
+
+[<directory>]
+
+Path to the directory containing PDF documents or subdirectories with PDF documents.
+
+Example: `pdfmd stat ~/pdf`
+
+
+--r --recursive
+
+If set to true, pdfmd includes all PDF documents found in subdirectories of <directory> as well.
+
+Default: false
+
+

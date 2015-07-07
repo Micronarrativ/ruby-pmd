@@ -1,0 +1,111 @@
+== General
+
+Will sort pdf documents into subdirectories according to the value of the meta-tag 'author'.
+
+If a document does not have an entry in the meta tag 'author', the file will not be processed.
+
+=== Parameter
+
+--destination, -d
+
+Speficy the root output directory to where the folderstructure is being created.
+
+This parameter is required if hiera is not configured.
+
+The command line parameter overwrites the hiera defaults
+
+Default: current working directory.
+
+
+
+--dryrun, -n
+
+If set to true the command will perform all actions as usual but without actually doing anything. Logentries will be prefaced with 'DRYRUN: ' for all simulated actions. Default: false
+
+
+
+--copy, -c
+
+Copy the files instead of moving them. Default: false
+
+
+
+--log, -l
+
+Disable/Enable the logging. Default: true
+
+
+
+--logfile, -p
+
+Set an alternate path for the logfile. If no path is chosen, the logfile gets created in the current working directory as `.pdfmd.log`.
+
+
+
+--interactive, -i
+
+Disable/Enable interactive sorting. This will ask for confirmation for each sorting action. Default: false
+
+
+
+--overwrite, -o
+
+If set to 'true' the command will overwrite any existing file at the target destination with the same name without asking. Default: false
+
+
+
+=== Replacement rules
+
+The subdirectories for the documents are generated from the values in the
+tag 'author' of each document.
+
+In order to ensure a clean directory structure, there are certain rules
+for altering the values.
+
+1. Whitespaces are replaced by underscores.
+
+2. Dots are replaced by underscores.
+
+3. All letters are converted to their lowercase version.
+
+4. Special characters are serialized.
+
+
+
+=== Hiera
+
+Set the default values mentioned below as sub-hash of the main configuration:
+
+--- #YAML
+pdfmd::config:
+  sort:
+    copy        : true|false
+    destination : /tmp
+    dryrun      : true|false
+    interactive : true|false
+    log         : true|false
+    logfile     : /var/log/pdfmd.log
+    overwrite   : true|false
+
+See the README file for an example how to define the values in Hiera or run `pdfmd explain hiera`.
+
+
+
+=== Example
+
+This command does the following:
+
+1. Take all pdf documents in the subdirectory ./documents.
+
+2. Create the output folder structure in `/tmp/test/`.
+
+3. Copy the files instead of moving them.
+
+4. Disable the logging.
+
+$ pdfmd sort -d /tmp/test -c -l false ./documents
+
+# Sort only a single file
+
+$ pdfmd sort -d /tmp/test -c -l false ./documents/test.pdf
+

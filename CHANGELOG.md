@@ -1,3 +1,23 @@
+# Version 2.0.0
+- Rewritten the gem using classes.
+- Shorter Code (optimizing)
+- Introduced a log-level in hiera
+- Set default log-file to current working directory.
+- Command 'rename': Parameter 'keywords' changed to 'nrkeywords'.
+- Command 'rename': Checking if filename is unchanged and avoiding error message from system now.
+- Command 'edit': Order of input values when changing all tags has been changed.
+- Command 'edit': Replaced Tag separator '=' with ':'. See `pdfmd help edit` for details.
+- Command 'sort': Added parameter 'overwrite'. See `pdfmd help sort` for details.
+- Command 'edit': Added Hiera parameter 'opendoc' and 'pdfviewer'.
+- Command 'stat': Added command to show some primitive statistics for a directory.
+- Defaults for the Thor commands have mostly changed. No defaults there anymore, but in the class itself.
+- Longer help texts take out into separate files for more structured code.
+- Changed multiple log messages in all commands.
+- Added parameter '-r' which shows the revision of the gem.
+- Bug: Renaming files with a '/' in the metadatafield 'author'.
+- Bug: Renaming files with spaces in the metadatafield 'subject'.
+- Collected Todo's in `TODO.mkd`.
+
 # Version 1.9.1
 - Removed some inactive Code
 
@@ -17,7 +37,7 @@
 # Version 1.8.0
 - Added Support for password protected pdf files in command 'show' and 'edit'
 - Cleaned up renaming key-string and added all string for NO,EN an DE language.
-- Cleaned the output of `pdfmd config`. 
+- Cleaned the output of `pdfmd config`.
 - Removed some TODOs
 - Bugfix in the rename command
 - Updated Tests
@@ -100,7 +120,7 @@
 
 # Version 1.3
 - Small bugfix about special characters in filenames (author).
-- Bugfix for the tag 'createdate' written as 'CreateDate' which did not 
+- Bugfix for the tag 'createdate' written as 'CreateDate' which did not
   take the date then.
 - Removed inactive code.
 - Added paramter 'version'

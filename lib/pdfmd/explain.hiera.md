@@ -2,9 +2,11 @@ Information about hiera: https://docs.puppetlabs.com/hiera/1/index.html
 
 Installation:
 
-``` 
+```
 $ gem install hiera
 ```
+
+This is a list of all available hiera settings.
 
 Configure default settings for pdfmd in hiera:
 
@@ -14,6 +16,7 @@ Configure default settings for pdfmd in hiera:
   pdfmd::config:
     default:
       password    : secretpassword
+      loglevel    : info|warn|error|debug
     sort:
       copy        : true
       destination : /data/output
@@ -26,7 +29,25 @@ Configure default settings for pdfmd in hiera:
       defaultdoctype: doc
       keywords    : 4
       outputdir   : /data/output/sorted
+      log         : true
+      logfile     : /var/log/pdfmd.log
+    rename:
+      allkeywords : true
+      copy        : true
+      defaultdoctype: doc
+      keywords    : 4
+      outputdir   : /data/output/sorted
+      log         : true
+      logfile     : /var/log/pdfmd.log
+    rename:
+      allkeywords : true
+      copy        : true
+      defaultdoctype: doc
+      keywords    : 4
+      outputdir   : /data/output/sorted
     edit:
-     rename       : true
-
-
+      rename      : true
+      opendoc     : true
+      pdfviewer   : evince
+      log         : true
+      logfile     : /var/log/pdfmd.log
