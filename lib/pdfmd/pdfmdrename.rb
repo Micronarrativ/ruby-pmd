@@ -85,10 +85,10 @@ class Pdfmdrename < Pdfmd
 
     @@default_tags.each do |current_tag|
 
-      if not @@metadata[current_tag].nil? and not @@metadata[current_tag] == ''
+      # Skip over keywords (optional tag)
+      current_tag.match(/keywords/) ? next : ''
 
-        # Skip over keywords (optional tag)
-        current_tag.match(/keywords/) ? next : ''
+      if not @@metadata[current_tag].nil? and not @@metadata[current_tag] == ''
 
       else
 

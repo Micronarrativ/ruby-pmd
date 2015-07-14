@@ -1,3 +1,6 @@
+# Version 2.1.1
+- Bugfix: Renaming and Keyword Check
+
 # Version 2.1.0
 - Added command 'clean' to delete values for Metatags
 - Added multiple file support for commands 'clean', 'edit', 'rename', 'show'
