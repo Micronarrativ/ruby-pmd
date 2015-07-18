@@ -174,7 +174,7 @@ class Pdfmdrename < Pdfmd
         end
 
         # Remove special characters from string
-        keywordsarray[index] = value.gsub(/\s|\/|\-|\./,'_')
+        keywordsarray[index] = value.gsub(/\s|\/|\-|\./,'_').gsub(/_+/,'_')
 
         # If the current value matches some of the replacement abbreviations,
         # put the value at index 0 in the array. It will then be listed earlier in the filename.

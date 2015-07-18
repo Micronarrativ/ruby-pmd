@@ -3,7 +3,7 @@ require './pdfmd.rb'
 require './pdfmd/pdfmdstat.rb'
 require "thor"
 
-VERSION = '2.1.1'
+VERSION = '2.1.2'
 NAME    = 'pdfmd'
 
 #

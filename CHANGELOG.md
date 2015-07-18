@@ -1,3 +1,6 @@
+# Version 2.1.2
+- Bugfix: Removed double occurence of '__' in keywords.
+
 # Version 2.1.1
 - Bugfix: Renaming and Keyword Check
 
