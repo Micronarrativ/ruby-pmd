@@ -1,3 +1,6 @@
+# Version 2.1.3
+- Bugfix: #1, Hyphen in Author tag
+
 # Version 2.1.2
 - Bugfix: Removed double occurence of '__' in keywords.
 

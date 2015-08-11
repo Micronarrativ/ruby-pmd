@@ -185,7 +185,7 @@ class Pdfmdedit < Pdfmd
 
     commandparameter = '-overwrite_original'
     @@metadata.each do |key,value|
-      commandparameter = commandparameter + " -#{key}='#{value}'"
+      commandparameter = commandparameter + " -#{key}=\"#{value}\""
     end
 
     if !@@documentPassword.to_s.empty?
