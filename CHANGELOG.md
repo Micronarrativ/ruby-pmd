@@ -1,3 +1,6 @@
+# Version 2.1.4
+- Bugfix: #2, trailing underscore in Author tag
+
 # Version 2.1.3
 - Bugfix: #1, Hyphen in Author tag
 
