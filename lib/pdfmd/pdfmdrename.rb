@@ -39,10 +39,10 @@ class Pdfmdrename < Pdfmd
     # Build new filename elements
     newFilename             = Hash.new
     newFilename[:date]      = @@metadata['createdate'].gsub(/\ \d{2}\:\d{2}\:\d{2}.*$/,'').gsub(/\:/,'')
-    newFilename[:author]    = get_author().gsub(/\'/,'').gsub(/\_$/, '') # Remove Hyphens as well
+    newFilename[:author]    = get_author().gsub(/\'/,'').gsub(/\_$/, '')
     newFilename[:doctype]   = get_doctype()
     newFilename[:title]     = @@metadata['title'].downcase
-    newFilename[:subject]   = @@metadata['subject'].downcase.gsub(/(\s|\-|\.|\&|\%)/,'_')
+    newFilename[:subject]   = @@metadata['subject'].downcase.gsub(/(\s|\-|\.|\&|\%|\,)/,'_').gsub(/\_+/, '_')
     newFilename[:keywords]  = get_keywords(get_keywordsPreface(newFilename))
     newFilename[:extension] = @fileextension
     newFilename[:outputdir] = get_outputdir(@outputdir)

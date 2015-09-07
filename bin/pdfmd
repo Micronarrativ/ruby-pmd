@@ -7,7 +7,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.1.4'
+VERSION = '2.1.5'
 NAME    = 'pdfmd'
 
 #
