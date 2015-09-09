@@ -6,6 +6,15 @@ Hidden deep in the directory structure of my disks I can quickly find the
 documents I need with a quick `find /document/path -type f -iname
 '*<keyword>*'` which matches some string in the filename.
 
+## Workflow
+![Workflow](./img/workflow_500.png) My workflow is as follow:   
+A) Scan the document. I use a small script for this to scan in color, black-white or grayscale. Generally all scans are black-white/300dpi. Documents with  handwriting on them end up in grayscale and rarely i use color scans.  
+  Documents end up as two-sided if there's a two sided print on it, otherwise not.
+B) The scanned document is saved as pdf document, no caring about the naming.
+C) That is where `pdfmd` comes in. Using `pdfmd` metadata is asked from me to provide. While going through the interactive menu, the document is opened, so it's easier for me to see which document I am working on.
+D) The pdf document is updated with the metadata and automatically renamed according to a general naming scheme. That way the document gets uniq and is easy to find on the filesystem level.
+E) The document gets automatically sorted away into a folder structure somewhere else on the system.
+
 # Requirements
 
 Although the requirements are listed in the script itself as well (header documentation!), here they are again:
@@ -154,3 +163,5 @@ $ hiera pdfmd::config
 
 If you have improvements and suggestions -> let me know.
 If you can help me writing tests for this, please let me know as well.
+
+Icons and symbols from [www.opensymbols.org](http://www.opensymbols.org).
