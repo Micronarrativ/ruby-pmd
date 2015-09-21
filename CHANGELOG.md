@@ -1,3 +1,6 @@
+# Version 2.1.6
+- Modified command `sort` to also support shell file extension.
+
 # Version 2.1.5
 - Bugfix: #3, Kommata in Subject field showing up in the filename, Removing double underscore
 

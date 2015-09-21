@@ -7,7 +7,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.1.5'
+VERSION = '2.1.6'
 NAME    = 'pdfmd'
 
 #
@@ -207,30 +207,35 @@ method_option :copy, :aliases => '-c', :required => false, :type => :boolean, :d
 method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sorting'
 method_option :overwrite, :alises => '-o', :required => false, :type => :boolean, :desc => 'Enable/Disable file overwrite.', :lazy_default => true
 method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something'
-def sort(input)
+def sort(*input)
 
-  if File.file?(input)
-    pdfdoc              = Pdfmdsort.new input
-    pdfdoc.copy         = pdfdoc.determineValidSetting(options[:copy], 'sort:copy')
-    pdfdoc.interactive  = pdfdoc.determineValidSetting(options[:interactive], 'sort:interactive')
-    pdfdoc.destination  = pdfdoc.determineValidSetting(options[:destination], 'sort:destination')
-    pdfdoc.overwrite    = pdfdoc.determineValidSetting(options[:overwrite], 'sort:overwrite')
-    pdfdoc.dryrun       = pdfdoc.determineValidSetting(options[:dryrun], 'sort:dryrun')
-    pdfdoc.sort
-  else
-
-    # Run the actions for all files
-    Dir.glob(input.chomp + '/*.pdf').each do |filename|
-      pdfdoc              = Pdfmdsort.new filename
+  input.each do |file|
+  
+    if File.file?(file)
+      pdfdoc              = Pdfmdsort.new file
       pdfdoc.copy         = pdfdoc.determineValidSetting(options[:copy], 'sort:copy')
       pdfdoc.interactive  = pdfdoc.determineValidSetting(options[:interactive], 'sort:interactive')
       pdfdoc.destination  = pdfdoc.determineValidSetting(options[:destination], 'sort:destination')
       pdfdoc.overwrite    = pdfdoc.determineValidSetting(options[:overwrite], 'sort:overwrite')
       pdfdoc.dryrun       = pdfdoc.determineValidSetting(options[:dryrun], 'sort:dryrun')
       pdfdoc.sort
+
+    else
+
+      # Run the actions for all files
+      Dir.glob(input.chomp + '/*.pdf').each do |filename|
+        pdfdoc              = Pdfmdsort.new filename
+        pdfdoc.copy         = pdfdoc.determineValidSetting(options[:copy], 'sort:copy')
+        pdfdoc.interactive  = pdfdoc.determineValidSetting(options[:interactive], 'sort:interactive')
+        pdfdoc.destination  = pdfdoc.determineValidSetting(options[:destination], 'sort:destination')
+        pdfdoc.overwrite    = pdfdoc.determineValidSetting(options[:overwrite], 'sort:overwrite')
+        pdfdoc.dryrun       = pdfdoc.determineValidSetting(options[:dryrun], 'sort:dryrun')
+        pdfdoc.sort
+      end
+
     end
 
-  end
+  end # End of input array loop
 
 end
 
