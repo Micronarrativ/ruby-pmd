@@ -12,6 +12,7 @@ when ''
   puts '- keywords'
   puts '- subject'
   puts '- title'
+  puts '- typo'
   puts ' '
   puts "Run `$ #{pdfmd} explain <subject>` to get more details."
 else

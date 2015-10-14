@@ -1,3 +1,6 @@
+# Version 2.2.0
+- Adding parameter 'typo' to command `sort`.
+
 # Version 2.1.6
 - Modified command `sort` to also support shell file extension.
 

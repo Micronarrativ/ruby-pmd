@@ -54,6 +54,12 @@ If set to 'true' the command will overwrite any existing file at the target dest
 
 
 
+--typo, -t
+
+If set to 'true' (or set at all) similar sub-directories in the sorting target directory will be reported before a new folder is being created. Similar sub-directories can be caused by typos in the author field for the document. 
+
+
+
 === Replacement rules
 
 The subdirectories for the documents are generated from the values in the

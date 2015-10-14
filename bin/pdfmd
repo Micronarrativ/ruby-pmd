@@ -7,7 +7,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.1.6'
+VERSION = '2.2.0'
 NAME    = 'pdfmd'
 
 #
@@ -207,6 +207,7 @@ method_option :copy, :aliases => '-c', :required => false, :type => :boolean, :d
 method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sorting'
 method_option :overwrite, :alises => '-o', :required => false, :type => :boolean, :desc => 'Enable/Disable file overwrite.', :lazy_default => true
 method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something'
+method_option :typo, :aliases => '-t', :required => false, :type => :boolean, :desc => 'Try to find typos before sorting into folders.', :lazy_default => true
 def sort(*input)
 
   input.each do |file|
@@ -218,6 +219,7 @@ def sort(*input)
       pdfdoc.destination  = pdfdoc.determineValidSetting(options[:destination], 'sort:destination')
       pdfdoc.overwrite    = pdfdoc.determineValidSetting(options[:overwrite], 'sort:overwrite')
       pdfdoc.dryrun       = pdfdoc.determineValidSetting(options[:dryrun], 'sort:dryrun')
+      pdfdoc.typo         = pdfdoc.determineValidSetting(options[:typo], 'sort:typo')
       pdfdoc.sort
 
     else

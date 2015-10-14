@@ -3,16 +3,20 @@
 # TODO: Author values with a slave One/two should be sorted into one/two/yyyymmdd-one_to-xxx.pdf
 class Pdfmdsort < Pdfmd
 
-  attr_accessor :filename, :dryrun, :copy, :interactive, :destination, :overwrite
+  require 'fuzzystringmatch'
+
+  attr_accessor :filename, :dryrun, :copy, :interactive, :destination, :overwrite, :typo
 
   # Initialize
   def initialize(input)
       super input
-      @destination  = '.'
-      @interactive  = false
-      @copy         = false
-      @dryrun       = false
-      @overwrite    = false
+      @stringSimBorder = 0.8  # Defines the value of the typo check
+      @destination     = '.'
+      @interactive     = false
+      @copy            = false
+      @dryrun          = false
+      @overwrite       = false
+      @typo            = false
   end
 
 
@@ -44,6 +48,30 @@ class Pdfmdsort < Pdfmd
     I18n.transliterate(author).downcase # Normalising
   end
 
+  # Method compares string from 'targetdir' with all subfolders in the targetdir
+  #   in order to find similarities in writing.
+  def findSimilarTargetdir( targetdir )
+
+    self.log('debug', "Running method 'findSimilarTarget' with parameter '#{targetdir}'.")
+
+    fuzzy       = FuzzyStringMatch::JaroWinkler.create( :native )
+    returnValue = false
+
+    # Get all subfolders 
+    subDirectories = Dir[@destination + '/*']
+    subDirectories.each do |fullPathFolder|
+       stringSimilarity = fuzzy.getDistance( 
+         fullPathFolder.gsub(@destination + '/', ''),
+         targetdir.gsub(@destination + '/', '')
+         )
+       if stringSimilarity > @stringSimBorder
+         self.log('debug', "findSimilarTargetdir: Found String value #{stringSimilarity.to_s} for target '#{fullPathFolder}'.")
+         returnValue = fullPathFolder
+       end
+    end
+    returnValue
+  end
+
 
   #
   # Sort the file away
@@ -69,13 +97,34 @@ class Pdfmdsort < Pdfmd
       targetdir   = @destination.chomp + '/' + author
       targetfile  = targetdir + '/' + Pathname.new(@filename).basename.to_s
 
-      # Create the target dir if not existing.
+      # Create the target directory, if it does not exist yet.
       if !File.exists? targetdir
+
+        # Check for similiar directory names which might indicate a typo in the
+        #   current directory name.
+        if @typo and foundDir = self.findSimilarTargetdir(targetdir)
+
+          self.log('info', "Similar target found ('" + foundDir + "'). Request user input.")
+          puts 'Similar target directory detected:'
+          puts 'Found : ' + foundDir
+          puts 'Target: ' + targetdir
+          while answer = readUserInput('Abort? ([y]/n): ')
+            if answer.match(/(y|yes|j|ja|^$)/i)
+              self.log('info','User chose to abort sorting.')
+              puts 'Abort.'
+              exit 0
+            elsif answer.match(/(n|no)/i)
+              self.log('info', 'User chose to continue sorting.')
+              break
+            end
+          end
+        end
+
         if @dryrun
           self.log('info', "Dryrun: Created Directory '#{targetdir}'.")
         else
           self.log('info', "Created directory '#{targetdir}'.")
-          puts targetdir
+          puts 'Created: ' + targetdir
           FileUtils.mkdir_p(targetdir)
         end
       end
