@@ -5,22 +5,21 @@ class Pdfmdsort < Pdfmd
 
   require 'fuzzystringmatch'
 
-  attr_accessor :filename, :dryrun, :copy, :interactive, :destination, :overwrite, :typo
+  attr_accessor :filename, :dryrun, :copy, :interactive, :destination, :overwrite, :typo, :dest_create
 
   # Initialize
   def initialize(input)
       super input
-      @stringSimBorder = 0.8  # Defines the value of the typo check
-      @destination     = '.'
-      @interactive     = false
-      @copy            = false
-      @dryrun          = false
-      @overwrite       = false
-      @typo            = false
+      @stringSimBorder   = 0.8   # Defines the value of the typo check
+      @destination       = '.'   # Sorting Base directory
+      @interactive       = false # Switch for interactive Sorting
+      @copy              = false # Switch for copy instead of moving
+      @dryrun            = false # Switch for dry-run process
+      @overwrite         = false # Switch for overwrite existing files
+      @typo              = false # Switch for detecting Author typos
+      @destinationCreate = false # Switch to create the base directory if missing
   end
 
-
-  #
   # Check if the destination is valid
   def checkDestination
 
@@ -28,10 +27,31 @@ class Pdfmdsort < Pdfmd
 
     if File.file?(@destination)
       log('error', "Destination '#{@destination}' is a file.")
-      false
+      puts "Abort. Destination '#{@destination}' is a file."
+      exit 1
+    end
+
+    # Create destination if switch is 'true'
+    if @dest_create
+
+      if @dryrun and !File.directory?(@destination)
+        log('info', "Dryrun: Folder '#{@destination}' created.")
+      elsif !File.directory?(@destination)
+        FileUtils.mkdir_p(@destination)
+        log('info', "Folder '#{@destination}' created.")
+      end
+
     else
+      log('debug', "Destination not created")
+    end
+
+    if File.directory?(@destination)
       log('debug', "Destination '#{@destination}' as directory confirmed.")
       true
+    else
+      log('error', "Destination '#{@destination}' as directory not confirmed.")
+      puts "Abort. Destination '#{@destination}' not available!"
+      exit 1
     end
 
   end

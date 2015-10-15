@@ -7,7 +7,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.2.0'
+VERSION = '2.3.0'
 NAME    = 'pdfmd'
 
 #
@@ -220,6 +220,7 @@ def sort(*input)
       pdfdoc.overwrite    = pdfdoc.determineValidSetting(options[:overwrite], 'sort:overwrite')
       pdfdoc.dryrun       = pdfdoc.determineValidSetting(options[:dryrun], 'sort:dryrun')
       pdfdoc.typo         = pdfdoc.determineValidSetting(options[:typo], 'sort:typo')
+      pdfdoc.dest_create  = pdfdoc.determineValidSetting('', 'sort:dest_create')
       pdfdoc.sort
 
     else

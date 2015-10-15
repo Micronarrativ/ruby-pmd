@@ -1,3 +1,6 @@
+# Version 2.3.0
+- Adding hiera parameter 'dest_create' to command `sort`.
+
 # Version 2.2.0
 - Adding parameter 'typo' to command `sort`.
 

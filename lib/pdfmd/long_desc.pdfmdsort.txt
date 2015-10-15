@@ -4,7 +4,7 @@ Will sort pdf documents into subdirectories according to the value of the meta-t
 
 If a document does not have an entry in the meta tag 'author', the file will not be processed.
 
-=== Parameter
+=== Parameter (commandline)
 
 --destination, -d
 
@@ -58,6 +58,11 @@ If set to 'true' the command will overwrite any existing file at the target dest
 
 If set to 'true' (or set at all) similar sub-directories in the sorting target directory will be reported before a new folder is being created. Similar sub-directories can be caused by typos in the author field for the document. 
 
+=== Parameter (hiera)
+
+dest_create
+
+if set to true, this will create a the destination directory if missing. If not set and the destination directory is not existing, the program will abort.
 
 
 === Replacement rules
@@ -87,14 +92,15 @@ pdfmd::config:
   sort:
     copy        : true|false
     destination : /tmp
+    dest_create : true|false
     dryrun      : true|false
     interactive : true|false
     log         : true|false
     logfile     : /var/log/pdfmd.log
     overwrite   : true|false
-
+    typo        : true|false
+    
 See the README file for an example how to define the values in Hiera or run `pdfmd explain hiera`.
-
 
 
 === Example
