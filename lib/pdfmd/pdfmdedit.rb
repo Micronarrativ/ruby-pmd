@@ -18,7 +18,7 @@ class Pdfmdedit < Pdfmd
   def start_viewer(filename = '', viewer = '')
     if File.exists?(filename) and !viewer.empty?
 
-      pid = IO.popen("#{viewer} #{filename}")
+      pid = IO.popen("#{viewer} '#{filename}' 2>&1")
       self.log('debug', "Application '#{viewer}' with PID #{pid.pid} started to show file '#{filename}'.")
       pid.pid
 
@@ -114,15 +114,33 @@ class Pdfmdedit < Pdfmd
             end
 
         puts 'Changing ' + key.capitalize + ', current value: ' + @@metadata[key].to_s
+
+        # Save the current value
+        current_value = @@metadata[key]
+
+        # Validate Check for date input
         if key.downcase == 'createdate'
 
           # Repeat asking for a valid date
           validatedDate = false
           while !validatedDate
-            validatedDate = validateDate(readUserInput('New date value: '))
-          end
-          @@metadata[key] = validatedDate
+            userInput = readUserInput('New date value: ')
 
+            if userInput.empty? and !current_value.empty?
+              @@metadata[key] = current_value
+              self.log('debug', "User decided to take over old value for #{key}.")
+              puts 'Date is needed. Setting old value: ' + current_value
+              break
+            end
+
+            # Update loop condition variable
+            validatedDate = validateDate(userInput)
+
+            # Update Metadata
+            @@metadata[key] = validatedDate
+          end
+
+        # Input of all other values
         else
 
           @@metadata[key] = readUserInput('New value: ')

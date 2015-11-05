@@ -1,3 +1,9 @@
+# Version 2.3.1
+- Fixing log typos.
+- Fixing Issue #4, 'Input files with spaces in filename'.
+- Suppressing errors from the PDF viewer.
+- Setting old document date when no date is provided by user.
+
 # Version 2.3.0
 - Adding hiera parameter 'dest_create' to command `sort`.
 

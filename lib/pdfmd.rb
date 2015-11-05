@@ -117,8 +117,8 @@ class Pdfmd
     end
 
     if not File.file?(filename)
-      self.log('error', "Cannog access file '#{filename}'.")
-      puts "Cannot access file '#{filename}'. Abort"
+      self.log('error', "Cannot access file '#{filename}'.")
+      puts "Cannot access file for reading metatags '#{filename}'. Abort"
       abort
     end
 

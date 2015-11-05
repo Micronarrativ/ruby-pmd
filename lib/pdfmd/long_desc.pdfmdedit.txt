@@ -150,6 +150,8 @@ yyyy:mm:dd
 
 - When providing and invalid date, the incorrect date is rejected and the user asked to provide the correct date.
 
+- When no date is provided, the current date value is used. It is not possible to empty the date value field.
+
 
 
 == Rename file
