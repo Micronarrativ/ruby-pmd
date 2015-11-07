@@ -159,6 +159,24 @@ Test your hiera configuration with
 $ hiera pdfmd::config
 ``` 
 
+# Errors
+
+## Cc1plus: Execvp:
+
+On Debian systems occasionally this wild error appears when sorting:
+
+``` 
+gcc: error trying to exec 'cc1plus': execvp: No such file or directory
+error: command 'gcc' failed with exit status 1
+``` 
+
+**Solution:** Check if the package *g++* is installed:
+
+``` 
+$ sudo aptitude install g++
+``` 
+
+
 # Contact
 
 If you have improvements and suggestions -> let me know.
