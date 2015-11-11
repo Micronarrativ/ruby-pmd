@@ -176,6 +176,27 @@ error: command 'gcc' failed with exit status 1
 $ sudo aptitude install g++
 ``` 
 
+# Example
+
+This example renames the a document `example.pdf` after fetching the metadata
+required to build up the uniq filename.  
+The renaming option is set in *hiera* and automatically applied.
+
+``` 
+$ pdfmd edit -t all example.pdf 
+Changing Createdate, current value: 2015:11:11 06:49:24+01:00
+New date value: 20150101120000
+Changing Author, current value: 
+New value: Daniel Roos
+Changing Title, current value: 
+New value: Document
+Changing Subject, current value: 
+New value: Example
+Changing Keywords, current value: 
+New value: Test file
+$ ls *.pdf
+20150101-daniel_roos-doc-document_example-test_file.pdf
+``` 
 
 # Contact
 
