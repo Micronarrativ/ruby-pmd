@@ -104,14 +104,14 @@ class Pdfmdedit < Pdfmd
     @@edit_tags.each do |key,value|
       if value.empty?
 
-            # At this poing:
-            # 1. If @opendoc
-            # 2. viewerPID.empty? (no viewer stated)
-            # => Start the viewer
-            if @opendoc and viewerPID.to_s.empty?
-              viewerPID = start_viewer(@filename, @pdfviewer)
-              self.log('debug', "Started external viewer '#{@pdfviewer}' with file '#{@filename}' and PID: #{viewerPID}")
-            end
+        # At this poing:
+        # 1. If @opendoc
+        # 2. viewerPID.empty? (no viewer stated)
+        # => Start the viewer
+        if @opendoc and viewerPID.to_s.empty?
+          viewerPID = start_viewer(@filename, @pdfviewer)
+          self.log('debug', "Started external viewer '#{@pdfviewer}' with file '#{@filename}' and PID: #{viewerPID}")
+        end
 
         puts 'Changing ' + key.capitalize + ', current value: ' + @@metadata[key].to_s
 
@@ -140,7 +140,7 @@ class Pdfmdedit < Pdfmd
             @@metadata[key] = validatedDate
           end
 
-        # Input of all other values
+          # Input of all other values
         else
 
           @@metadata[key] = readUserInput('New value: ')

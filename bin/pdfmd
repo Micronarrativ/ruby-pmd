@@ -23,15 +23,15 @@ def readLongDesc(filename)
 
   longDescContent = ''
   paths.each do |value|
-    if File.exists?(value + '/' + filename)
 
+    if File.exists?(value + '/' + filename)
       File.open(value + '/' + filename, 'r') do |infile|
         while (line = infile.gets)
           longDescContent = longDescContent + line
         end
       end
-
     end
+
   end
 
   longDescContent
