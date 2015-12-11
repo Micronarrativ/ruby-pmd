@@ -1,3 +1,6 @@
+# Version 2.3.2
+- Fixing automatic close of the pdf viewer.
+
 # Version 2.3.1
 - Fixing log typos.
 - Fixing Issue #4, 'Input files with spaces in filename'.

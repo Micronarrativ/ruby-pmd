@@ -158,6 +158,7 @@ class Pdfmdedit < Pdfmd
     # Close the external PDF viewer if a PID has been set.
     if !viewerPID.to_s.empty?
       `kill #{viewerPID}`
+      `pkill -f "#{@pdfviewer} #{@filename}"` # Double kill
       self.log('debug', "Viewer process with PID #{viewerPID} killed.")
     end
 
