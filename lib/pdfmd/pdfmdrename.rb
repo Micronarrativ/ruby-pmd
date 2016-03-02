@@ -41,8 +41,8 @@ class Pdfmdrename < Pdfmd
     newFilename[:date]      = @@metadata['createdate'].gsub(/\ \d{2}\:\d{2}\:\d{2}.*$/,'').gsub(/\:/,'')
     newFilename[:author]    = get_author().gsub(/\'/,'').gsub(/\_$/, '')
     newFilename[:doctype]   = get_doctype()
-    newFilename[:title]     = @@metadata['title'].downcase
-    newFilename[:subject]   = @@metadata['subject'].downcase.gsub(/(\s|\-|\.|\&|\%|\,)/,'_').gsub(/\_+/, '_')
+    newFilename[:title]     = @@metadata['title'].downcase.gsub(/(\s|\-|\.|\&|\%|\,)/, '_').gsub(/\_+/, '_')
+    newFilename[:subject]   = @@metadata['subject'].downcase.gsub(/(\s|\-|\.|\&|\%|\,)/, '_').gsub(/\_+/, '_')
     newFilename[:keywords]  = get_keywords(get_keywordsPreface(newFilename))
     newFilename[:extension] = @fileextension
     newFilename[:outputdir] = get_outputdir(@outputdir)
@@ -55,6 +55,7 @@ class Pdfmdrename < Pdfmd
     command = @copy ? 'cp' : 'mv'
 
     filetarget  = get_filename(newFilename)
+    puts filetarget
     if @dryrun # Do nothing on dryrun
       if @filename == filetarget
         self.log('info', "Dryrun: File '#{@filename}' already has the correct name. Doing nothing.")
@@ -239,7 +240,7 @@ class Pdfmdrename < Pdfmd
       # title and subject are being returned.
 
       # Normalize special characters
-      title   = @@metadata['title'].downcase
+      title   = filedata[:title].downcase
       subject = !filedata[:subject].empty? ? '_' + filedata[:subject].downcase : ''
       subject = subject.gsub(/\s|\-|\&/, '_')
       I18n.transliterate(title + subject)
