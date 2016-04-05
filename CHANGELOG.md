@@ -1,3 +1,6 @@
+# Version 2.3.4
+- Fixing skipping of uppercase extension documents
+
 # Version 2.3.2
 - Fixing automatic close of the pdf viewer.
 

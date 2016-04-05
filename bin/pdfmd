@@ -7,7 +7,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.3.3'
+VERSION = '2.3.4'
 NAME    = 'pdfmd'
 
 #
@@ -58,7 +58,7 @@ class DOC < Thor
     filename.each do |current_file|
 
       # Skip non-pdf documents
-      ! File.extname(current_file).match(/\.pdf/) ? next : ''
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
 
        pdfdoc         = Pdfmdshow.new current_file
        format         = pdfdoc.determineValidSetting(options[:format], 'show:format')
@@ -86,7 +86,7 @@ class DOC < Thor
     filename.each do |current_file|
 
       # Skip non-pdf documents
-      ! File.extname(current_file).match(/\.pdf/) ? next : ''
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
 
       pdfdoc      = Pdfmdclean.new current_file
       pdfdoc.tags = options[:tags]
@@ -126,7 +126,7 @@ def edit(*filename)
   filename.each do |current_file|
 
     # Skip non-pdf documents
-    ! File.extname(current_file).match(/\.pdf/) ? next : ''
+    ! File.extname(current_file).match(/\.pdf/i) ? next : ''
 
     pdfdoc            = Pdfmdedit.new current_file
     tags              = pdfdoc.determineValidSetting(options[:tag],'edit:tags')
@@ -258,7 +258,7 @@ end
     filename.each do |current_file|
 
       # Skip non-pdf documents
-      ! File.extname(current_file).match(/\.pdf/) ? next : ''
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
 
       pdfdoc                = Pdfmdrename.new current_file
       pdfdoc.dryrun         = pdfdoc.determineValidSetting(options[:dryrun],'rename:dryrun')
