@@ -18,3 +18,8 @@
 ### Method count_values
 
 * Keywords could be splittet up into two words (as additional parameter)
+
+# Bugs
+## hypen and underscore
+* **Description**: Using an author with a hypen - whitespace combination in the name will result in a double underscore in the filename: '__'
+
