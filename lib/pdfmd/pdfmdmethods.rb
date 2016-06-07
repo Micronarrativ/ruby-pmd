@@ -37,6 +37,10 @@ module Pdfmdmethods
 
     if !manualSetting.nil?
       self.log('debug', "Chosing manual setting '#{key} = #{manualSetting}'.")
+
+      # if manualSetting is date, the actual field meant is "'create date'", not 'date'.
+      manualSetting = manualSetting.gsub('date:', 'createdate:')
+
       manualSetting
     elsif !hieraValue.nil? or
       !hieraValue == ''

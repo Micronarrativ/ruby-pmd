@@ -1,3 +1,6 @@
+# Version 2.3.5
+- Bugfix, Setting the date manually ('pdfmd edit -t date:xxxxxxx') updated the wrong meta field.
+
 # Version 2.3.4
 - Fixing skipping of uppercase extension documents
 
