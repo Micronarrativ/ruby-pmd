@@ -12,6 +12,7 @@
 ## pdfmdedit.rb
 
 * keywords are added differently according to the documentation, http://www.sno.phy.queensu.ca/~phil/exiftool/faq.html
+* a broken xref table will not allow changes to the pdf document. recreating the file via pdf2ps -> ps2pdf will fix this. Integrate this somehow into the system (plugin?),
 
 ## pdfmdstat.rb
 
