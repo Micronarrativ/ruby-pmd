@@ -134,7 +134,7 @@ def init_bashcompletion(name, version, remove = false)
 
   # Find the current local path where the original bash completion file might be hiding.
   paths = [
-    "#{File.dirname(File.expand_path($0))}../lib",
+    "#{File.dirname(File.expand_path($0))}/../lib",
     "#{Gem.dir}/gems/#{name}-#{version}/lib",
   ]
   bash_completion_destination = '/etc/bash_completion.d/pdfmd.bash'
