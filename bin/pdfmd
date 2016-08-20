@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 require 'pdfmd'
 require 'pdfmd/pdfmdstat'
+require 'pdfmd/pdfmdinit'
 require "thor"
 require "highline/import"
 require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.3.5'
+VERSION = '2.4.0'
 NAME    = 'pdfmd'
 
-#
 # Read the content of the long description from an external file
 #
 def readLongDesc(filename)
@@ -98,6 +98,24 @@ class DOC < Thor
     end
   end
 
+
+# Initialise something
+#
+#
+desc 'init [COMMAND]', 'Initialise additonal functions'
+long_desc readLongDesc 'pdfmd/long_desc.pdfmdinit.txt'
+method_option :remove, :type => :boolean, :aliases => '-r', :required => false, :lazydefault => 'true'
+def init(subcommand = '')
+
+  if subcommand == 'bash_completion'
+    init_bashcompletion(NAME,VERSION,options[:remove])
+  else
+    puts 'No command provided. Abort.'
+    puts 'Run `$ pdfmd help init` for details.'
+    exit 1
+  end
+
+end
 
 # Show current settings
 #
@@ -298,30 +316,3 @@ end
 
 DOC.start
 
-#  #
-#  # Explain fields and Metatags
-#  # Show information about how they are used.
-#  #
-#  desc 'explain','Show more information about usuable Meta-Tags'
-#  long_desc <<-LONGDESC
-#  == General
-#
-#  Explain some terms used with the script.
-#
-#  == Example
-#
-#  # Show the available subjects
-#  \x5>CLI explain
-#
-#  # Show information about the subject 'author'
-#  \x5>CLI explain author
-#
-#  LONGDESC
-#  def explain(term='')
-#
-#    ENV['PDFMD_EXPLAIN']  = term
-#    ENV['PDFMD']          = File.basename(__FILE__)
-#    require_relative('./pdfmd/explain.rb')
-#
-#  end
-#

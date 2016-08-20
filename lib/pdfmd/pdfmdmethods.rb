@@ -127,3 +127,48 @@ module Pdfmdmethods
   end # End of queryHiera
 
 end
+
+#
+# Initializing or removing the bash_completion file
+def init_bashcompletion(name, version, remove = false)
+
+  # Find the current local path where the original bash completion file might be hiding.
+  paths = [
+    "#{File.dirname(File.expand_path($0))}../lib",
+    "#{Gem.dir}/gems/#{name}-#{version}/lib",
+  ]
+  bash_completion_destination = '/etc/bash_completion.d/pdfmd.bash'
+  bash_completion_destination_backup = bash_completion_destination + '.backup'
+
+  paths.each do |value|
+    bash_completion_source = value + '/' + name + '/pdfmd.bash'
+    if File.exists?(bash_completion_source)
+
+      if !remove
+
+        # Create a backup file when a file is found
+        if File.exists?(bash_completion_destination)
+          puts 'Existing file found.Taking backup.'
+          `sudo cp #{bash_completion_destination} #{bash_completion_destination_backup}`
+        end
+        puts 'Installing ' + bash_completion_destination
+        `sudo cp #{bash_completion_source} #{bash_completion_destination}`
+      else
+
+        if File.exists?(bash_completion_destination)
+          puts 'Removing ' + bash_completion_destination
+          `sudo rm #{bash_completion_destination}`
+          if $?.exitstatus == 0
+            puts 'File successfully removed.'
+          end
+        else
+          puts bash_completion_destination + ' not found.'
+        end
+
+      end
+
+    end
+  end
+
+end
+

@@ -1,5 +1,5 @@
 # pdfmd
-Pdf Meta data managing script.
+Pdf metadata managing script.
 
 I use the script `pdfmd.rb`/pdfmetadata (with a slightly different name) to manage my PDF documents and keep the naming in line.  
 Hidden deep in the directory structure of my disks I can quickly find the
@@ -128,6 +128,13 @@ __HINT__: Before you start using the script, make sure you have a backup of your
 _pdfmd_ recognises if a pdf file is password protected and will ask for the password.  
 A password string can be defined in hiera that will be used per default.
 
+# Bash completion
+
+Pdfmd comes with bash completion. To setup bash completion run the command
+
+$ pdfmd init bash_completion
+
+This will install a bash completion file. A restart of/new console might be necessary to enable it.
 
 # Hiera
  
