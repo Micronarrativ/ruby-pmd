@@ -8,7 +8,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.4.1'
+VERSION = '2.4.2'
 NAME    = 'pdfmd'
 
 # Read the content of the long description from an external file
@@ -233,6 +233,7 @@ def sort(*input)
   
     if File.file?(file)
       pdfdoc              = Pdfmdsort.new file
+      puts options[:copy]
       pdfdoc.copy         = pdfdoc.determineValidSetting(options[:copy], 'sort:copy')
       pdfdoc.interactive  = pdfdoc.determineValidSetting(options[:interactive], 'sort:interactive')
       pdfdoc.destination  = pdfdoc.determineValidSetting(options[:destination], 'sort:destination')

@@ -1,3 +1,13 @@
+# Version 2.4.2
+- Bugfix, overwriting hiera settings with commandline parameters were not working.
+
+# Version 2.4.1
+- Bugfix, Setup of bash_completion did not find the source file.
+
+# Version 2.4.0
+- Adding new parameter: init.
+- Setup of bash_completion-file.
+
 # Version 2.3.5
 - Bugfix, Setting the date manually ('pdfmd edit -t date:xxxxxxx') updated the wrong meta field.
 
