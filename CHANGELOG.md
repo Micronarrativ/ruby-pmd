@@ -5,6 +5,8 @@
   not used in the author-collision calculation any more.
 - Buxfix, Sorting now also works with directories as input.
 - Command 'stat': Added parameter to disable the percentage output.
+- Bugfix, Removing output of debugging and empty lines.
+- Changing edit separation sign from ':' to '='.
 
 # Version 2.4.2
 - Bugfix, overwriting hiera settings with commandline parameters were not working.

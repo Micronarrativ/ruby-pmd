@@ -87,7 +87,7 @@ $ pdfmd edit -t tag1,tag2,tag3 <filename>
 
 # Edit multiple Tags and set a new value in batch mode.
 
-$ pdfmd edit -t tag1:'value1',tag2:'value2' <filename>
+$ pdfmd edit -t tag1='value1',tag2='value2' <filename>
 
 
 
@@ -108,9 +108,9 @@ $ pdfmd edit -t all example.pdf
 
 # Set tags 'Author', 'CreateDate' in example.pdf in batch mode (non-interactive:
 
-pdfmd edit -t author:'Me',createdate:'1970:00:00 01:01:01' example.pdf
+pdfmd edit -t author='Me',createdate='1970:00:00 01:01:01' example.pdf
 
-pdfmd edit -t author:'Me',Createdate:19700000 example.pdf
+pdfmd edit -t author='Me',Createdate=19700000 example.pdf
 
 
 

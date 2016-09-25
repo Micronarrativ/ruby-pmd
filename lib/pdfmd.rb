@@ -35,6 +35,9 @@ class Pdfmd
   # Hiera configuration data
   @@hieradata         = Hash.new
 
+  # Field seperator for edit tags
+  @@edit_separator = '='
+
   def initialize(filename)
 
     # Default Logfile location and logging enabled

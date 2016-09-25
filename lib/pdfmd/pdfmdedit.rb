@@ -57,10 +57,12 @@ class Pdfmdedit < Pdfmd
         tagsForEditing = tags.split(',')
         tagsForEditing.each do |value|
 
-          if value.match(/:/)
+          # Matchin for seperator
+          separator = @@edit_separator
+          if value.match(/#{separator}/)
 
             self.log('debug', 'Found tag value assignment.')
-            tagmatching = value.split(':')
+            tagmatching = value.split(separator)
 
             # Check date for validity
             if tagmatching[0] == 'createdate'

@@ -148,7 +148,6 @@ def edit(*filename)
 
     pdfdoc            = Pdfmdedit.new current_file
     tags              = pdfdoc.determineValidSetting(options[:tag],'edit:tags')
-    puts 'tag: ' + tags
     pdfdoc.opendoc    = pdfdoc.determineValidSetting(options[:opendoc], 'edit:opendoc')
     pdfdoc.pdfviewer  = pdfdoc.determineValidSetting(nil, 'edit:pdfviewer')
     pdfdoc.set_tags tags
@@ -242,7 +241,6 @@ def sort(*input)
 
     if File.file?(file)
       pdfdoc              = Pdfmdsort.new file
-      puts options[:copy]
       pdfdoc.copy         = pdfdoc.determineValidSetting(options[:copy], 'sort:copy')
       pdfdoc.interactive  = pdfdoc.determineValidSetting(options[:interactive], 'sort:interactive')
       pdfdoc.destination  = pdfdoc.determineValidSetting(options[:destination], 'sort:destination')
