@@ -15,6 +15,8 @@
 
 ### Method: _sort_
 * Sorting files from a source without any matchin documengs ( == Parameter is empty) results in nasty ruby error code: $ pdfmd sort <target> non/existing/files.pdf
+* The string matching filter does not only match directories, but also pdf document in the sort destination with a similar name.
+
 ## pdfmdedit.rb
 
 * keywords are added differently according to the documentation, http://www.sno.phy.queensu.ca/~phil/exiftool/faq.html
