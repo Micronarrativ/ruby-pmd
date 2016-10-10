@@ -9,6 +9,10 @@
 * Parameter to disable percentage output
 * Parameter to set output format: json,yaml, hash
 
+### Method: _rename_
+* Keywords that contain values of the replacement keys (['rec'] in ['kostenrechnung'] becomes shorter, though not used for classification ( ==  ['kostenrec'].
+* The createdate pattern does not work with yyyy-mm-dd.
+
 ### Method: _sort_
 * Sorting files from a source without any matchin documengs ( == Parameter is empty) results in nasty ruby error code: $ pdfmd sort <target> non/existing/files.pdf
 ## pdfmdedit.rb
