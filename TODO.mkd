@@ -9,6 +9,8 @@
 * Parameter to disable percentage output
 * Parameter to set output format: json,yaml, hash
 
+### Method: _sort_
+* Sorting files from a source without any matchin documengs ( == Parameter is empty) results in nasty ruby error code: $ pdfmd sort <target> non/existing/files.pdf
 ## pdfmdedit.rb
 
 * keywords are added differently according to the documentation, http://www.sno.phy.queensu.ca/~phil/exiftool/faq.html
