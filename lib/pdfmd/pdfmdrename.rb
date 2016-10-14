@@ -152,6 +152,11 @@ class Pdfmdrename < Pdfmd
   end
 
   # Get the keywords
+  # This methods is trying in a way to intelligently handle the keywords and
+  # return them back to. While doing this, the abbreviations are also being
+  # taken into account. Wordcombinations on the other hand, that contain some
+  # keywords for the abbreviation, should not be changed.
+  # That's what makes it a bit tricky.
   def get_keywords(preface = '')
 
     if !@@metadata['keywords'].empty?
@@ -170,7 +175,7 @@ class Pdfmdrename < Pdfmd
           end
           keyvaluearray = keyvaluearray.sort_by{|size| -size.length}
           keyvaluearray.each do |keystring|
-            value = value.gsub(/#{keystring.lstrip.chomp}\s?/i, abbreviation.to_s)
+            value = value.gsub(/^#{keystring.lstrip.chomp}\s?/i, abbreviation.to_s)
           end
         end
 
