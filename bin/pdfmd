@@ -176,6 +176,7 @@ long_desc readLongDesc 'pdfmd/long_desc.pdfmdstat.txt'
 option :recursive, :type => :boolean, :aliases => '-r', :desc => 'Include subdirectories recursively.', :lazy_default => true, :required => false
 option :tags, :aliases => '-t', :type => :string, :desc => 'Define Metatags to run at', :lazy_default => 'author,title,subject,createdate,keywords', :required => false
 option :format, :aliases => '-f', :type => :string, :desc => 'Define output format.', :required => false, :default => 'yaml', :enum => ['yaml', 'json', 'hash']
+option :status, :aliases => '-s', :type => :boolean, :desc => 'Show calculation status.', :required => false, :default => true
 def stat(input)
 
   filemetadata  = Hash.new
@@ -195,10 +196,12 @@ def stat(input)
     currentNooFiles = 0
     Dir.glob("#{input.chomp}#{recursive}/*.pdf").each do |filename|
 
-      # Print percentage
-      currentNooFiles = currentNooFiles + 1
-      percentage      = 100 / nooFiles * currentNooFiles
-      print "\r Status: #{percentage} % of #{nooFiles} files processed.   "
+      # Print percentage if requested
+      if options[:status]
+        currentNooFiles = currentNooFiles + 1
+        percentage      = 100 / nooFiles * currentNooFiles
+        print "\r Status: #{percentage} % of #{nooFiles} files processed.   "
+      end
 
       pdfdoc                                 = Pdfmd.new filename
       filemetadata                           = {}
@@ -206,8 +209,12 @@ def stat(input)
       pdfdoc                                 = nil
 
     end
-    puts ''
-    puts ''
+    # Print some linebreak if the status has been shown.
+    # This makes it a bit prettier.
+    if options[:status]
+      puts ''
+      puts ''
+    end
 
     pdfstat = Pdfmdstat.new(currentOutput)
     pdfstat.tags options[:tags]

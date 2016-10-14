@@ -14,16 +14,23 @@ Path to the directory containing PDF documents or subdirectories with PDF docume
 Example: `pdfmd stat ~/pdf`
 
 
---r --recursive
+-r --recursive
 
 If set to true, pdfmd includes all PDF documents found in subdirectories of <directory> as well.
 
 Default: false
 
 
---f --format
+-f --format
 
 Sets alternativ output formats. Valid values are 'hash', 'yaml', 'json'.
 
 Default: json
+
+
+-s --status
+
+Enable/Disable the output during the statistics calculation.
+
+Default: true
 

@@ -6,7 +6,6 @@
 
 ### Method: _stat_
 * Parameter to ignore differences in upper and lowercase
-* Parameter to disable percentage output
 
 ### Method: _rename_
 * The createdate pattern does not work with yyyy-mm-dd.

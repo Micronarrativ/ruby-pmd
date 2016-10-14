@@ -4,6 +4,7 @@
 - Bugfix, Files in the destination directory are now ignored while sorting and 
   not used in the author-collision calculation any more.
 - Buxfix, Sorting now also works with directories as input.
+- Command 'stat': Added parameter to disable the percentage output.
 
 # Version 2.4.2
 - Bugfix, overwriting hiera settings with commandline parameters were not working.

@@ -6,17 +6,15 @@ require_relative './pdfmdmethods.rb'
 
 class Pdfmdstat
 
-  # Keeps the metadata once it's available
-  # Instancevariable
-  @metadata_hash = {}
-
   # Include unspecific methods for Pdfmd
   include Pdfmdmethods
 
   attr_accessor :metadata
 
-  @statdata   = {}
-  @hieradata  = {}
+  # Instancevariables
+  @statdata      = {}
+  @hieradata     = {}
+  @metadata_hash = {} # Keeps the metadata ones it's available
 
   def initialize(metadata)
 
