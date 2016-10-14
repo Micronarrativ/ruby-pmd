@@ -14,8 +14,7 @@
 * The createdate pattern does not work with yyyy-mm-dd.
 
 ### Method: _sort_
-* The string matching filter does not only match directories, but also pdf document in the sort destination with a similar name.
-# Author values with a slash One/two should be sorted into one/two/yyyymmdd-one_to-xxx.pdf
+* Author values with a slash One/two should be sorted into one/two/yyyymmdd-one_to-xxx.pdf
 
 ## pdfmdedit.rb
 

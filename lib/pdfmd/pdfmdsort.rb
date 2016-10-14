@@ -79,14 +79,21 @@ class Pdfmdsort < Pdfmd
     # Get all subfolders 
     subDirectories = Dir[@destination + '/*']
     subDirectories.each do |fullPathFolder|
-       stringSimilarity = fuzzy.getDistance( 
-         fullPathFolder.gsub(@destination + '/', ''),
-         targetdir.gsub(@destination + '/', '')
-         )
-       if stringSimilarity > @stringSimBorder
-         self.log('debug', "findSimilarTargetdir: Found String value #{stringSimilarity.to_s} for target '#{fullPathFolder}'.")
-         returnValue = fullPathFolder
-       end
+
+      # Match only directories, not any files that might be in the target directory
+      if !File.directory?(fullPathFolder)
+
+        stringSimilarity = fuzzy.getDistance(
+          fullPathFolder.gsub(@destination + '/', ''),
+          targetdir.gsub(@destination + '/', '')
+          )
+        if stringSimilarity > @stringSimBorder
+          self.log('debug', "findSimilarTargetdir: Found String value #{stringSimilarity.to_s} for target '#{fullPathFolder}'.")
+          returnValue = fullPathFolder
+        end
+
+      end
+
     end
     returnValue
   end
