@@ -1,6 +1,5 @@
 # == Class: pdfmdsort
 #
-# TODO: Author values with a slave One/two should be sorted into one/two/yyyymmdd-one_to-xxx.pdf
 class Pdfmdsort < Pdfmd
 
   require 'fuzzystringmatch'
