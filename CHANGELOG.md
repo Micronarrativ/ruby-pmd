@@ -1,3 +1,10 @@
+# Version 2.5.0
+- Adding stat export formats.
+- Bugfix, Abbreviations in keywords are not replaced anymore.
+- Bugfix, Files in the destination directory are now ignored while sorting and 
+  not used in the author-collision calculation any more.
+- Buxfix, Sorting now also works with directories as input.
+
 # Version 2.4.2
 - Bugfix, overwriting hiera settings with commandline parameters were not working.
 

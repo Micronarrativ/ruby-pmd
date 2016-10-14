@@ -21,3 +21,9 @@ If set to true, pdfmd includes all PDF documents found in subdirectories of <dir
 Default: false
 
 
+--f --format
+
+Sets alternativ output formats. Valid values are 'hash', 'yaml', 'json'.
+
+Default: json
+

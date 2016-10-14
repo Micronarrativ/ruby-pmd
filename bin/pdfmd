@@ -8,7 +8,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.4.3'
+VERSION = '2.5.0'
 NAME    = 'pdfmd'
 
 # Read the content of the long description from an external file
@@ -175,6 +175,7 @@ desc 'stat', 'Show metadata statistics of multiple files'
 long_desc readLongDesc 'pdfmd/long_desc.pdfmdstat.txt'
 option :recursive, :type => :boolean, :aliases => '-r', :desc => 'Include subdirectories recursively.', :lazy_default => true, :required => false
 option :tags, :aliases => '-t', :type => :string, :desc => 'Define Metatags to run at', :lazy_default => 'author,title,subject,createdate,keywords', :required => false
+option :format, :aliases => '-f', :type => :string, :desc => 'Define output format.', :required => false, :default => 'yaml', :enum => ['yaml', 'json', 'hash']
 def stat(input)
 
   filemetadata  = Hash.new
@@ -190,19 +191,19 @@ def stat(input)
 
     # Count the number of files quickly to show an overview
     # nooFiles = numberOfFiles
-    nooFiles = Dir[File.join(input.chomp, recursive, '*.pdf')].count { |file| File.file?(file) }
+    nooFiles        = Dir[File.join(input.chomp, recursive, '*.pdf')].count { |file| File.file?(file) }
     currentNooFiles = 0
     Dir.glob("#{input.chomp}#{recursive}/*.pdf").each do |filename|
 
       # Print percentage
       currentNooFiles = currentNooFiles + 1
-      percentage = 100 / nooFiles * currentNooFiles
+      percentage      = 100 / nooFiles * currentNooFiles
       print "\r Status: #{percentage} % of #{nooFiles} files processed.   "
 
-      pdfdoc = Pdfmd.new filename
-      filemetadata = {}
+      pdfdoc                                 = Pdfmd.new filename
+      filemetadata                           = {}
       currentOutput[File.basename(filename)] = pdfdoc.metadata.to_s
-      pdfdoc = nil
+      pdfdoc                                 = nil
 
     end
     puts ''
@@ -211,6 +212,7 @@ def stat(input)
     pdfstat = Pdfmdstat.new(currentOutput)
     pdfstat.tags options[:tags]
     pdfstat.analyse_metadata
+    pdfstat.output_metadata(options[:format])
 
   end
 

@@ -6,6 +6,10 @@ require_relative './pdfmdmethods.rb'
 
 class Pdfmdstat
 
+  # Keeps the metadata once it's available
+  # Instancevariable
+  @metadata_hash = {}
+
   # Include unspecific methods for Pdfmd
   include Pdfmdmethods
 
@@ -110,8 +114,29 @@ class Pdfmdstat
 
     end
 
-    puts sortedOutputHash.to_yaml.gsub(/---\n/,'')
+    # Load the class variable with the metadata
+    @metadata_hash = sortedOutputHash
 
   end
+
+  # Output the metadata in multiple format
+  # Default: yaml
+  #
+  # else:
+  #   json
+  def output_metadata(format = 'yaml')
+
+    case format
+    when 'json'
+      require 'json'
+      puts @metadata_hash.to_json
+    when 'hash'
+      puts @metadata_hash
+    else
+      puts @metadata_hash.to_yaml.gsub(/---\n/,'')
+    end
+
+  end
+
 
 end
