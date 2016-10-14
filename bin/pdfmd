@@ -8,7 +8,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.4.2'
+VERSION = '2.4.3'
 NAME    = 'pdfmd'
 
 # Read the content of the long description from an external file
@@ -230,7 +230,7 @@ method_option :typo, :aliases => '-t', :required => false, :type => :boolean, :d
 def sort(*input)
 
   input.each do |file|
-  
+
     if File.file?(file)
       pdfdoc              = Pdfmdsort.new file
       puts options[:copy]
@@ -245,8 +245,8 @@ def sort(*input)
 
     else
 
-      # Run the actions for all files
-      Dir.glob(input.chomp + '/*.pdf').each do |filename|
+      # Run the actions for all files which are in the directory
+      Dir.glob(input.join.chomp('/') + '/*.pdf').each do |filename|
         pdfdoc              = Pdfmdsort.new filename
         pdfdoc.copy         = pdfdoc.determineValidSetting(options[:copy], 'sort:copy')
         pdfdoc.interactive  = pdfdoc.determineValidSetting(options[:interactive], 'sort:interactive')

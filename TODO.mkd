@@ -14,7 +14,6 @@
 * The createdate pattern does not work with yyyy-mm-dd.
 
 ### Method: _sort_
-* Sorting files from a source without any matchin documengs ( == Parameter is empty) results in nasty ruby error code: $ pdfmd sort <target> non/existing/files.pdf
 * The string matching filter does not only match directories, but also pdf document in the sort destination with a similar name.
 
 ## pdfmdedit.rb
