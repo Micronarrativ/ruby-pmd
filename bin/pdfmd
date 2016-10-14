@@ -8,7 +8,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.5.0'
+VERSION = '2.6.0'
 NAME    = 'pdfmd'
 
 # Read the content of the long description from an external file

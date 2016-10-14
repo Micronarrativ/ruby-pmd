@@ -1,10 +1,12 @@
-# Version 2.5.0
+# Version 2.6.0
 - Adding stat export formats.
 - Bugfix, Abbreviations in keywords are not replaced anymore.
 - Bugfix, Files in the destination directory are now ignored while sorting and 
   not used in the author-collision calculation any more.
 - Buxfix, Sorting now also works with directories as input.
 - Command 'stat': Added parameter to disable the percentage output.
+
+# Version 2.5.0
 - Bugfix, Removing output of debugging and empty lines.
 - Changing edit separation sign from ':' to '='.
 
