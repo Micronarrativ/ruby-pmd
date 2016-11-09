@@ -8,6 +8,9 @@
 ### Method: _stat_
 * Parameter to ignore differences in upper and lowercase
 
+### Method: stat
+* Add filenames to the statistic, so they can be isolated.
+
 ### Method: _rename_
 * The createdate pattern does not work with yyyy-mm-dd.
 
