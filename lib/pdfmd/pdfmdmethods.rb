@@ -11,7 +11,7 @@ module Pdfmdmethods
   # If there is no manual setting, the value of 'manualSetting'
   #   should be set to 'nil'
   #
-  def determineValidSetting(manualSetting,key)
+  def Pdfmdmethods.determineValidSetting(manualSetting,key)
 
     if !@hieradata.nil? 
       hieraKey    = '@hieradata'
@@ -58,7 +58,7 @@ module Pdfmdmethods
 
   #
   # Logging stuff
-  def log(status = 'info', message)
+  def Pdfmdmethods.log(status = 'info', message)
 
     # Setting the loglevel
     case @loglevel
@@ -84,7 +84,7 @@ module Pdfmdmethods
 
   #
   # Query hiera for settings if available
-  def queryHiera(keyword, facts = 'UNSET')
+  def Pdfmdmethods.queryHiera(keyword, facts = 'UNSET')
 
     pathHieraConfig = [
       '/etc/hiera.yaml',
@@ -130,7 +130,7 @@ end
 
 #
 # Initializing or removing the bash_completion file
-def init_bashcompletion(name, version, remove = false)
+def Pdfmdmethods.init_bashcompletion(name, version, remove = false)
 
   # Find the current local path where the original bash completion file might be hiding.
   paths = [

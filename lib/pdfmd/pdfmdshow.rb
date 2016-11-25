@@ -22,7 +22,7 @@ class Pdfmdshow < Pdfmd
   # Define the output format for showing the metadata
   def set_outputformat( format = 'yaml' )
     format.nil? ? format = 'yaml' : ''
-    self.log('debug',"Output format set to '#{format}'.")
+    Pdfmdmethods.log('debug',"Output format set to '#{format}'.")
     @@outputformat = format
   end
 
@@ -44,6 +44,18 @@ class Pdfmdshow < Pdfmd
 
   end
 
+  # Correct the date fields in a given hash
+  # This error is comming from the way pdf documents lists the dates in the format
+  # yyyy:mm:dd hh:mm:dd instead of 'yyyy-mm-d hh:mm:ss'.
+  def show_corrected_date_format(input_hash)
+
+    if input_hash['createdate'] =~ /^(\d{4}):(\d{2}):(\d{2})/
+      input_hash['createdate'] = input_hash['createdate'].gsub(/^(\d{4}):(\d{2}):(\d{2})/,'\1-\2-\3')
+    end
+    input_hash
+
+  end
+
   # Return the provided metatags
   def show_metatags( tags = @@default_tags, format = @@outputformat, show_filename = @@show_filename )
 
@@ -57,6 +69,8 @@ class Pdfmdshow < Pdfmd
       end
     end
 
+    metadataOutputHash = show_corrected_date_format(metadataOutputHash)
+
     if show_filename
       metadataOutputHash['filename'] = @filename
     end
@@ -64,22 +78,22 @@ class Pdfmdshow < Pdfmd
     # Return output well formatted
     case format
     when /hash/i
-      self.log('info',"Showing metatags for '#{@filename}' in format 'hash'.")
+      Pdfmdmethods.log('info',"Showing metatags for '#{@filename}' in format 'hash'.")
       metadataOutputHash
     when /csv/i
       csvData = Hash.new
       metadataOutputHash.keys.each do |tagname|
         csvData[tagname] = '"' + metadataOutputHash[tagname.downcase].to_s.gsub(/"/,'""') + '"'
       end
-      self.log('info',"Showing metatags for '#{@filename}' in format 'csv'.")
+      Pdfmdmethods.log('info',"Showing metatags for '#{@filename}' in format 'csv'.")
       csvData.values.join(',')
     when /json/i
       require 'json'
-      self.log('info',"Showing metatags for '#{@filename}' in format 'json'.")
+      Pdfmdmethods.log('info',"Showing metatags for '#{@filename}' in format 'json'.")
       metadataOutputHash.to_json
     else 
       require 'yaml'
-      self.log('info',"Showing metatags for '#{@filename}' in format 'yaml'.")
+      Pdfmdmethods.log('info',"Showing metatags for '#{@filename}' in format 'yaml'.")
       metadataOutputHash.to_yaml
     end
 

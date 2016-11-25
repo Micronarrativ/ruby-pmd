@@ -140,6 +140,7 @@ class Pdfmdedit < Pdfmd
 
             # Update Metadata
             @@metadata[key] = validatedDate
+
           end
 
           # Input of all other values

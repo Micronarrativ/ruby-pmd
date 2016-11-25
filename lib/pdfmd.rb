@@ -22,6 +22,7 @@ class Pdfmd
   require_relative 'pdfmd/pdfmdsort.rb'
   require_relative 'pdfmd/string_extend.rb'
   require_relative 'pdfmd/pdfmdclean.rb'
+  require_relative 'pdfmd/pdfmddb.rb'
   require 'logger'
 
   @@default_tags      = ['createdate', 'author', 'title', 'subject', 'keywords']
@@ -48,10 +49,10 @@ class Pdfmd
 
     # Defining the loglevel
     @loglevel = 'info'
-    self.log('debug','---')
-    self.log('info',"Starting with file '#{filename}'.")
+    Pdfmdmethods.log('debug','---')
+    Pdfmdmethods.log('info',"Starting with file '#{filename}'.")
     @filename  = filename
-    @hieradata = queryHiera('pdfmd::config')
+    @hieradata = Pdfmdmethods.queryHiera('pdfmd::config')
     if ! filename.empty?
       read_metatags(@filename)
     end
@@ -120,12 +121,17 @@ class Pdfmd
     end
 
     if not File.file?(filename)
-      self.log('error', "Cannot access file '#{filename}'.")
+      Pdfmdmethods.log('error', "Cannot access file '#{filename}'.")
       puts "Cannot access file for reading metatags '#{filename}'. Abort"
       abort
     end
 
-    metastrings = `exiftool #{commandparameter} '#{filename}'`.split("\n")
+    begin
+    metastrings = `exiftool #{commandparameter} '#{filename}'`.split("\n") 
+    rescue
+      puts "Error with document '#{filename}'."
+      metastrings = Array.new
+    end
 
     # Assume an error (to enter the loop)
     metaPasswordError = true
@@ -137,7 +143,7 @@ class Pdfmd
       metaPasswordError = false
       metastrings.each do |metatag|
         if metatag.match(/warning.*password protected/i)
-          self.log('info',"File '#{filename}' is password protected.")
+          Pdfmdmethods.log('info',"File '#{filename}' is password protected.")
           metaPasswordError = true
         end
       end
@@ -153,7 +159,7 @@ class Pdfmd
       if documentPassword = self.determineValidSetting(nil, 'default:password') and
         !triedHieraPassword
 
-        self.log('debug','Using default password from hiera.')
+        Pdfmdmethods.log('debug','Using default password from hiera.')
         @@documentPassword = documentPassword
         triedHieraPassword = true
 
@@ -161,17 +167,17 @@ class Pdfmd
 
         # Message output if default password was not working
         if triedHieraPassword and triedManualPassword == 0
-          self.log('warn','Default password from hiera is invalid.')
+          Pdfmdmethods.log('warn','Default password from hiera is invalid.')
         end
 
         # Exit loop if there were more than three manual password inputs
         if triedManualPassword == 3
-          self.log('error',"More than three password attempts on file '#{filename}'. Abort.")
+          Pdfmdmethods.log('error',"More than three password attempts on file '#{filename}'. Abort.")
           exit 1
         end
 
         # Request password from user
-        self.log('info', 'Requesting password from user.')
+        Pdfmdmethods.log('info', 'Requesting password from user.')
         @@documentPassword = readUserInput('Document password : ').chomp
         triedManualPassword = 1 + triedManualPassword
         puts ''
@@ -184,7 +190,7 @@ class Pdfmd
 
     # NB: Maybe the output format should be changed here to catch keywords
     # matching the split string ('   : '). Exiftool has a format output option as well.
-    self.log('debug', "Reading metadata from file '#{filename}'.")
+    Pdfmdmethods.log('debug', "Reading metadata from file '#{filename}'.")
     metastrings.each do |key|
       value = key.split('    : ')
       metatag = value[0].downcase.gsub(/ /,'')
