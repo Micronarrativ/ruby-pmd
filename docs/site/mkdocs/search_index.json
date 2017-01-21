@@ -1,0 +1,609 @@
+{
+    "docs": [
+        {
+            "location": "/",
+            "text": "Welcome to the pdfmd documentation\n\n\nFor the tool visit \npdfmd@rubygems.org\n.\n\n\nCommands\n\n\n\n\npdfmd clean [filename]\n - Remove the metadata from a file.\n\n\npdfmd config\n\n\npdfmd edit [filename]\n - Edit the metadata of a file.\n\n\npdfmd help\n - Show the help.\n\n\npdfmd init\n - Setup environment (optional)\n\n\npdfmd rename [filename]\n - Rename a file according to its metadata.\n\n\npdfmd show [filename]\n - Show the metadata of a file.\n\n\npdfmd sort [filename]\n - Sort the file to a destination.\n\n\npdfmd stat [directory]\n - Show statistical data about files.\n\n\n\n\nFeatures\n\n\n\n\nPdfmd\n can rename and sort away tagged documents automatically and make sure all files have a consistent name.  \n\n\nFiles can be\n\n\n\n\nsorted\n\n\ntagged\n\n\nrenamed\n\n\nviewed\n\n\ncleaned\n\n\nincluded in statistics\n\n\n\n\nInstallation\n\n\npdfmd\n\n\nInstall \npdfmd\n as a ruby gem:\n\n\n$ gem install pdfmd\n\n\n\n\nhiera\n\n\nThe use of \nhiera\n is optional, but makes repeating tasks a lot easier.\n\n\nInstall \nhiera\n as a ruby gem:\n\n\n$ gem install hiera\n\n\n\n\nSources\n\n\n\n\nGithub",
+            "title": "Home"
+        },
+        {
+            "location": "/#welcome-to-the-pdfmd-documentation",
+            "text": "For the tool visit  pdfmd@rubygems.org .",
+            "title": "Welcome to the pdfmd documentation"
+        },
+        {
+            "location": "/#commands",
+            "text": "pdfmd clean [filename]  - Remove the metadata from a file.  pdfmd config  pdfmd edit [filename]  - Edit the metadata of a file.  pdfmd help  - Show the help.  pdfmd init  - Setup environment (optional)  pdfmd rename [filename]  - Rename a file according to its metadata.  pdfmd show [filename]  - Show the metadata of a file.  pdfmd sort [filename]  - Sort the file to a destination.  pdfmd stat [directory]  - Show statistical data about files.",
+            "title": "Commands"
+        },
+        {
+            "location": "/#features",
+            "text": "Pdfmd  can rename and sort away tagged documents automatically and make sure all files have a consistent name.    Files can be   sorted  tagged  renamed  viewed  cleaned  included in statistics",
+            "title": "Features"
+        },
+        {
+            "location": "/#installation",
+            "text": "",
+            "title": "Installation"
+        },
+        {
+            "location": "/#pdfmd",
+            "text": "Install  pdfmd  as a ruby gem:  $ gem install pdfmd",
+            "title": "pdfmd"
+        },
+        {
+            "location": "/#hiera",
+            "text": "The use of  hiera  is optional, but makes repeating tasks a lot easier.  Install  hiera  as a ruby gem:  $ gem install hiera",
+            "title": "hiera"
+        },
+        {
+            "location": "/#sources",
+            "text": "Github",
+            "title": "Sources"
+        },
+        {
+            "location": "/concept/",
+            "text": "pdfmd/concept\n\n\nThe requirement\n\n\nAfter a couple of years growing into adulthood and dealing with bureaucracy, binders full of paper started growing in my shelfs and I found myself in the middle of question \"Should I keep them or throw them?\".\nI could hardly determine which one to keep, but this process of getting Invoices and official documents and just storing them, did not seem to scale well in the future.\n\n\nI therefore borrowed a document scanner and digitalized all documents I had.\n\n\nIn the end I found myself with a couple of hundred documents, which I had to store somewhere and somehow.\n\n\nOut of this the naming scheme for document grew.\n\n\nYYYYmmdd-<author>-<document_type>-<title>-<subject>-<keywords>.pdf\n\n\n\nThis served me well for storing the documents, but became quite tedeous to perform manually with all documents.\n\n\nThe idea\n\n\nAfter a couple of years following this naming procedure, I finally had enough to manually rename the documents, making mistakes in the spelling and have to sort them as well.\n\n\nOut of necessasity I wrote \npdfmd\n which helps me gathering some metadata about a document, putting it into the document, renaming it according to the naming scheme and sorting it away as well.\n\n\nThis significanly brought down the time I spent working on a document from a couple of minutes to less than a minute including scanning the original.\n\n\nSome error-catching logic implemented also prevents me from making small spelling errors or not following the scheme.\n\n\nWorkflow\n\n\nThe workflow is fairly simple\n\n\n\n\nA document comes in in any way. This can be scanned documents or e-mailattachments, e.g.\n\n\nPdfmd\n interactively updates the metadata of the document to make sure it correctly reflects the content of the document.\n\n\nPdfmd\n either automatically or manually renames a single or multiple  document(s) to a consistent naming-sheme.\n\n\nPdfmd\n sorts either automatically or manually single or multiple documents into a folder structure.\n\n\nThe documents coming out of this workflow are stored in a hierarchically folderstructure and easy to find again.\n\n\n\n\n\n\nWhile the incoming document might be called like this:\n\n\n$ ls *.pdf\nScan01.pdf\n\n\n\nthe finished document after entering some metadata looks like this:\n\n\n$ ls *.pdf\n19700101-ibm-inv33265-x3350_server-project_secret.pdf\n\n\n\nJust by looking at the filename I can search for\n\n\n\n\nthe date\n\n\nthe document author\n\n\nfor an invoice (\ninv\n)\n\n\nfor an invoice number (\n33265\n)\n\n\nfor a server name (\nx3350\n)\n\n\nfor a designated assigned project (\nproject secret\n)\n\n\n\n\nWhile the metadata can contain even more detailed information, this usually is enough to cover my needs.",
+            "title": "Concept"
+        },
+        {
+            "location": "/concept/#the-requirement",
+            "text": "After a couple of years growing into adulthood and dealing with bureaucracy, binders full of paper started growing in my shelfs and I found myself in the middle of question \"Should I keep them or throw them?\".\nI could hardly determine which one to keep, but this process of getting Invoices and official documents and just storing them, did not seem to scale well in the future.  I therefore borrowed a document scanner and digitalized all documents I had.  In the end I found myself with a couple of hundred documents, which I had to store somewhere and somehow.  Out of this the naming scheme for document grew.  YYYYmmdd-<author>-<document_type>-<title>-<subject>-<keywords>.pdf  This served me well for storing the documents, but became quite tedeous to perform manually with all documents.",
+            "title": "The requirement"
+        },
+        {
+            "location": "/concept/#the-idea",
+            "text": "After a couple of years following this naming procedure, I finally had enough to manually rename the documents, making mistakes in the spelling and have to sort them as well.  Out of necessasity I wrote  pdfmd  which helps me gathering some metadata about a document, putting it into the document, renaming it according to the naming scheme and sorting it away as well.  This significanly brought down the time I spent working on a document from a couple of minutes to less than a minute including scanning the original.  Some error-catching logic implemented also prevents me from making small spelling errors or not following the scheme.",
+            "title": "The idea"
+        },
+        {
+            "location": "/concept/#workflow",
+            "text": "The workflow is fairly simple   A document comes in in any way. This can be scanned documents or e-mailattachments, e.g.  Pdfmd  interactively updates the metadata of the document to make sure it correctly reflects the content of the document.  Pdfmd  either automatically or manually renames a single or multiple  document(s) to a consistent naming-sheme.  Pdfmd  sorts either automatically or manually single or multiple documents into a folder structure.  The documents coming out of this workflow are stored in a hierarchically folderstructure and easy to find again.    While the incoming document might be called like this:  $ ls *.pdf\nScan01.pdf  the finished document after entering some metadata looks like this:  $ ls *.pdf\n19700101-ibm-inv33265-x3350_server-project_secret.pdf  Just by looking at the filename I can search for   the date  the document author  for an invoice ( inv )  for an invoice number ( 33265 )  for a server name ( x3350 )  for a designated assigned project ( project secret )   While the metadata can contain even more detailed information, this usually is enough to cover my needs.",
+            "title": "Workflow"
+        },
+        {
+            "location": "/commands/clean/",
+            "text": "pdfmd/commands/clean\n\n\nDescription\n\n\nRemove all metatags that \npdfmd\n handles from the document or a number of documents.\n\nThe tag in the metatadata is not being removed, but the value is set to an empty value instead.\n\n\nUsage\n\n\n$ pdfmd clean <pdf-file>\n\n\n\n\nParameter\n\n\n-t, --tags=TAGS       Comma separated list of tags.\n                      The keyword *all* marks all tags used by pdfmd.\n\n\n\n\nExample\n\n\n$ pdfmd clean -t author,title example.pdf\n$",
+            "title": "clean"
+        },
+        {
+            "location": "/commands/clean/#description",
+            "text": "Remove all metatags that  pdfmd  handles from the document or a number of documents. \nThe tag in the metatadata is not being removed, but the value is set to an empty value instead.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/clean/#usage",
+            "text": "$ pdfmd clean <pdf-file>",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/clean/#parameter",
+            "text": "-t, --tags=TAGS       Comma separated list of tags.\n                      The keyword *all* marks all tags used by pdfmd.",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/clean/#example",
+            "text": "$ pdfmd clean -t author,title example.pdf\n$",
+            "title": "Example"
+        },
+        {
+            "location": "/commands/config/",
+            "text": "pdfmd/commands/config\n\n\nDescription\n\n\nShow the current used configuration.\n\n\nUsage\n\n\n$ pdfmd config [command]\n\n\n\n\nParameter\n\n\n-l, --log <value>       Enable/Disable logging.\n                        Default: true\n\n\n\n\n\nExample\n\n\n# Show the whole configuration\n$ pdfmd config \n---\ndefault:\n  loglevel: debug\nshow:\n  format: yaml\n  includepdf: true\n...\n\n# Show the configuration of the section 'default'\n$ pdfmd config default\n---\nloglevel: default\n$",
+            "title": "config"
+        },
+        {
+            "location": "/commands/config/#description",
+            "text": "Show the current used configuration.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/config/#usage",
+            "text": "$ pdfmd config [command]",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/config/#parameter",
+            "text": "-l, --log <value>       Enable/Disable logging.\n                        Default: true",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/config/#example",
+            "text": "# Show the whole configuration\n$ pdfmd config \n---\ndefault:\n  loglevel: debug\nshow:\n  format: yaml\n  includepdf: true\n...\n\n# Show the configuration of the section 'default'\n$ pdfmd config default\n---\nloglevel: default\n$",
+            "title": "Example"
+        },
+        {
+            "location": "/commands/edit/",
+            "text": "pdfmd/commands/edit\n\n\nDescription\n\n\nThe edit command will edit the tags in the metadata of a PDF document. Multiple values can be specified or \nall\n.\n\n\nThe command will invoke an interactive user input and request the values for the metatag, unless a value is defined as parameter value.\n\n\nThe edit command can be chained with the command \nrename\n. This will automatically rename the PDf document  according to the metadata tags. See the documentation for the command \nrename\n for details.\n\n\nUsage\n\n\n$ pdfmd edit -t|--tag <TAG> [-r|--rename] [-o|--opendoc] <document[s]>\n\n\n\n\nParameter\n\n\n-l, --log           Enable/Disable the logging.dddd\n                    Default: true\n\n-o, --opendoc       If set to *true*, the application defined in *pdfviewer*\n                    from Hiera will be used to open the document while\n                    interactively asking for the new tags values.\n\n                    See further informations about *pdfviewer* below.\n\n-p, --logfilepath   Path to the logfile.\n                    Default: ./.pdfmd.log\n\n-t, --tag           Fieldname or list of fieldnames of the tags to update. In a\n                    list of fieldnames single names must be separated by\n                    commata.\n\n                    If a value is provided, the current value will be replaced\n                    by the provided value.\n\n                    This parameter cannot be defined in Hiera and needs to be\n                    specified on the command line (hence the interactivity).\n\n-r, --rename        If set, the command will trigger the renaming command in\n                    order to adjust the filename to the changes in the metadata.\n\n                    Setting this parameter is identical to running the command:\n\n                    $ pdfmd rename <filename>\n\n\n\n\nHiera\n\n\n# YAML\n---\npdfmd::config:\n  edit:\n    rename    : true|false\n    log       : true|false\n    logfile   : /var/log/pdfmd.log\n    opendoc   : true|false\n    pdfviewer : <binary>\n\n\n\n\nopendoc\n\n\nIf set to true the command will try to start a the pdfviewer specified in \npdfviewer\n and display the PDF document while editing. If all values are being specified to the tags (e.g.: \nauthor='John Doe'\n), the pdf viewer will not be started.\n\n\nOnly if some user interaction is requested.\n\n\nThe process of the viewer will be automatically killed when the editing of the document has been finished.\n\n\nThere is no equivalent command line parameter for setting the viewer binary.\n\n\npdfviewer\n\n\nBinary or path to the binary to run as PDF document viewer. The filepath of the PDF document will be provided to the binary as argument.\n\n\nDefault: evince\n\n\nThere is no corresponding commandline parameter to set the value. This is only available from Hiera.\n\n\nExample\n\n\nGeneral\n\n\n# Edit tag 'TAG' and set a new value interactive.\n$ pdfmd edit -t TAG <filename>\n...\n\n# Edit tag 'Author' and set new value interactive.\n$ pdfmd edit -t author example.pdf\n...\n\n# Edit multiple Tags and set a new value interactive.\n$ pdfmd edit -t tag1,tag2,tag3 <filename>\n...\n\n# Edit multiple Tags and set a new value in batch mode.\n$ pdfmd edit -t tag1='value1',tag2='value2' <filename>\n\n\n\n\nMultiple tags\n\n\nFor setting multiple tags list the tags comma separated.\n\nFor setting all tags (Author, Title, Subject, CreateDate, Keywords) use the keyword 'all' as tagname.\n\n\n# Set tags 'Author', 'Title', 'Subject' in example.pdf interactivly.\n$ pdfmd edit -t author,title,subject example.pdf`\n\n# Set tags 'Author', 'Title', 'Subject', 'CreateDate', 'Keywords' in example.pdf interactively:\n$ pdfmd edit -t all example.pdf\n\n# Set tags 'Author', 'CreateDate' in example.pdf in batch mode (non-interactive):\npdfmd edit -t author='Me',createdate='1970:00:00 01:01:01' example.pdf\npdfmd edit -t author='Me',Createdate=19700000 example.pdf\n\n\n\n\nTags\n\n\ncreatedate\n\n\nIn order to set the value for the metadata field \ncreatedate\n, the standard format 'YYYY-mm-dd HH:MM:SS' is accepted.\n\n\nTo allow easier input of values, internal matching will try to interpret the input value.\n\n\nThe following formats will be accepted:\n\n\nyyyymmdd\nyyyymmd\nyyyymmddHHMMSS\nyyyy-mm-dd HH:MM:SS\nyyyy:mm:dd HH:MM:SS\nyyyy.mm.dd HH:MM:SS\nyyyy-mm-d\nyyyy-mm-dd\nyyyy.mm.d\nyyyy.mm.dd\nyyyy:mm:d\nyyyy:mm:dd\n\n\n\n\n\n\nIf no time (HH:MM:SS or HHMMSS) is provided, those values are automatically set to zero.\n\n\nThe output format of every timestamp is \n\n\nWhen providing and invalid date, the incorrect date is rejected and the user asked to provide the correct date.\n\n\nWhen no date is provided, the current date value is used. It is not possible to empty the date value field.\n\n\n\n\nRename file\n\n\nIn addition to setting the tags the current file can be renamed according to\nthe new metadata.\n\n\n# Set tag 'Author' and rename file example.pdf\n$ pdfmd edit -t author -r example.pdf\n\n\n\n\n# Hiera\n---\npdfmd::config:\n  edit:\n    rename: true\n\n\n\n\n\n\nSee \npdfmd help rename\n for details about renaming.\n\n\nTo enable this feature in hiera add the key \nrename\n into the section \nedit\n with the value \ntrue\n.\n\n\n\n\nPasswords\n\n\nPdfmd\n will try to figure out if a document is protected by a password. If a password is required, the processing will stop and the user been asked to provide a password.\n\n\nA default password can also be specified via \nHiera\n.\n\n\nThis will set the password in \nHiera\n to 'secret': \n\n\n---\npdfmd::config:\n  default:\n    password: secret\n\n\n\n\nThe password request to the user is triggered only when no password has been found in \nHiera\n.",
+            "title": "edit"
+        },
+        {
+            "location": "/commands/edit/#description",
+            "text": "The edit command will edit the tags in the metadata of a PDF document. Multiple values can be specified or  all .  The command will invoke an interactive user input and request the values for the metatag, unless a value is defined as parameter value.  The edit command can be chained with the command  rename . This will automatically rename the PDf document  according to the metadata tags. See the documentation for the command  rename  for details.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/edit/#usage",
+            "text": "$ pdfmd edit -t|--tag <TAG> [-r|--rename] [-o|--opendoc] <document[s]>",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/edit/#parameter",
+            "text": "-l, --log           Enable/Disable the logging.dddd\n                    Default: true\n\n-o, --opendoc       If set to *true*, the application defined in *pdfviewer*\n                    from Hiera will be used to open the document while\n                    interactively asking for the new tags values.\n\n                    See further informations about *pdfviewer* below.\n\n-p, --logfilepath   Path to the logfile.\n                    Default: ./.pdfmd.log\n\n-t, --tag           Fieldname or list of fieldnames of the tags to update. In a\n                    list of fieldnames single names must be separated by\n                    commata.\n\n                    If a value is provided, the current value will be replaced\n                    by the provided value.\n\n                    This parameter cannot be defined in Hiera and needs to be\n                    specified on the command line (hence the interactivity).\n\n-r, --rename        If set, the command will trigger the renaming command in\n                    order to adjust the filename to the changes in the metadata.\n\n                    Setting this parameter is identical to running the command:\n\n                    $ pdfmd rename <filename>",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/edit/#hiera",
+            "text": "# YAML\n---\npdfmd::config:\n  edit:\n    rename    : true|false\n    log       : true|false\n    logfile   : /var/log/pdfmd.log\n    opendoc   : true|false\n    pdfviewer : <binary>",
+            "title": "Hiera"
+        },
+        {
+            "location": "/commands/edit/#opendoc",
+            "text": "If set to true the command will try to start a the pdfviewer specified in  pdfviewer  and display the PDF document while editing. If all values are being specified to the tags (e.g.:  author='John Doe' ), the pdf viewer will not be started.  Only if some user interaction is requested.  The process of the viewer will be automatically killed when the editing of the document has been finished.  There is no equivalent command line parameter for setting the viewer binary.",
+            "title": "opendoc"
+        },
+        {
+            "location": "/commands/edit/#pdfviewer",
+            "text": "Binary or path to the binary to run as PDF document viewer. The filepath of the PDF document will be provided to the binary as argument.  Default: evince  There is no corresponding commandline parameter to set the value. This is only available from Hiera.",
+            "title": "pdfviewer"
+        },
+        {
+            "location": "/commands/edit/#example",
+            "text": "",
+            "title": "Example"
+        },
+        {
+            "location": "/commands/edit/#general",
+            "text": "# Edit tag 'TAG' and set a new value interactive.\n$ pdfmd edit -t TAG <filename>\n...\n\n# Edit tag 'Author' and set new value interactive.\n$ pdfmd edit -t author example.pdf\n...\n\n# Edit multiple Tags and set a new value interactive.\n$ pdfmd edit -t tag1,tag2,tag3 <filename>\n...\n\n# Edit multiple Tags and set a new value in batch mode.\n$ pdfmd edit -t tag1='value1',tag2='value2' <filename>",
+            "title": "General"
+        },
+        {
+            "location": "/commands/edit/#multiple-tags",
+            "text": "For setting multiple tags list the tags comma separated. \nFor setting all tags (Author, Title, Subject, CreateDate, Keywords) use the keyword 'all' as tagname.  # Set tags 'Author', 'Title', 'Subject' in example.pdf interactivly.\n$ pdfmd edit -t author,title,subject example.pdf`\n\n# Set tags 'Author', 'Title', 'Subject', 'CreateDate', 'Keywords' in example.pdf interactively:\n$ pdfmd edit -t all example.pdf\n\n# Set tags 'Author', 'CreateDate' in example.pdf in batch mode (non-interactive):\npdfmd edit -t author='Me',createdate='1970:00:00 01:01:01' example.pdf\npdfmd edit -t author='Me',Createdate=19700000 example.pdf",
+            "title": "Multiple tags"
+        },
+        {
+            "location": "/commands/edit/#tags",
+            "text": "",
+            "title": "Tags"
+        },
+        {
+            "location": "/commands/edit/#createdate",
+            "text": "In order to set the value for the metadata field  createdate , the standard format 'YYYY-mm-dd HH:MM:SS' is accepted.  To allow easier input of values, internal matching will try to interpret the input value.  The following formats will be accepted:  yyyymmdd\nyyyymmd\nyyyymmddHHMMSS\nyyyy-mm-dd HH:MM:SS\nyyyy:mm:dd HH:MM:SS\nyyyy.mm.dd HH:MM:SS\nyyyy-mm-d\nyyyy-mm-dd\nyyyy.mm.d\nyyyy.mm.dd\nyyyy:mm:d\nyyyy:mm:dd   If no time (HH:MM:SS or HHMMSS) is provided, those values are automatically set to zero.  The output format of every timestamp is   When providing and invalid date, the incorrect date is rejected and the user asked to provide the correct date.  When no date is provided, the current date value is used. It is not possible to empty the date value field.",
+            "title": "createdate"
+        },
+        {
+            "location": "/commands/edit/#rename-file",
+            "text": "In addition to setting the tags the current file can be renamed according to\nthe new metadata.  # Set tag 'Author' and rename file example.pdf\n$ pdfmd edit -t author -r example.pdf  # Hiera\n---\npdfmd::config:\n  edit:\n    rename: true   See  pdfmd help rename  for details about renaming.  To enable this feature in hiera add the key  rename  into the section  edit  with the value  true .",
+            "title": "Rename file"
+        },
+        {
+            "location": "/commands/edit/#passwords",
+            "text": "Pdfmd  will try to figure out if a document is protected by a password. If a password is required, the processing will stop and the user been asked to provide a password.  A default password can also be specified via  Hiera .  This will set the password in  Hiera  to 'secret':   ---\npdfmd::config:\n  default:\n    password: secret  The password request to the user is triggered only when no password has been found in  Hiera .",
+            "title": "Passwords"
+        },
+        {
+            "location": "/commands/init/",
+            "text": "pdfmd/command/init\n\n\nDescription\n\n\nThe \ninit\n command will try to adjust the environment to support pdfmd.\n\n\nAt this moment only the installation of a bash completion file has been integrated.\n\n\nUsage\n\n\n$ pdfmd init <parameter>\n\n\n\n\nParameter\n\n\nbash_completion     Installs or removes the bash_completion-file for pdfmd. An existing file will be overwritten after a file with the extension `.backup` has been created within the same directory.\n\n-r, --remove        If set the bash completion file will be removed. This does not reinstated or remove any files created as backup.\n\n\n\n\nHiera\n\n\nThere are no settings in hiera for this command.\n\n\nExample\n\n\n# Install the bash completion file\n$ pdfmd init bash_completion\n\n# Remove the bash completion file\n$ pdfmd init -r bash_completion",
+            "title": "init"
+        },
+        {
+            "location": "/commands/init/#description",
+            "text": "The  init  command will try to adjust the environment to support pdfmd.  At this moment only the installation of a bash completion file has been integrated.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/init/#usage",
+            "text": "$ pdfmd init <parameter>",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/init/#parameter",
+            "text": "bash_completion     Installs or removes the bash_completion-file for pdfmd. An existing file will be overwritten after a file with the extension `.backup` has been created within the same directory.\n\n-r, --remove        If set the bash completion file will be removed. This does not reinstated or remove any files created as backup.",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/init/#hiera",
+            "text": "There are no settings in hiera for this command.",
+            "title": "Hiera"
+        },
+        {
+            "location": "/commands/init/#example",
+            "text": "# Install the bash completion file\n$ pdfmd init bash_completion\n\n# Remove the bash completion file\n$ pdfmd init -r bash_completion",
+            "title": "Example"
+        },
+        {
+            "location": "/commands/rename/",
+            "text": "pdfmd/commands/rename\n\n\nDescription\n\n\nRename a file according to the meta tags of the document.\n\n\nUsage\n\n\n$ pdfmd rename [-a|--allkeywords] [-c|--copy [true]] [-k|--nrkeywords <integer>]\n                [-l, --log [true]] [-n|--dry-run [true]]\n                [-o|--outputdir <directoryPath>] [-p|--logfile <logfilePath>]\n\n\n\n\n\nParameter\n\n\n-a, --allkeywords   Use all keywords from the meta tags within the file name.\n                    This will ignore the the limit for keywords to use in a\n                    filename.\n                    Default: false\n\n                    Hiera {pdfmd::config => { rename => { allkeywords => true }}}\n\n\n-c, --copy          Copy the file instead of moving the file to the new destination.\n                    Default: false\n\n-k, --nrkeywords    If set to integer, this parameter will limit the number of \n                    keywords used in the filename.\n                    Default: 3\n\n-l, --log           Enable or disable logging.\n                    Default: true\n\n                    Hiera { pdfmd::config => { rename => { log => true } } }\n\n-n, --dry-run       If set to true, this will simulate the renaming of the file\n                    without changing the file.\n                    Default: true\n\n-o, --outputdir     If set to an existing path, the renamed file will be moved there (unless `-c` has been specified).\n                    Otherwise the the location of the file will not be changed.\n\n-p, --logfile       If set to an existing path, the output file will be written to that location.\n                    Defaults to the current working directory.\n\n\n\n\nHiera\n\n\nGeneral\n\n\n# YAML\n---\npdfmd::config:\n  rename:\n    dryrun         : true|false\n    defaultdoctype : doc\n    allkeywords    : true|false\n    outputdir      : /tmp\n    nrkeywords     : 3\n    copy           : true|false\n    log            : true|false\n    logfile        : /var/log/pdfmd.log\n\n\n\n\n\ndefaultdoctype\n\n\nSets the default abbreviation for documents, that cannot be matched. This is used when no other document type could be determined from the metadata field \ntitle\n.\n\n\nThis settings is not available as command line parameter.\n\n\nDefault: doc\n\n\nExamples\n\n\nGeneral\n\n\n# Rename the file according to the metatags\n$ pdfmd rename <inputfile>\n\n# Rename `example.pdf` according to the metatags\n$ pdfmd rename example.pdf\n\n# Simulate renaming `example.pdf` according to the metatags\n$ pdfmd rename -n example.pdf\n\n\n\n\nDetailed\n\n\n\n\nA file \nexample.pdf\n with the following meta tags being set:\n\n\n\n\nFilename   : example.pdf\nAuthor     : John\nTitle      : Presentation\nSubject    : New Product\nCreateDate : 1970:01:01 01:00:00\nKeywords   : John Doe, Jane Doe, Mister Doe\n\n\n\n\n# Renaming the file\n$ pdfmd rename example.pdf\nNew filename: 19700101-john-dok-new_product-john_doe-jane_doe.pdf\n\n# Simulation to rename te file (no actual change)\n$ pdfmd rename -n example.pdf\nNew filename: example.pdf\n\n# Renaming the file with all keywords\n$ pdfmd rename -a example.pdf\nNew filename: 19700101-john-dok-new_product-john_doe-jane_doe-mister_doe.pdf\n\n\n\n\nRules\n\n\nThere are some rules regarding how documents are being renamed.\n\n\nRule 1\n\n\nBasic\n\n\nAll documents have the following filenaming structure:\n\n\n<YYYYmmdd>-<author>-<documenttype>-<topics>.<extension>\n\n  YYYY         : Year in a 4 digit number\n  mm           : Month in a two digit number with leading zero\n  dd           : Day in a two digit number with leading zero\n  author       : Value from the metatag 'author', without spaces, in lowercase\n                 and replaced special characters.\n  documenttype : Abbreviation for document type. Defaults to 'doc', unless\n                 otherwise specified or overwritten. See the details above\n                 the documenttype below for details.\n  topics       : Additional information generated from the tags 'title',\n                 'subject' and 'keywords'. \n  extension    : The file extension.\n\n\n\n\nDocument type\n\n\nThe document type is being determined from the metatag field \ntitle\n. The document type is supposed to be a three character abbreviation, depending on the type of document:\n\n\ncon: Contract\ndoc: General document\ninv: Invoice\ninf: Information\nman: Manual\noff: Offer\nord: Order\nrpt: Receipt\ntic: Ticket\n\n\n\n\n\n\n\n\nIf the document type cannot be identified by the metatag \ntitle\n, it defaults to \ndoc\n, unless it has been overwritten by the parameter \ndocumenttype\n in Hiera or the command line.\n\n\n\n\n\n\nThis default behavior got introduced with version 1.8.1 and can be overwritten by Hiera.\n\n\n\n\n\n\nTODO: Add more information about this in hiera.\n\n\nTopics\n\n\nThe topics in the filename are automatically generated from the metatag fields\n\n\n\n\ntitle\n\n\nsubject\n\n\nkeywords\n\n\n\n\nIf the metatag fields 'title' and 'keywords' contain one of the words from listed in Document type, it will be replaced with the corresponding abbreviation, e.g.:\n\n\nContact     => con\nInvoice     => inv\nInformation => inf\nManual      => man\n...\n\n\n\n\n\n\nThis can be overwritten by setting the keys parameter in Hiera.\n\n\nThis will result in a shorter filename with a more predictable length.\n  For example with the hiera key defining the customer number as well:\n\n\n\n\n# Hiera\n...\nman: Manual\ncnr: Customernumber\n...\n\n\n# Filename without replacement\n19700101-author-invoice-99999999-customernumber_8888888-example_text.pdf\n\n# Filename with replacement\n19700101-author-inv-99999999-cnr8888888-example_text.pdf \n\n\n\n\n\nRule 2\n\n\nThe number of keywords used in the filename is defined by the parameter \n-k\n and defaults to 3. This means the first three keywords will be consideres in the filerenaming, the rest will not be considered.\n\n\nRule 3\n\n\nThe following keywords are prioritised:\n\n\n\n\nkvi\n\n\nfak\n\n\nord\n\n\nkdn\n\n\n\n\nRule 4\n\n\nSpecial character and whitespaces are replaced.\n\n\nwhitespace => '_'\n/          => '_'\n\n\n\n\nRule 5\n\n\nThe new filename has only lowercase characters.",
+            "title": "rename"
+        },
+        {
+            "location": "/commands/rename/#description",
+            "text": "Rename a file according to the meta tags of the document.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/rename/#usage",
+            "text": "$ pdfmd rename [-a|--allkeywords] [-c|--copy [true]] [-k|--nrkeywords <integer>]\n                [-l, --log [true]] [-n|--dry-run [true]]\n                [-o|--outputdir <directoryPath>] [-p|--logfile <logfilePath>]",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/rename/#parameter",
+            "text": "-a, --allkeywords   Use all keywords from the meta tags within the file name.\n                    This will ignore the the limit for keywords to use in a\n                    filename.\n                    Default: false\n\n                    Hiera {pdfmd::config => { rename => { allkeywords => true }}}\n\n\n-c, --copy          Copy the file instead of moving the file to the new destination.\n                    Default: false\n\n-k, --nrkeywords    If set to integer, this parameter will limit the number of \n                    keywords used in the filename.\n                    Default: 3\n\n-l, --log           Enable or disable logging.\n                    Default: true\n\n                    Hiera { pdfmd::config => { rename => { log => true } } }\n\n-n, --dry-run       If set to true, this will simulate the renaming of the file\n                    without changing the file.\n                    Default: true\n\n-o, --outputdir     If set to an existing path, the renamed file will be moved there (unless `-c` has been specified).\n                    Otherwise the the location of the file will not be changed.\n\n-p, --logfile       If set to an existing path, the output file will be written to that location.\n                    Defaults to the current working directory.",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/rename/#hiera",
+            "text": "",
+            "title": "Hiera"
+        },
+        {
+            "location": "/commands/rename/#general",
+            "text": "# YAML\n---\npdfmd::config:\n  rename:\n    dryrun         : true|false\n    defaultdoctype : doc\n    allkeywords    : true|false\n    outputdir      : /tmp\n    nrkeywords     : 3\n    copy           : true|false\n    log            : true|false\n    logfile        : /var/log/pdfmd.log",
+            "title": "General"
+        },
+        {
+            "location": "/commands/rename/#defaultdoctype",
+            "text": "Sets the default abbreviation for documents, that cannot be matched. This is used when no other document type could be determined from the metadata field  title .  This settings is not available as command line parameter.  Default: doc",
+            "title": "defaultdoctype"
+        },
+        {
+            "location": "/commands/rename/#examples",
+            "text": "",
+            "title": "Examples"
+        },
+        {
+            "location": "/commands/rename/#general_1",
+            "text": "# Rename the file according to the metatags\n$ pdfmd rename <inputfile>\n\n# Rename `example.pdf` according to the metatags\n$ pdfmd rename example.pdf\n\n# Simulate renaming `example.pdf` according to the metatags\n$ pdfmd rename -n example.pdf",
+            "title": "General"
+        },
+        {
+            "location": "/commands/rename/#detailed",
+            "text": "A file  example.pdf  with the following meta tags being set:   Filename   : example.pdf\nAuthor     : John\nTitle      : Presentation\nSubject    : New Product\nCreateDate : 1970:01:01 01:00:00\nKeywords   : John Doe, Jane Doe, Mister Doe  # Renaming the file\n$ pdfmd rename example.pdf\nNew filename: 19700101-john-dok-new_product-john_doe-jane_doe.pdf\n\n# Simulation to rename te file (no actual change)\n$ pdfmd rename -n example.pdf\nNew filename: example.pdf\n\n# Renaming the file with all keywords\n$ pdfmd rename -a example.pdf\nNew filename: 19700101-john-dok-new_product-john_doe-jane_doe-mister_doe.pdf",
+            "title": "Detailed"
+        },
+        {
+            "location": "/commands/rename/#rules",
+            "text": "There are some rules regarding how documents are being renamed.",
+            "title": "Rules"
+        },
+        {
+            "location": "/commands/rename/#rule-1",
+            "text": "",
+            "title": "Rule 1"
+        },
+        {
+            "location": "/commands/rename/#basic",
+            "text": "All documents have the following filenaming structure:  <YYYYmmdd>-<author>-<documenttype>-<topics>.<extension>\n\n  YYYY         : Year in a 4 digit number\n  mm           : Month in a two digit number with leading zero\n  dd           : Day in a two digit number with leading zero\n  author       : Value from the metatag 'author', without spaces, in lowercase\n                 and replaced special characters.\n  documenttype : Abbreviation for document type. Defaults to 'doc', unless\n                 otherwise specified or overwritten. See the details above\n                 the documenttype below for details.\n  topics       : Additional information generated from the tags 'title',\n                 'subject' and 'keywords'. \n  extension    : The file extension.",
+            "title": "Basic"
+        },
+        {
+            "location": "/commands/rename/#document-type",
+            "text": "The document type is being determined from the metatag field  title . The document type is supposed to be a three character abbreviation, depending on the type of document:  con: Contract\ndoc: General document\ninv: Invoice\ninf: Information\nman: Manual\noff: Offer\nord: Order\nrpt: Receipt\ntic: Ticket    If the document type cannot be identified by the metatag  title , it defaults to  doc , unless it has been overwritten by the parameter  documenttype  in Hiera or the command line.    This default behavior got introduced with version 1.8.1 and can be overwritten by Hiera.    TODO: Add more information about this in hiera.",
+            "title": "Document type"
+        },
+        {
+            "location": "/commands/rename/#topics",
+            "text": "The topics in the filename are automatically generated from the metatag fields   title  subject  keywords   If the metatag fields 'title' and 'keywords' contain one of the words from listed in Document type, it will be replaced with the corresponding abbreviation, e.g.:  Contact     => con\nInvoice     => inv\nInformation => inf\nManual      => man\n...   This can be overwritten by setting the keys parameter in Hiera.  This will result in a shorter filename with a more predictable length.\n  For example with the hiera key defining the customer number as well:   # Hiera\n...\nman: Manual\ncnr: Customernumber\n...\n\n\n# Filename without replacement\n19700101-author-invoice-99999999-customernumber_8888888-example_text.pdf\n\n# Filename with replacement\n19700101-author-inv-99999999-cnr8888888-example_text.pdf",
+            "title": "Topics"
+        },
+        {
+            "location": "/commands/rename/#rule-2",
+            "text": "The number of keywords used in the filename is defined by the parameter  -k  and defaults to 3. This means the first three keywords will be consideres in the filerenaming, the rest will not be considered.",
+            "title": "Rule 2"
+        },
+        {
+            "location": "/commands/rename/#rule-3",
+            "text": "The following keywords are prioritised:   kvi  fak  ord  kdn",
+            "title": "Rule 3"
+        },
+        {
+            "location": "/commands/rename/#rule-4",
+            "text": "Special character and whitespaces are replaced.  whitespace => '_'\n/          => '_'",
+            "title": "Rule 4"
+        },
+        {
+            "location": "/commands/rename/#rule-5",
+            "text": "The new filename has only lowercase characters.",
+            "title": "Rule 5"
+        },
+        {
+            "location": "/commands/show/",
+            "text": "pdfmd/commands/show\n\n\nDescription\n\n\nShow the managed metatags of a PDF document.\n\n\nManaged tags are\n\n\n\n\nauthor\n\n\ncreatedate\n\n\ntitle\n\n\nsubject\n\n\nkeywords\n\n\n\n\nUsage\n\n\n$ pdfmd show [-t|--tag <TAG>] [-f|--format <FORMAT>] [-i|--includepdf]\n    [-p|--logfile <logfilepath>] [-i|--log <true|false>]\n\n\n\n\nParameter\n\n\n-t, --tag           Single or list of metatags to include in the output. The \n                    selected tag(s) must be one of the managed ones listed\n                    above. Other tags are ignored.\n                    Multiple tags can be specified, separated by commata.\n                    If multiple tags are specified, the order in which the\n                    tags are specified is being used for the output. This will\n                    impact the order of fields, when exporting e.g. to CSV.\n                    The tag is case insensitive: 'AuThor' == 'author'.\n\n                    Hiera key: `pdfmd::config => show => tag`\n\n-a, --all           Include all managed metatags in the output. This is the\n                    default setting.\n\n-f, --format        If set, this parameter can be used to alter the output\n                    format.\n                    Possible values are: 'json', 'yaml', 'csv' and 'hash'.\n                    Default value is 'yaml'.\n\n                    Hiera key: `pdfmd::config => show => format`\n\n-i, --includepdf    If set to 'true', the output will also include the \n                    filename of the processed file.\n                    Default: false\n\n                    Hiera key: `pdfmd::config => show => includepdf`\n\n-p, --logfile       Specifies the path to the logfile.\n                    Defaults to: './.pdfmd.log'\n\n                    Hiera key: `pdfmd::config => show => logfile`\n\n-i, --log           Enables/Disablss logging.\n                    Defaults to 'true'.\n\n                    Hiera key: `pdfmd::config => show => log`\n\n\n\n\nHiera\n\n\n# YAML\n---\npdfmd::config:\n  show:\n    format: yaml|json|csv|hash\n    tag: author,subject,createdate,title,keywords\n    includepdf: true|false\n    log: true|false\n    logfile: /var/log/pdfmd.log\n\n\n\n\nExamples\n\n\n# Show default metatags for a pdf document\n$ pdfmd show example.pdf\n\n# Show values for the metatags 'author' for the file 'example.pdf'.\n$ pdfmd show -t author example.pdf\n\n# Show values for the metatags 'author', 'title', for the file 'example.pdf'.\n$ pdfmd show -t author,title example.pdf",
+            "title": "show"
+        },
+        {
+            "location": "/commands/show/#description",
+            "text": "Show the managed metatags of a PDF document.  Managed tags are   author  createdate  title  subject  keywords",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/show/#usage",
+            "text": "$ pdfmd show [-t|--tag <TAG>] [-f|--format <FORMAT>] [-i|--includepdf]\n    [-p|--logfile <logfilepath>] [-i|--log <true|false>]",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/show/#parameter",
+            "text": "-t, --tag           Single or list of metatags to include in the output. The \n                    selected tag(s) must be one of the managed ones listed\n                    above. Other tags are ignored.\n                    Multiple tags can be specified, separated by commata.\n                    If multiple tags are specified, the order in which the\n                    tags are specified is being used for the output. This will\n                    impact the order of fields, when exporting e.g. to CSV.\n                    The tag is case insensitive: 'AuThor' == 'author'.\n\n                    Hiera key: `pdfmd::config => show => tag`\n\n-a, --all           Include all managed metatags in the output. This is the\n                    default setting.\n\n-f, --format        If set, this parameter can be used to alter the output\n                    format.\n                    Possible values are: 'json', 'yaml', 'csv' and 'hash'.\n                    Default value is 'yaml'.\n\n                    Hiera key: `pdfmd::config => show => format`\n\n-i, --includepdf    If set to 'true', the output will also include the \n                    filename of the processed file.\n                    Default: false\n\n                    Hiera key: `pdfmd::config => show => includepdf`\n\n-p, --logfile       Specifies the path to the logfile.\n                    Defaults to: './.pdfmd.log'\n\n                    Hiera key: `pdfmd::config => show => logfile`\n\n-i, --log           Enables/Disablss logging.\n                    Defaults to 'true'.\n\n                    Hiera key: `pdfmd::config => show => log`",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/show/#hiera",
+            "text": "# YAML\n---\npdfmd::config:\n  show:\n    format: yaml|json|csv|hash\n    tag: author,subject,createdate,title,keywords\n    includepdf: true|false\n    log: true|false\n    logfile: /var/log/pdfmd.log",
+            "title": "Hiera"
+        },
+        {
+            "location": "/commands/show/#examples",
+            "text": "# Show default metatags for a pdf document\n$ pdfmd show example.pdf\n\n# Show values for the metatags 'author' for the file 'example.pdf'.\n$ pdfmd show -t author example.pdf\n\n# Show values for the metatags 'author', 'title', for the file 'example.pdf'.\n$ pdfmd show -t author,title example.pdf",
+            "title": "Examples"
+        },
+        {
+            "location": "/commands/sort/",
+            "text": "pdfmd/commands/sort\n\n\nDescription\n\n\nThis command will sort pdf documents into subdirectories. The destination directories are fetched from the metatadata in the document, slightly adjusted if necessary.\n\n\nIf a file does not have a value for the metatag \nauthor\n, the file will not be processed.\n\n\nUsage\n\n\n$ pdfmd sort [-d|--destination <path>] [-c|--copy [true|false]]\n             [-i|--interactive [true|false]] [-o|--overwrite [true|false]]\n             [-n|--dry-run [true|false]] [-t|--typo [true|false]]\n\n\n\n\nParameter\n\n\n-d, --destination   Specify the root output directory to where the folder\n                    structure is being created.\n                    This parameter is required on the commandline if Hiera\n                    does not provide a value for it.\n\n                    The command line parameter will overwrite any existing\n                    Hiera setting.\n\n                    Default: current working directory\n\n                    Hiera key: pdfmd::config => sort => destination \n\n-n, --dryrun        If set to true, this parameter will performa all actions as\n                    usual, but there will no actual sorting or changes of any\n                    kind.\n\n                    Default: false\n\n                    Hiera key: pdfmd::config => sort => dryryn\n\n-n, --dryrun        If set to true, this parameter will performa all actions as\n                    usual, but there will no actual sorting or changes of any\n                    kind.\n\n                    Default: false\n\n                    Hiera key: pdfmd::config => sort => dryryn\n\n-c, --copy          Copy the file instead of moving it.\n\n                    Default: false\n\n                    Hiera key: pdfmd::config => sort => copy\n\n-l, --log           Disable/Enable the logging.\n\n                    Default: true\n\n-p, --logfile       Set an alternative path for the logfile. If no path is\n                    chosen, the logfile gets created in the current working\n                    directory as `.pdfmd.log`.\n\n-i, --interactive   Disable/Enable interactive sorting. Setting this parameter\n                    will ask for configuration for each sorting action.\n\n                    Default: false\n\n-o, --overwrite     If set to true, this parameter will overwrite any existing\n                    file at the target destination with the same name without\n                    asking.\n\n                    Default: false\n\n-t, --typo          If set subdirectories with similar spelling will be\n                    reported before a new folder is being created. Similar\n                    directory wording can be caused by typos in the author\n                    field in the metatadata of the document.\n\n\n\n\nHiera\n\n\nGeneral\n\n\nParameter can be set in Hiera as default. Those will be reused unless overwritten on the commandline.\n\n\npdfmd::config:\n  sort:\n    destination:\n    dest_create: true|false\n    interactive: true|false\n    copy: true|false\n    typo: true|false\n\n\n\n\nAdditional parameter\n\n\ndest_create   If this key is set to true, the destination directory will be\n              created if it is missing.\n\n              Default: false\n\n\n\n\nRules\n\n\nThe subdirectories for the pdf documents are generated from the values in the tag \nauthor\n of each document. In order to ensure a clean directory structure, there are certain rules for altering the values.\n\n\n\n\nWhitespaces are replaced by underscores ('_').\n\n\nDots are replaced with underscores.\n\n\nAll characters are changed to their lowercase version.\n\n\nSpecial characters are serialized.\n\n\n\n\nExamples\n\n\n# Copy all documents in the subdirectory ./documents, create a folder\n# structure in `/tmp/test`, copy the files instead of moving them and disable\n# logging.\n$ pdfmd sort -d /tmp/test -c -l false ./documents\n\n# Sort a single file with the same other options as in the previous example.\n$ pdfmd sort -d /tmp/test -c -l -false ./documents/test.pdf\n\n\n\n\nTypos\n\n\nThe parameter \n--typo\n may cause \npdfmd\n to show a warning during the sorting process. \nPdfmd\n will check if there is an destination directory for the document already created, which has a similar bt-in",
+            "title": "sort"
+        },
+        {
+            "location": "/commands/sort/#description",
+            "text": "This command will sort pdf documents into subdirectories. The destination directories are fetched from the metatadata in the document, slightly adjusted if necessary.  If a file does not have a value for the metatag  author , the file will not be processed.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/sort/#usage",
+            "text": "$ pdfmd sort [-d|--destination <path>] [-c|--copy [true|false]]\n             [-i|--interactive [true|false]] [-o|--overwrite [true|false]]\n             [-n|--dry-run [true|false]] [-t|--typo [true|false]]",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/sort/#parameter",
+            "text": "-d, --destination   Specify the root output directory to where the folder\n                    structure is being created.\n                    This parameter is required on the commandline if Hiera\n                    does not provide a value for it.\n\n                    The command line parameter will overwrite any existing\n                    Hiera setting.\n\n                    Default: current working directory\n\n                    Hiera key: pdfmd::config => sort => destination \n\n-n, --dryrun        If set to true, this parameter will performa all actions as\n                    usual, but there will no actual sorting or changes of any\n                    kind.\n\n                    Default: false\n\n                    Hiera key: pdfmd::config => sort => dryryn\n\n-n, --dryrun        If set to true, this parameter will performa all actions as\n                    usual, but there will no actual sorting or changes of any\n                    kind.\n\n                    Default: false\n\n                    Hiera key: pdfmd::config => sort => dryryn\n\n-c, --copy          Copy the file instead of moving it.\n\n                    Default: false\n\n                    Hiera key: pdfmd::config => sort => copy\n\n-l, --log           Disable/Enable the logging.\n\n                    Default: true\n\n-p, --logfile       Set an alternative path for the logfile. If no path is\n                    chosen, the logfile gets created in the current working\n                    directory as `.pdfmd.log`.\n\n-i, --interactive   Disable/Enable interactive sorting. Setting this parameter\n                    will ask for configuration for each sorting action.\n\n                    Default: false\n\n-o, --overwrite     If set to true, this parameter will overwrite any existing\n                    file at the target destination with the same name without\n                    asking.\n\n                    Default: false\n\n-t, --typo          If set subdirectories with similar spelling will be\n                    reported before a new folder is being created. Similar\n                    directory wording can be caused by typos in the author\n                    field in the metatadata of the document.",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/sort/#hiera",
+            "text": "",
+            "title": "Hiera"
+        },
+        {
+            "location": "/commands/sort/#general",
+            "text": "Parameter can be set in Hiera as default. Those will be reused unless overwritten on the commandline.  pdfmd::config:\n  sort:\n    destination:\n    dest_create: true|false\n    interactive: true|false\n    copy: true|false\n    typo: true|false",
+            "title": "General"
+        },
+        {
+            "location": "/commands/sort/#additional-parameter",
+            "text": "dest_create   If this key is set to true, the destination directory will be\n              created if it is missing.\n\n              Default: false",
+            "title": "Additional parameter"
+        },
+        {
+            "location": "/commands/sort/#rules",
+            "text": "The subdirectories for the pdf documents are generated from the values in the tag  author  of each document. In order to ensure a clean directory structure, there are certain rules for altering the values.   Whitespaces are replaced by underscores ('_').  Dots are replaced with underscores.  All characters are changed to their lowercase version.  Special characters are serialized.",
+            "title": "Rules"
+        },
+        {
+            "location": "/commands/sort/#examples",
+            "text": "# Copy all documents in the subdirectory ./documents, create a folder\n# structure in `/tmp/test`, copy the files instead of moving them and disable\n# logging.\n$ pdfmd sort -d /tmp/test -c -l false ./documents\n\n# Sort a single file with the same other options as in the previous example.\n$ pdfmd sort -d /tmp/test -c -l -false ./documents/test.pdf",
+            "title": "Examples"
+        },
+        {
+            "location": "/commands/sort/#typos",
+            "text": "The parameter  --typo  may cause  pdfmd  to show a warning during the sorting process.  Pdfmd  will check if there is an destination directory for the document already created, which has a similar bt-in",
+            "title": "Typos"
+        },
+        {
+            "location": "/commands/stat/",
+            "text": "pdfmd/command/sort\n\n\nDescription\n\n\nShow statistics about the metadata of the PDF documents in a directory.\n\n\nUsage\n\n\n$ pdfmd stat [-r|--recursive] [-t|--tags <TAGS>] [-f|--format FORMAT]\n             [-s|--status true|false] <directory>\n\n\n\n\nParameter\n\n\n-r, --recursive     If set to true, all documents from all subdirectories are\n                    included.\n\n                    Default: false\n\n-f, --format        Sets alternative output formats.\n                    The following formats are available:\n\n                    * hash\n                    * yaml\n                    * json\n\n                    Default: json\n\n-s, --status        Enable/Disable the output during statistics calculations.\n\n                    Default: true\n\n\n\n\nExamples\n\n\n# Run statistics on the documents in the current directory.\n$ pdfmd stat .\n\n# Run statistics on the document and all subdirectories.\n$ pdfmd stat -r .",
+            "title": "stat"
+        },
+        {
+            "location": "/commands/stat/#description",
+            "text": "Show statistics about the metadata of the PDF documents in a directory.",
+            "title": "Description"
+        },
+        {
+            "location": "/commands/stat/#usage",
+            "text": "$ pdfmd stat [-r|--recursive] [-t|--tags <TAGS>] [-f|--format FORMAT]\n             [-s|--status true|false] <directory>",
+            "title": "Usage"
+        },
+        {
+            "location": "/commands/stat/#parameter",
+            "text": "-r, --recursive     If set to true, all documents from all subdirectories are\n                    included.\n\n                    Default: false\n\n-f, --format        Sets alternative output formats.\n                    The following formats are available:\n\n                    * hash\n                    * yaml\n                    * json\n\n                    Default: json\n\n-s, --status        Enable/Disable the output during statistics calculations.\n\n                    Default: true",
+            "title": "Parameter"
+        },
+        {
+            "location": "/commands/stat/#examples",
+            "text": "# Run statistics on the documents in the current directory.\n$ pdfmd stat .\n\n# Run statistics on the document and all subdirectories.\n$ pdfmd stat -r .",
+            "title": "Examples"
+        },
+        {
+            "location": "/tags/author/",
+            "text": "pdfmd/tags/author\n\n\nDocument\n\n\n\n\nThe \nauthor\n is defined as the creator of the document, not necessary of the file.\n\n\nYou get an invoice from you power distributor: there's the value for author field right there.\n\n\n\n\nExamples\n\n\n\n\nInvoice from somebody : That somebody is the author\n\n\nReceipt for buy from a store: The store is the author\n\n\n\n\nAffects\n\n\nFilename\n\n\n\n\nThe value of the author metatag is part of the filename. Based on the value of this field, the string for the filename is built up.\n\n\n\n\nSorting directory\n\n\n\n\nWhen sorting documents into a destination, the author value is evaluated in order to create a subdirectory.\n\n\nSpaces and special characters are being replaced. The author is converted to lowercase characters.\n\n\n\n\nExif\n\n\n\n\nThe corresponding metatag field in a pdf document is: \nauthor",
+            "title": "author"
+        },
+        {
+            "location": "/tags/author/#document",
+            "text": "The  author  is defined as the creator of the document, not necessary of the file.  You get an invoice from you power distributor: there's the value for author field right there.",
+            "title": "Document"
+        },
+        {
+            "location": "/tags/author/#examples",
+            "text": "Invoice from somebody : That somebody is the author  Receipt for buy from a store: The store is the author",
+            "title": "Examples"
+        },
+        {
+            "location": "/tags/author/#affects",
+            "text": "",
+            "title": "Affects"
+        },
+        {
+            "location": "/tags/author/#filename",
+            "text": "The value of the author metatag is part of the filename. Based on the value of this field, the string for the filename is built up.",
+            "title": "Filename"
+        },
+        {
+            "location": "/tags/author/#sorting-directory",
+            "text": "When sorting documents into a destination, the author value is evaluated in order to create a subdirectory.  Spaces and special characters are being replaced. The author is converted to lowercase characters.",
+            "title": "Sorting directory"
+        },
+        {
+            "location": "/tags/author/#exif",
+            "text": "The corresponding metatag field in a pdf document is:  author",
+            "title": "Exif"
+        },
+        {
+            "location": "/tags/createdate/",
+            "text": "pdfmd/tags/createdate\n\n\nDocument\n\n\n\n\nThe tag \ncreatedate\n refers to the date and time of a document when it has been created.\n\n\nIf there is a date on the document, that is probably the value for \ncreatedate\n. It is not the date at which the file gets modified.\n\n\n\n\nExamples\n\n\n\n\nInvoice from somebody with an invoicedate: that is the \ncreatedate\n.\n\n\nReceipt from buying from a store: the receipt date is the \ncreatedate\n.\n\n\n\n\nAffects\n\n\nFilename\n\n\n\n\nThe value of the createdate metatag is part of the filename. Based on the value of this field, the beginning of the filename string is build up.\n\n\nThe createdate is taken from the metadata field, all non-digit characters removed and a consecutive string of 8 digits build that represents the date when the document has been created.\n\n\nThe createdate can contain an accurate time as well, but this is not used in the filename.\n\n\n\n\nExif\n\n\n\n\nThe metatag field \nCreate Date\n contains the value that is modified and used for the naming of the file.\n\n\nThe \nCreate Date\n is separated by colons within the exifdata, but those are stripped away under processing.",
+            "title": "createdate"
+        },
+        {
+            "location": "/tags/createdate/#document",
+            "text": "The tag  createdate  refers to the date and time of a document when it has been created.  If there is a date on the document, that is probably the value for  createdate . It is not the date at which the file gets modified.",
+            "title": "Document"
+        },
+        {
+            "location": "/tags/createdate/#examples",
+            "text": "Invoice from somebody with an invoicedate: that is the  createdate .  Receipt from buying from a store: the receipt date is the  createdate .",
+            "title": "Examples"
+        },
+        {
+            "location": "/tags/createdate/#affects",
+            "text": "",
+            "title": "Affects"
+        },
+        {
+            "location": "/tags/createdate/#filename",
+            "text": "The value of the createdate metatag is part of the filename. Based on the value of this field, the beginning of the filename string is build up.  The createdate is taken from the metadata field, all non-digit characters removed and a consecutive string of 8 digits build that represents the date when the document has been created.  The createdate can contain an accurate time as well, but this is not used in the filename.",
+            "title": "Filename"
+        },
+        {
+            "location": "/tags/createdate/#exif",
+            "text": "The metatag field  Create Date  contains the value that is modified and used for the naming of the file.  The  Create Date  is separated by colons within the exifdata, but those are stripped away under processing.",
+            "title": "Exif"
+        },
+        {
+            "location": "/tags/keywords/",
+            "text": "pdfmd/tags/keywords\n\n\nDocument\n\n\n\n\nThe tag \nkeywords\n refers to any other key word that might be related to a document.\n\n\nKeywords can contain specialised tags like customernumbers, invoicenumber and other reoccuring numbers. that can be configured to get special treatment.\n\n\nKeywords can be treated as free-text field and play a minor role in the naming part.\n\n\nThe order of keywords defines which keywords are more likely to show up in the naming of the file.\n\n\n\n\nExamples\n\n\n\n\nInvoice with a customer number and an invoice number: The customer number should go into the \nkeywords\n. The product the invoice is for as well.\n\n\nReceipt with for a product: the product should go into the keywords field.\n\n\nDefined abbreviations like \"customernumber\" => \"cnb\" can be replaced and the filename be shortened.\n\n\n\n\nAffects\n\n\nFilename\n\n\n\n\nThe last part of the filename (before the extension) is generate from the keywords.\n\n\nDefined strings can be replaced with abbreviations in Hiera.\n\n\nThe number of keywords in the filename is limited to 3 (default) and can be re-defined.\n\n\n\n\nExif\n\n\n\n\nFrom the exif data of a pdf document the keywords are stored in the tag \nKeywords\n as a comma separated string.\n\n\nkeywords\n are stored as entered and are not altered in the metatag field.",
+            "title": "keywords"
+        },
+        {
+            "location": "/tags/keywords/#document",
+            "text": "The tag  keywords  refers to any other key word that might be related to a document.  Keywords can contain specialised tags like customernumbers, invoicenumber and other reoccuring numbers. that can be configured to get special treatment.  Keywords can be treated as free-text field and play a minor role in the naming part.  The order of keywords defines which keywords are more likely to show up in the naming of the file.",
+            "title": "Document"
+        },
+        {
+            "location": "/tags/keywords/#examples",
+            "text": "Invoice with a customer number and an invoice number: The customer number should go into the  keywords . The product the invoice is for as well.  Receipt with for a product: the product should go into the keywords field.  Defined abbreviations like \"customernumber\" => \"cnb\" can be replaced and the filename be shortened.",
+            "title": "Examples"
+        },
+        {
+            "location": "/tags/keywords/#affects",
+            "text": "",
+            "title": "Affects"
+        },
+        {
+            "location": "/tags/keywords/#filename",
+            "text": "The last part of the filename (before the extension) is generate from the keywords.  Defined strings can be replaced with abbreviations in Hiera.  The number of keywords in the filename is limited to 3 (default) and can be re-defined.",
+            "title": "Filename"
+        },
+        {
+            "location": "/tags/keywords/#exif",
+            "text": "From the exif data of a pdf document the keywords are stored in the tag  Keywords  as a comma separated string.  keywords  are stored as entered and are not altered in the metatag field.",
+            "title": "Exif"
+        },
+        {
+            "location": "/tags/subject/",
+            "text": "pdfmd/tags/subject\n\n\nDocument\n\n\n\n\nThe \nsubject\n of a document is defined as the topic of the document.\n\n\nThe topic should not be too long. A reference number of any kind is optimal.\n\n\nThe \nsubject\n is tightly connected to the tag \ntitle\n.\n\n\n\n\nExamples\n\n\n\n\nInvoice: Invoice number\n\n\nManual: Topic\n\n\nContract: Contract number of topic of the contract.\n\n\nOrder: Ordernumber\n\n\n\n\nAffects\n\n\nFilename\n\n\n\n\nSome part of the filename is build from the subject part. When the title matches some abbreviation definition, the subject will be added behind that abbreviation. Otherwise the title and subject will be listed separately in the filename.\n\n\n\n\nExif\n\n\n\n\nThe subject is stored in the metatag \nsubject\n within the exif information of a PDF document.",
+            "title": "subject"
+        },
+        {
+            "location": "/tags/subject/#document",
+            "text": "The  subject  of a document is defined as the topic of the document.  The topic should not be too long. A reference number of any kind is optimal.  The  subject  is tightly connected to the tag  title .",
+            "title": "Document"
+        },
+        {
+            "location": "/tags/subject/#examples",
+            "text": "Invoice: Invoice number  Manual: Topic  Contract: Contract number of topic of the contract.  Order: Ordernumber",
+            "title": "Examples"
+        },
+        {
+            "location": "/tags/subject/#affects",
+            "text": "",
+            "title": "Affects"
+        },
+        {
+            "location": "/tags/subject/#filename",
+            "text": "Some part of the filename is build from the subject part. When the title matches some abbreviation definition, the subject will be added behind that abbreviation. Otherwise the title and subject will be listed separately in the filename.",
+            "title": "Filename"
+        },
+        {
+            "location": "/tags/subject/#exif",
+            "text": "The subject is stored in the metatag  subject  within the exif information of a PDF document.",
+            "title": "Exif"
+        },
+        {
+            "location": "/tags/title/",
+            "text": "pdfmd/tags/title\n\n\nDocument\n\n\n\n\nThe \ntitle\n describes the general type of the document.\n\n\nCan be chosen freely. Some titles are treated special when assigning the filename.\n\n\n\n\nExamples\n\n\n\n\nInvoice\n\n\nManual\n\n\nContract\n\n\nOrder\n\n\n\n\nAffects\n\n\nFilename\n\n\n\n\n\n\nOne part of the generated filename is created from the metatag field \ntitle\n. When the title matches one of the defined abbreviations, the following is going to happen:\n\n\n\n\n\n\nThe title part of the filename is being replaced with the assigned abbreviation.\n\n\n\n\nThe value of the subject is directly added to the abbreviation string in the filename.\n\n\n\n\nExif\n\n\n\n\nThe \ntitle\n is stored in the metatag \ntitle\n within the exif information of a PDF document.",
+            "title": "title"
+        },
+        {
+            "location": "/tags/title/#document",
+            "text": "The  title  describes the general type of the document.  Can be chosen freely. Some titles are treated special when assigning the filename.",
+            "title": "Document"
+        },
+        {
+            "location": "/tags/title/#examples",
+            "text": "Invoice  Manual  Contract  Order",
+            "title": "Examples"
+        },
+        {
+            "location": "/tags/title/#affects",
+            "text": "",
+            "title": "Affects"
+        },
+        {
+            "location": "/tags/title/#filename",
+            "text": "One part of the generated filename is created from the metatag field  title . When the title matches one of the defined abbreviations, the following is going to happen:    The title part of the filename is being replaced with the assigned abbreviation.   The value of the subject is directly added to the abbreviation string in the filename.",
+            "title": "Filename"
+        },
+        {
+            "location": "/tags/title/#exif",
+            "text": "The  title  is stored in the metatag  title  within the exif information of a PDF document.",
+            "title": "Exif"
+        },
+        {
+            "location": "/hiera/",
+            "text": "pdfmd/hiera\n\n\nDescription\n\n\nHiera is s simple pluggable Hierarchical Database. Multiple backends are supported, the default backend are files in the yaml format. It can be used for all kinds of data.\n\n\nSince it is so simple to implement and to edit, Hiera is supported by pdfmd.\n\n\nBy replicating the database of \nhiera\n to other systems and restructuring the configuration depending on the host it runs on, \npdfmd\n can be configured to behave differently on differen hosts.\n\n\nInstallation\n\n\nFrom the doc:\n\n\n\n\nHiera is available as a Gem called \nhiera\n and out of the box it comes with just a single\nYAML backend.\n\n\nHiera is also available as a native package via apt (\nhttp://apt.puppetlabs.com\n) and yum (\nhttp://yum.puppetlabs.com\n). Instructions for adding these repositories can be found at \nhttp://docs.puppetlabs.com/guides/installation.html#debian-and-ubuntu\n and \nhttp://docs.puppetlabs.com/guides/installation.html#enterprise-linux\n respectively.\n\n\nAt present JSON (\ngithub/ripienaar/hiera-json\n) and Puppet (hiera-puppet) backends are availble.\n\n\n\n\nConfiguration\n\n\n---\n:backends:\n  - yaml\n\n:hierarchy:\n  - defaults\n\n:yaml:\n  :datadir: /path/to/hieradata\n\n\n\n\n\n\nThis configuration will required yaml files in \n/path/to/hieradata\n. Only a datafile called \ndefaults.yaml\n is defined in the backend. This file needs to contain hash data.\n\n\nThe file \ndefaults.yaml\n needs to be structured like the following example:\n\n\n\n\n---\npdfmd::config:\n  default:\n    loglevel: debug\n  show:\n    format: yaml\n    includepdf: true\n  edit:\n    rename: true\n    opendoc: true\n    pdfviewer: mupdf\n  rename:\n    keys:\n      inv: Invoice\n      ord: ['Order', 'Ordernumber']\n      con: Contract\n\n\n\n\nUsage\n\n\nCommandline\n\n\n\n\nConfigured correctly the pdfmd configuration can be queried directly from the commandline using \nhiera\n:\n\n\n\n\n$ hiera pdfmd::config\n{\"default\"=>{\"loglevel\"=>\"debug\"},\n \"show\"=>{\"format\"=>\"yaml\", \"includepdf\"=>true},\n \"edit\"=>\n  {\"rename\"=>true,\n   \"opendoc\"=>true,\n   \"pdfviewer\"=>\"mupdf\"},\n \"rename\"=>\n   \"keys\" =>\n    {\"inv\"=>'Invoice',\n     \"ord\"=>['Order', 'Ordernumber'],},\n   ....\n\n\n\n\nor with \npdfmd config\n\n\n$ pdfmd config\n---\ndefault:\n  loglevel: debug\nshow:\n  format: yaml\n  includepdf: true\nedit:\n  rename: true\n  opendoc: true\n  pdfviewer: mupdf\nrename:\n  keys:\n    inv: Invoice\n    ord: \n      - Order\n      - Ordernumber\n\n\n\n\nPdfmd config\n\n\nThe parameter \nconfig\n shows the whole configuration from \nhiera\n or a subsection that can be defined by adding the section to the comand.\n\n\n$ pdfmd config show\n---\nformat: yaml\nincludepdf: true",
+            "title": "Hiera"
+        },
+        {
+            "location": "/hiera/#description",
+            "text": "Hiera is s simple pluggable Hierarchical Database. Multiple backends are supported, the default backend are files in the yaml format. It can be used for all kinds of data.  Since it is so simple to implement and to edit, Hiera is supported by pdfmd.  By replicating the database of  hiera  to other systems and restructuring the configuration depending on the host it runs on,  pdfmd  can be configured to behave differently on differen hosts.",
+            "title": "Description"
+        },
+        {
+            "location": "/hiera/#installation",
+            "text": "From the doc:   Hiera is available as a Gem called  hiera  and out of the box it comes with just a single\nYAML backend.  Hiera is also available as a native package via apt ( http://apt.puppetlabs.com ) and yum ( http://yum.puppetlabs.com ). Instructions for adding these repositories can be found at  http://docs.puppetlabs.com/guides/installation.html#debian-and-ubuntu  and  http://docs.puppetlabs.com/guides/installation.html#enterprise-linux  respectively.  At present JSON ( github/ripienaar/hiera-json ) and Puppet (hiera-puppet) backends are availble.",
+            "title": "Installation"
+        },
+        {
+            "location": "/hiera/#configuration",
+            "text": "---\n:backends:\n  - yaml\n\n:hierarchy:\n  - defaults\n\n:yaml:\n  :datadir: /path/to/hieradata   This configuration will required yaml files in  /path/to/hieradata . Only a datafile called  defaults.yaml  is defined in the backend. This file needs to contain hash data.  The file  defaults.yaml  needs to be structured like the following example:   ---\npdfmd::config:\n  default:\n    loglevel: debug\n  show:\n    format: yaml\n    includepdf: true\n  edit:\n    rename: true\n    opendoc: true\n    pdfviewer: mupdf\n  rename:\n    keys:\n      inv: Invoice\n      ord: ['Order', 'Ordernumber']\n      con: Contract",
+            "title": "Configuration"
+        },
+        {
+            "location": "/hiera/#usage",
+            "text": "",
+            "title": "Usage"
+        },
+        {
+            "location": "/hiera/#commandline",
+            "text": "Configured correctly the pdfmd configuration can be queried directly from the commandline using  hiera :   $ hiera pdfmd::config\n{\"default\"=>{\"loglevel\"=>\"debug\"},\n \"show\"=>{\"format\"=>\"yaml\", \"includepdf\"=>true},\n \"edit\"=>\n  {\"rename\"=>true,\n   \"opendoc\"=>true,\n   \"pdfviewer\"=>\"mupdf\"},\n \"rename\"=>\n   \"keys\" =>\n    {\"inv\"=>'Invoice',\n     \"ord\"=>['Order', 'Ordernumber'],},\n   ....  or with  pdfmd config  $ pdfmd config\n---\ndefault:\n  loglevel: debug\nshow:\n  format: yaml\n  includepdf: true\nedit:\n  rename: true\n  opendoc: true\n  pdfviewer: mupdf\nrename:\n  keys:\n    inv: Invoice\n    ord: \n      - Order\n      - Ordernumber",
+            "title": "Commandline"
+        },
+        {
+            "location": "/hiera/#pdfmd-config",
+            "text": "The parameter  config  shows the whole configuration from  hiera  or a subsection that can be defined by adding the section to the comand.  $ pdfmd config show\n---\nformat: yaml\nincludepdf: true",
+            "title": "Pdfmd config"
+        },
+        {
+            "location": "/about/",
+            "text": "",
+            "title": "About"
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+/* Creates via 
+ * $ dot -Tpng <inputfile.dot> -o <ouputfile.png>
+ */
+digraph workflow {
+  rankdir="LR";
+  splines="ortho";
+
+  /* steps */
+  node [ shape="none"; ] 
+    step1 [ label="input"; ]
+    step2 [ label="output"; ]
+    1
+    2
+    3
+    4
+    5
+
+  /* manual actions */
+  node [ shape="diamond"; ]
+    input [ label="incoming\ndocument"; ]
+    output[ label="outgoing\ndocument"; ]
+
+
+  /* pdfmd actions */ 
+  node [ shape="box"; ]
+    update_metadata [ label="update\nmetadata"; ]
+    rename
+    sort
+  
+
+  subgraph cluster_pdfmd {  
+    label="pdfmd";
+    style="rounded";
+    color="gray";
+    labeljust="l";
+    update_metadata
+    rename
+    sort 
+  }
+
+  input -> update_metadata -> rename -> sort -> output
+  update_metadata -> output [ xlabel="automatic"; style="dashed";]
+
+  step1 -> step2 [ color="gray"; ]
+  { rank=same; step1; input; }
+  { rank=same; step2; output; }
+
+  /* Steps */
+  1 -> 2 -> 3 -> 4 -> 5 [ style="invis"; ]
+
+}
+

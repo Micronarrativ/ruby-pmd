@@ -1,0 +1,7 @@
+# Logfile created on 2015-07-07 20:42:01 +0200 by logger.rb/44203
+I, [2015-07-07T20:42:01.345848 #14145]  INFO -- : Starting with file '/home/jt/Nedlastinger/pdfsort/test.pdf'.
+I, [2015-07-07T20:42:02.000264 #14145]  INFO -- : Showing metatags for '/home/jt/Nedlastinger/pdfsort/test.pdf' in format 'yaml'.
+I, [2016-12-22T06:53:39.641993 #345]  INFO -- : Starting with file ''.
+I, [2016-12-22T06:58:44.178560 #418]  INFO -- : Starting with file ''.
+I, [2016-12-22T07:04:41.861055 #607]  INFO -- : Starting with file '/data/oc/oc/dokumenter/work/26787593.pdf'.
+I, [2016-12-22T07:04:42.049852 #607]  INFO -- : Waiting for user input.

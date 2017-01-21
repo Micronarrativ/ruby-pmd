@@ -1,0 +1,454 @@
+#!/usr/bin/env ruby
+require 'pdfmd'
+require 'pdfmd/pdfmdstat'
+require 'pdfmd/pdfmdinit'
+require 'pdfmd/hiera'
+require "thor"
+require "highline/import"
+require "fileutils"
+require "i18n"
+require 'pathname'
+
+VERSION = '2.6.0'
+NAME    = 'pdfmd'
+
+# Read the content of the long description from an external file
+#
+def readLongDesc(filename)
+
+  # Multiple possible paths to cover the development as well
+  paths = [
+    "#{File.dirname(File.expand_path($0))}../lib",
+    "#{Gem.dir}/gems/#{NAME}-#{VERSION}/lib",
+  ]
+
+  longDescContent = ''
+  paths.each do |value|
+
+    if File.exists?(value + '/' + filename)
+      File.open(value + '/' + filename, 'r') do |infile|
+        while (line = infile.gets)
+          longDescContent = longDescContent + line
+        end
+      end
+    end
+
+  end
+
+  longDescContent
+
+end
+
+#
+# Thor classes
+
+# Database class
+class Db < Thor
+
+  # Create a DB file
+  method_option :dbfilepath, :type => :string, :aliases => '-f', :desc => 'Path to the db file', :required => false
+  method_option :overwrite, :type => :boolean, :aliases => '-o', :desc => 'Boolean for overwriting existing db files', :required => false, :lazy_default => true
+  desc 'create', 'Creating a lokal database with metatag information.'
+  def create
+
+    hiera_config      = eval(Hiera.getSettings('pdfmd::config'))
+    dbpath_file_hiera = hiera_config['db']['sqlite']['dbpath'] rescue nil
+    dbpath_file_hiera_overwrite = hiera_config['db']['overwrite_on_create']
+    dblocation        = Hiera.getActiveSetting(options['dbfilepath'], dbpath_file_hiera, Dir.pwd + '/pdfmddb.sqlite')
+    dboverwrite = Hiera.getActiveSetting(options['overwrite'], dbpath_file_hiera_overwrite, false)
+
+    if File.exists?(dblocation) and not dboverwrite
+      puts "File '#{dblocation}' already exists. Recreate db with '$ #{__FILE__} create -o true -f #{dblocation}'."
+      exit 1
+    else
+      puts "Trying to create file at '#{dblocation}',"
+      pdfdb = Pdfmddb.new dblocation
+      pdfdb.create rescue begin
+        puts 'Something went wrong. Does the filepath exist?'
+        exit 1
+      end
+    end
+
+    puts 'Database file created.'
+
+  end
+
+  desc 'delete', 'Deleting a DB'
+  def delete
+    puts 'deleting'
+  end
+
+  desc 'update', 'Updating the database'
+  def update(*contentpath)
+
+    # This method is a double of pdfmd.gethiera?
+    hiera_config      = eval(Hiera.getSettings('pdfmd::config'))
+    dbpath_file_hiera = hiera_config['db']['sqlite']['dbpath'] rescue nil
+    dblocation        = Hiera.getActiveSetting(options['dbfilepath'], dbpath_file_hiera, Dir.pwd + '/pdfmddb.sqlite')
+
+    contentpath = contentpath.size == 0 ? [Dir.pwd] : contentpath
+
+    pdfdb = Pdfmddb.new dblocation
+    contentpath.each do |input_path|
+      if input_path =~ /\./
+        input_path = Dir.pwd
+      end
+      pdfdb.document_path << input_path.chomp('/')
+    end
+    pdfdb.run_update
+  end
+
+  desc 'reset', 'Reset the database'
+  def reset
+    puts 'resetting.'
+  end
+
+  desc 'stats', 'Show stats of the database.'
+  def stats
+
+    hiera_config      = eval(Hiera.getSettings('pdfmd::config'))
+    dbpath_file_hiera = hiera_config['db']['sqlite']['dbpath'] rescue nil
+    dblocation        = Hiera.getActiveSetting(options['dbfilepath'], dbpath_file_hiera, Dir.pwd + '/pdfmddb.sqlite')
+
+    pdfdb = Pdfmddb.new dblocation
+    puts pdfdb.statistics
+  end
+
+  # Search the database
+  # Default search goes agains the key words, but the tags can be specified.
+  #
+  desc 'search', 'Search the database.'
+  method_option :dbfilepath, :aliases => '-f', :type => :string, :required => false
+  #method_option :keyword, :type => :string, :aliases => '-k', :required => false
+  #method_option :author, :aliases => '-a', :type => :string, :required => false
+  #method_option :title, :aliases => '-t', :type => string, :required => false
+  #method_option :subject, :aliases => '-s', :type => string, :required => false
+  #method_option :date, aliases => '-d', :type => string, :required => false
+  def search(*search_terms)
+
+    hiera_config      = eval(Hiera.getSettings('pdfmd::config'))
+    dbpath_file_hiera = hiera_config['db']['sqlite']['dbpath'] rescue nil
+    dblocation        = Hiera.getActiveSetting(options['dbfilepath'], dbpath_file_hiera, Dir.pwd + '/pdfmddb.sqlite')
+    if not File.exists?(dblocation)
+      puts  "Database file '#{dblocation}' does not exist. Please create with '$ #{__FILE__} db create -f #{dblocation}'."
+      exit 1
+    end
+
+    pdfdb = Pdfmddb.new dblocation
+    puts pdfdb.search search_terms
+
+  end
+
+end
+class DOC < Thor
+
+  @@hieradata = Pdfmd.hieradata
+
+  # Class options for all commands (logging only)
+  # none
+
+  #
+  # Show the current metadata tags
+  #
+  desc 'show', 'Show metadata of a file'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdshow.txt'
+  method_option :tag, :type => :string, :aliases => '-t', :desc => 'Show specific tag(s), comma separated', :required => false
+  method_option :format, :type => :string, :aliases => '-f', :desc => 'Define output format', :required => false
+  method_option :includepdf, :type => :boolean, :aliases => '-i', :desc => 'Include the filename in output', :required => false
+  def show(*filename)
+
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
+
+       pdfdoc         = Pdfmdshow.new
+       pdfdoc.set_file current_file
+       format         = Pdfmdmethods.determineValidSetting(options[:format], 'show:format',@@hieradata)
+       show_filename  = Pdfmdmethods.determineValidSetting(options[:includepdf], 'show:includepdf',@@hieradata)
+       show_tags      = Pdfmdmethods.determineValidSetting(options[:tag], 'show:tags',@@hieradata)
+       options = {
+         :tag        => show_tags,
+         :format     => format,
+         :includepdf => show_filename
+       }
+       puts pdfdoc.show_metatags options
+
+       # Unset
+       pdfdoc         = ''
+
+    end
+
+  end
+
+  # Clean all metadata from a document
+  #
+  desc 'clean', 'Clean metadata from file'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdclean.txt'
+  method_option :tags, :aliases => '-t', :type => :string, :required => false
+  def clean(*filename)
+
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
+
+      pdfdoc      = Pdfmdclean.new current_file
+      pdfdoc.tags = options[:tags]
+      pdfdoc.run
+
+      # Unset
+      pdfdoc      = ''
+
+    end
+  end
+
+
+  # Initialise something
+  #
+  #
+  desc 'init [COMMAND]', 'Initialise additonal functions'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdinit.txt'
+  method_option :remove, :type => :boolean, :aliases => '-r', :required => false, :lazydefault => 'true'
+  def init(subcommand = '')
+
+    if subcommand == 'bash_completion'
+      init_bashcompletion(NAME,VERSION,options[:remove])
+    else
+      puts 'No command provided. Abort.'
+      puts 'Run `$ pdfmd help init` for details.'
+      exit 1
+    end
+
+  end
+
+  # Show current settings
+  #
+  desc 'config', 'Show config defaults'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdconfig.txt'
+  method_option :show, :type => :boolean, :aliases => '-s', :required => false
+  def config(subcommand = '')
+
+    pdfdoc = Pdfmdconfig.new 
+    puts pdfdoc.show_config subcommand
+
+  end
+
+  #
+  # Change a MetaTag Attribute
+  #
+  # FIXME: keywords are added differently according to the documentation
+  # http://www.sno.phy.queensu.ca/~phil/exiftool/faq.html
+  desc 'edit', 'Edit Meta Tag(s)'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdedit.txt'
+  method_option :tag, :type => :string, :aliases => '-t', :desc => 'Name of the Tag(s) to Edit', :required => true, :lazy_default => 'all'
+  method_option :rename, :type => :boolean, :aliases => '-r', :desc => 'Rename file after changing meta-tags', :required => false
+  method_option :opendoc, :type => :boolean, :aliases => '-o', :desc => 'Open the PDF document in a separate window.', :required => false, :lazy_default => true
+  def edit(*filename)
+
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
+
+      pdfdoc            = Pdfmdedit.new 
+      pdfdoc.set_file current_file
+      tags              = Pdfmdmethods.determineValidSetting(options[:tag],'edit:tags', @@hieradata)
+      pdfdoc.opendoc    = Pdfmdmethods.determineValidSetting(options[:opendoc], 'edit:opendoc', @@hieradata)
+      pdfdoc.pdfviewer  = Pdfmdmethods.determineValidSetting(nil, 'edit:pdfviewer', @@hieradata)
+      pdfdoc.set_tags tags
+      pdfdoc.update_tags
+      pdfdoc.write_tags current_file
+
+      # If the file shall be renamed at the same time, trigger the other task
+      if Pdfmdmethods.determineValidSetting(options[:rename], 'edit:rename', @@hieradata)
+
+        #rename filename
+        Pdfmdmethods.log('info', 'Running rename command.')
+        rename current_file
+
+      end
+
+    end
+
+  end
+
+  #
+  # Show statistics
+  #
+  desc 'stat', 'Show metadata statistics of multiple files'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdstat.txt'
+  option :recursive, :type => :boolean, :aliases => '-r', :desc => 'Include subdirectories recursively.', :lazy_default => true, :required => false
+  option :tags, :aliases => '-t', :type => :string, :desc => 'Define Metatags to run at', :lazy_default => 'author,title,subject,createdate,keywords', :required => false
+  option :format, :aliases => '-f', :type => :string, :desc => 'Define output format.', :required => false, :default => 'yaml', :enum => ['yaml', 'json', 'hash']
+  option :status, :aliases => '-s', :type => :boolean, :desc => 'Show calculation status.', :required => false, :default => true
+  def stat(input)
+
+    filemetadata  = Hash.new
+    currentOutput = Hash.new
+
+    if File.file?(input)
+      puts 'Input is a single file.'
+      puts 'n.a.y.'
+      exit 1
+    else
+
+      # Remove trailing slashes
+      input = input.gsub(/\/$/,'')
+
+      # Iterate through all Files an collect the metadata
+      recursive = options[:recursive] ? '/**' : ''
+
+      # Count the number of files quickly to show an overview
+      # nooFiles = numberOfFiles
+      nooFiles        = Dir[File.join(input.chomp, recursive, '*.pdf')].count { |file| File.file?(file) }
+      currentNooFiles = 0
+
+      Dir.glob("#{input.chomp}#{recursive}/*.pdf").each do |filename|
+
+        # Print percentage if requested
+        if options[:status]
+          currentNooFiles = currentNooFiles + 1
+          percentage      = 100 / nooFiles * currentNooFiles
+          print "\r Status: #{percentage} % of #{nooFiles} files processed. "
+        end
+
+        pdfdoc                                 = Pdfmd.new
+        pdfdoc.set_file filename
+        filemetadata                           = {}
+        currentOutput[File.basename(filename)] = pdfdoc.metadata.to_s
+        pdfdoc                                 = nil
+
+      end
+      # Print some linebreak if the status has been shown.
+      # This makes it a bit prettier.
+      if options[:status]
+        puts ''
+        puts ''
+      end
+
+      pdfstat = Pdfmdstat.new(currentOutput)
+      pdfstat.tags options[:tags]
+      pdfstat.analyse_metadata
+      pdfstat.output_metadata(options[:format])
+
+    end
+
+  end
+
+  #
+  # Sort the files into directories based on the author
+  #
+  desc 'sort','Sort files into directories sorted by Author'
+  long_desc readLongDesc 'pdfmd/long_desc.pdfmdsort.txt'
+  method_option :destination, :aliases => '-d', :required => false, :type => :string, :desc => 'Defines the output directory'
+  method_option :copy, :aliases => '-c', :required => false, :type => :boolean, :desc => 'Copy files instead of moving them'
+  method_option :interactive, :aliases => '-i', :required => false, :type => :boolean, :desc => 'Enable/Disable interactive sorting'
+  method_option :overwrite, :alises => '-o', :required => false, :type => :boolean, :desc => 'Enable/Disable file overwrite.', :lazy_default => true
+  method_option :dryrun, :aliases => '-n', :required => false, :type => :boolean, :desc => 'Run without changing something'
+  method_option :typo, :aliases => '-t', :required => false, :type => :boolean, :desc => 'Try to find typos before sorting into folders.', :lazy_default => true
+  def sort(*input)
+
+    input.each do |file|
+
+      if File.file?(file)
+        pdfdoc              = Pdfmdsort.new
+        pdfdoc.set_file file
+        pdfdoc.copy         = Pdfmdmethods.determineValidSetting(options[:copy], 'sort:copy',@@hieradata)
+        pdfdoc.interactive  = Pdfmdmethods.determineValidSetting(options[:interactive], 'sort:interactive',@@hieradata)
+        pdfdoc.destination  = Pdfmdmethods.determineValidSetting(options[:destination], 'sort:destination',@@hieradata)
+        pdfdoc.overwrite    = Pdfmdmethods.determineValidSetting(options[:overwrite], 'sort:overwrite',@@hieradata)
+        pdfdoc.dryrun       = Pdfmdmethods.determineValidSetting(options[:dryrun], 'sort:dryrun',@@hieradata)
+        pdfdoc.typo         = Pdfmdmethods.determineValidSetting(options[:typo], 'sort:typo',@@hieradata)
+        pdfdoc.dest_create  = Pdfmdmethods.determineValidSetting('', 'sort:dest_create',@@hieradata)
+        pdfdoc.sort
+
+      else
+
+        # Run the actions for all files which are in the directory
+        Dir.glob(input.join.chomp('/') + '/*.pdf').each do |filename|
+          pdfdoc              = Pdfmdsort.new
+          pdfdoc.set_file filename
+          pdfdoc.copy         = Pdfmdmethods.determineValidSetting(options[:copy], 'sort:copy',@@hieradata)
+          pdfdoc.interactive  = Pdfmdmethods.determineValidSetting(options[:interactive], 'sort:interactive',@@hieradata)
+          pdfdoc.destination  = Pdfmdmethods.determineValidSetting(options[:destination], 'sort:destination',@@hieradata)
+          pdfdoc.overwrite    = Pdfmdmethods.determineValidSetting(options[:overwrite], 'sort:overwrite',@@hieradata)
+          pdfdoc.dryrun       = Pdfmdmethods.determineValidSetting(options[:dryrun], 'sort:dryrun',@@hieradata)
+          pdfdoc.sort
+        end
+
+      end
+
+    end # End of input array loop
+
+  end
+
+  # Database for fast document searching
+  #
+  desc 'db','Database actions'
+  long_desc readLongDesc('pdfmd/long_des.pdfmddb.txt')
+  subcommand 'db', Db
+
+  # Fix wrong datesettings in files
+  desc 'fix', 'Fix wrong settings in PDF files'
+  long_desc readLongDesc('pdfmd/long_des.pdfmdfix.txt')
+  def fix
+    puts 'n.a.'
+  end
+
+
+  # Rename the file according to the Metadata
+  #
+  # Scheme: YYYYMMDD-author-subject-keywords.extension
+  desc 'rename', 'Rename the file according to Metadata'
+  long_desc readLongDesc('pdfmd/long_desc.pdfmdrename.txt')
+  method_option :dryrun, :type => :boolean, :aliases => '-n', :desc => 'Run without making changes', :required => false
+  method_option :allkeywords, :type => :boolean, :aliases => '-a', :desc => 'Add all keywords (no limit)', :required => false, :lazy_default => true
+  method_option :nrkeywords, :type => :string, :aliases => '-k', :desc => 'Number of keywords to include (Default: 3)', :required => false
+  method_option :outputdir, :aliases => '-o', :type => :string, :desc => 'Specify output directory', :required => false
+  method_option :copy, :aliases => '-c', :type => :boolean, :desc => 'Copy instead of moving the file when renaming', :lazy_default => true
+  def rename(*filename)
+
+    filename.each do |current_file|
+
+      # Skip non-pdf documents
+      ! File.extname(current_file).match(/\.pdf/i) ? next : ''
+
+      pdfdoc                = Pdfmdrename.new 
+      pdfdoc.set_file       current_file
+      pdfdoc.dryrun         = Pdfmdmethods.determineValidSetting(options[:dryrun],'rename:dryrun', @@hieradata)
+      pdfdoc.allkeywords    = Pdfmdmethods.determineValidSetting(options[:allkeywords],'rename:allkeywords', @@hieradata)
+      pdfdoc.outputdir      = Pdfmdmethods.determineValidSetting(options[:outputdir], 'rename:outputdir', @@hieradata)
+      if nrkeywords = Pdfmdmethods.determineValidSetting(options[:nrkeywords], 'rename:nrkeywords', @@hieradata)
+        pdfdoc.nrkeywords = nrkeywords
+      end
+      pdfdoc.copy           = Pdfmdmethods.determineValidSetting(options[:copy], 'rename:copy', @@hieradata)
+      pdfdoc.rename
+
+      # Unset
+      pdfdoc                = ''
+
+    end
+
+  end
+
+  #
+  # One parameter to show the current version
+  #
+  map %w[--version -v] => :__print_version
+  desc "--version, -v", 'Show the current script version'
+  def __print_version
+    puts VERSION
+  end
+
+  map %w[--revision -r] => :__print_revision
+  desc "--revision, -r", 'Show the revision of the gem'
+  def __print_revision
+    metadata = YAML.load(`gem specification pdfmd metadata`)
+    puts metadata['revision']
+  end
+
+end
+
+DOC.start
+

@@ -1,0 +1,16 @@
+== General
+
+Explain terms used with the script.
+
+
+
+== Example
+
+# Show the available subjects
+
+$ pdfmd explain
+
+# Show information about the subject 'author'
+
+$ pdfmd explain author
+

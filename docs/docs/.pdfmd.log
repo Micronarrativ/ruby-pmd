@@ -1,0 +1,11 @@
+# Logfile created on 2016-12-08 07:46:25 +0100 by logger.rb/54362
+I, [2016-12-08T07:46:25.134804 #4707]  INFO -- : Starting with file '/tmp/ALLPAGES-4150856-dato-2016-10-19-Alle dokumenter.pdf'.
+I, [2016-12-08T07:46:25.639476 #4707]  INFO -- : Cleaning tags 'createdate, author, title, subject, keywords' from file '/tmp/ALLPAGES-4150856-dato-2016-10-19-Alle dokumenter.pdf'.
+I, [2016-12-08T07:46:59.930857 #4723]  INFO -- : Starting with file '/tmp/test.pdf'.
+I, [2016-12-08T07:47:00.392855 #4723]  INFO -- : Cleaning tags 'createdate, author, title, subject, keywords' from file '/tmp/test.pdf'.
+I, [2016-12-08T14:19:15.364618 #24190]  INFO -- : Starting with file ''.
+I, [2016-12-08T14:19:16.952503 #24201]  INFO -- : Starting with file ''.
+I, [2016-12-08T14:19:18.977354 #24211]  INFO -- : Starting with file ''.
+I, [2016-12-08T14:20:41.440119 #24256]  INFO -- : Starting with file ''.
+I, [2016-12-08T14:21:19.029352 #24288]  INFO -- : Starting with file ''.
+I, [2016-12-08T14:22:22.411213 #24319]  INFO -- : Starting with file ''.

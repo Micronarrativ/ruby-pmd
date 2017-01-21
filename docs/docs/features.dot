@@ -1,0 +1,19 @@
+/*
+ * Creates via
+ * $ neato -Tpng <inputfile.dot> -o <outputfile.png>
+ */
+graph features {
+
+  node [ ]
+    edit [ label="Edit\ntags"; ]
+    sort [ label="Sort\nfiles"; ]
+    rename [ label="Auto\nrenaming"; ]
+    stat [ label="Statistics"; ]
+    clean [ label="Remove\ntags"; ]
+    show [ label="Show\ntags"; ]
+  
+  node [ shape="note"; ]
+    document [ label="PDF\ndocument"; ]
+
+  { edit,rename,clean,show,stat,sort } -- document
+}
