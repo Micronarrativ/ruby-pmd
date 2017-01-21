@@ -23,4 +23,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'fileutils', '~>0.7','>= 0.7'
   s.add_dependency 'i18n', '~>0.6', '>= 0.6.11'
   s.add_dependency 'fuzzy-string-match', '~>0.9', '>=0.9.7'
+  s.add_dependency 'sqlite3', '~> 1.3', '>=1.3.10'
+  s.add_dependency 'sequel', '~> 4.42', '>=4.42.1'
 end
