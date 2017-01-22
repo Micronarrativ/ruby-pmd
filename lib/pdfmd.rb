@@ -43,8 +43,6 @@ class Pdfmd
   # Field seperator for edit tags
   @@edit_separator = '='
 
-  @@logfile = 'test'
-
   def initialize
 
     # Default Logfile location and logging enabled

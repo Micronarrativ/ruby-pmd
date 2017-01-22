@@ -59,7 +59,6 @@ module Pdfmdmethods
   #
   # Logging stuff
   def Pdfmdmethods.log(status = 'info', message)
-    puts @logfile
 
     # Setting the loglevel
     case @loglevel

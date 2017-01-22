@@ -140,16 +140,13 @@ class Db < Thor
   end
 
 end
+
+# Main Class for most functions, except the database actions
 class DOC < Thor
 
   @@hieradata = Pdfmd.hieradata
 
-  # Class options for all commands (logging only)
-  # none
-
-  #
   # Show the current metadata tags
-  #
   desc 'show', 'Show metadata of a file'
   long_desc readLongDesc 'pdfmd/long_desc.pdfmdshow.txt'
   method_option :tag, :type => :string, :aliases => '-t', :desc => 'Show specific tag(s), comma separated', :required => false
@@ -414,7 +411,7 @@ class DOC < Thor
       # Skip non-pdf documents
       ! File.extname(current_file).match(/\.pdf/i) ? next : ''
 
-      pdfdoc                = Pdfmdrename.new 
+      pdfdoc                = Pdfmdrename.new
       pdfdoc.set_file       current_file
       pdfdoc.dryrun         = Pdfmdmethods.determineValidSetting(options[:dryrun],'rename:dryrun', @@hieradata)
       pdfdoc.allkeywords    = Pdfmdmethods.determineValidSetting(options[:allkeywords],'rename:allkeywords', @@hieradata)
