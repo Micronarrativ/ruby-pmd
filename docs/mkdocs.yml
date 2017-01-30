@@ -1,20 +1,22 @@
 site_name: pdfmd
 pages:
-  - ['index.md', 'Home']
-  - ['concept.md', 'Concept']
-  - ['commands/clean.md', 'Commands', 'clean']
-  - ['commands/config.md', 'Commands', 'config']
-  - ['commands/edit.md', 'Commands', 'edit']
-  - ['commands/init.md', 'Commands', 'init']
-  - ['commands/rename.md', 'Commands', 'rename']
-  - ['commands/show.md', 'Commands', 'show']
-  - ['commands/sort.md', 'Commands', 'sort']
-  - ['commands/stat.md', 'Commands', 'stat']
-  - ['tags/author.md', 'Tags', 'author']
-  - ['tags/createdate.md', 'Tags', 'createdate']
-  - ['tags/keywords.md', 'Tags', 'keywords']
-  - ['tags/subject.md', 'Tags', 'subject']
-  - ['tags/title.md', 'Tags', 'title']
-  - ['hiera.md', 'Hiera']
-  - ['about.md', 'About']
+  - Home: 'index.md'
+  - Concept: 'concept.md'
+  - Commands:
+    - clean: 'commands/clean.md'
+    - config: 'commands/config.md'
+    - edit: 'commands/edit.md'
+    - init: 'commands/init.md'
+    - rename: 'commands/rename.md'
+    - show: 'commands/show.md'
+    - sort: 'commands/sort.md'
+    - stat: 'commands/stat.md'
+  - Tags:
+    - author: 'tags/author.md'
+    - createdate: 'tags/createdate.md'
+    - keywords: 'tags/keywords.md'
+    - subject: 'tags/subject.md'
+    - title: 'tags/title.md'
+  - Hiera: 'hiera.md'
+  - About: 'about.md'
 
