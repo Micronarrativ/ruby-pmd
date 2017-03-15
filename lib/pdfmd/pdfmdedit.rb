@@ -173,6 +173,7 @@ class Pdfmdedit < Pdfmd
 
   #
   # Function to validate and interprete date information
+  # Not sure why this is here and not in the methods method. ?????
   def validateDate(date)
 
     year    = '[1-2][0-9][0-9][0-9]'
