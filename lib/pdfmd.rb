@@ -201,7 +201,13 @@ class Pdfmd
       value = key.split('    : ')
       metatag = value[0].downcase.gsub(/ /,'')
       if @@metadata.has_key?( metatag )
-        @@metadata[ metatag ] = value[1]
+
+        if metatag.downcase == 'createdate'
+          @@metadata[ metatag ] = Pdfmdmethods.validateDate(value[1])
+        else
+          @@metadata[ metatag ] = value[1]
+        end
+
       end
     end
 
