@@ -63,7 +63,7 @@ class Pdfmdedit < Pdfmd
             # Check date for validity
             if tagmatching[0].downcase == 'createdate'
               tagmatching[1].gsub!(/^'|'$/,'') # Remove any apostrophes
-              validatedDate = validateDate(tagmatching[1])
+              validatedDate = Pdfmdmethods.validateDate(tagmatching[1])
               if !validatedDate
                 Pdfmdmethods.log('error',"Date not recognized: '#{tagmatching[1]}'.")
                 raise 'Error: Date format not recognized. Abort.'
@@ -96,7 +96,7 @@ class Pdfmdedit < Pdfmd
   def update_tags()
 
     # Validate the createdate and clean it from the hash if it's not validated
-    if not self.validateDate(@@metadata['createdate']) and not @edit_tags.has_key?('createdate')
+    if not Pdfmdmethods.validateDate(@@metadata['createdate']) and not @edit_tags.has_key?('createdate')
       puts 'Warning. CreateDate \'' + @@metadata['createdate'] + '\' not valid!. Resetting date.'
       @edit_tags['createdate'] = ''
     end
@@ -140,7 +140,7 @@ class Pdfmdedit < Pdfmd
             end
 
             # Update loop condition variable
-            validatedDate = validateDate(userInput)
+            validatedDate = Pdfmdmethods.validateDate(userInput)
 
             # Update Metadata
             @@metadata[key.downcase] = validatedDate
@@ -169,38 +169,6 @@ class Pdfmdedit < Pdfmd
       Pdfmdmethods.log('debug', "Viewer process with PID #{viewerPID} killed.")
     end
 
-  end
-
-  #
-  # Function to validate and interprete date information
-  # Not sure why this is here and not in the methods method. ?????
-  def validateDate(date)
-
-    year    = '[1-2][0-9][0-9][0-9]'
-    month   = '0[1-9]|10|11|12'
-    day     = '[1-9]|0[1-9]|1[0-9]|2[0-9]|3[0-1]'
-    hour    = '[0-1][0-9]|2[0-3]|[1-9]'
-    minute  = '[0-5][0-9]'
-    second  = '[0-5][0-9]'
-    identifiedDate = case date
-    when /^(#{year})(#{month})(#{day})$/
-      $1 + ':' + $2 + ':' + $3 + ' 00:00:00'
-    when /^(#{year})(#{month})(#{day})(#{hour})(#{minute})(#{second})$/
-      $1 + ':' + $2 + ':' + $3 + ' ' + $4 + ':' + $5 + ':' + $6
-    when /^(#{year})[\:|\.|\-|\/](#{month})[\:|\.|\-|\/](#{day})\s(#{hour})[\:](#{minute})[\:](#{second})$/
-      $1 + ':' + $2 + ':' + $3 + ' ' + $4 + ':' + $5 + ':' + $6
-    when /^(#{year})[\:|\.|\-|\/](#{month})[\:|\.|\-|\/](#{day})$/
-      day   = "%02d" % $3
-      month = "%02d" % $2
-      # Return the identified string
-      $1 + ':' + month + ':' + day + ' 00:00:00'
-    else
-
-      # This wasn't a date we recognize
-      false
-
-    end
-    return identifiedDate
   end
 
   #

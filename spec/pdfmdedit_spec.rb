@@ -14,7 +14,7 @@ RSpec.describe Pdfmdedit do
   it 'is setting the tags to edit to author and subject' do
     edit_doc = Pdfmdedit.new 
     tags = [ 'author', 'subject' ]
-    edit_doc.default_tags = tags
+    edit_doc.set_tags tags
     expect(edit_doc.default_tags).to eq ["author","subject"]
   end
 
@@ -127,17 +127,6 @@ RSpec.describe Pdfmdedit do
       'createdate' => '1970:01:01 00:00:01',
       'keywords' => 'Customernumber 98765',
     })
-  end
-
-
-  context 'when validating a date' do
-    it 'validates date strings' do
-      edit_doc = Pdfmdedit.new
-      expect(edit_doc.validateDate('19700101')).to eq '1970:01:01 00:00:00'
-      expect(edit_doc.validateDate('1970-01-01')).to eq '1970:01:01 00:00:00'
-      expect(edit_doc.validateDate('1970:01:01')).to eq '1970:01:01 00:00:00'
-      expect(edit_doc.validateDate('1970/01/01')).to eq '1970:01:01 00:00:00'
-    end
   end
 
 end
