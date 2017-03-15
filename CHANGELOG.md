@@ -1,3 +1,11 @@
+# Version 2.6.1
+- Trying to clean out the mess
+- Datevalidation: Implemented checks to find invalid dates and timestamps.
+- Datevalidation: Implemented converting from yyyyddmm to yyyymmdd.
+- Updated mkdocs documentation structure.
+- Removed comments
+- Removed forgotten debug line.
+
 # Version 2.6.0
 - Adding stat export formats.
 - Bugfix, Abbreviations in keywords are not replaced anymore.
