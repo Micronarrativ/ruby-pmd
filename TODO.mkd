@@ -4,6 +4,7 @@
 * The logfile is a bit annoying. It should be possible to configure the logfile to be placed whereever convenient without creating double log files.
 * Replace system copy command with fileutils.copy.
 * File with "abrechung" as title, gets rename to "rec".
+* Replace logfile with command paramter -v (normal output), -vv (more info) and -vvv (debug).
 
 ### Method: _stat_
 * Parameter to ignore differences in upper and lowercase
