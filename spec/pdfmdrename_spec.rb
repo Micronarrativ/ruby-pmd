@@ -127,6 +127,21 @@ RSpec.describe Pdfmdrename do
         expect(rename_doc.filetarget).to eq new_file
       end
 
+      it 'generates a filename with a dot in the authors name at the end' do
+        @@metadata = {
+          'createdate' => '1970:01:01 00:00:01',
+          'title'      => 'Invoice',
+          'subject'    => '44381A38',
+          'author'     => 'John Doe B.V.',
+          'keywords'   => 'Good & Ugly',
+        }
+        new_file = "/tmp/19700101-john_doe_bv-inv-44381a38-cno987654-good_ugly.pdf"
+        rename_doc = Pdfmdrename.new
+        rename_doc.instance_variable_set(:@filename, '/tmp/example.pdf')
+        expect{rename_doc.rename}.to output('new file: ' + new_file + "\n").to_stdout
+        expect(rename_doc.filetarget).to eq new_file
+      end
+
 
 
     end
