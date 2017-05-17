@@ -59,27 +59,7 @@ module Pdfmdmethods
   #
   # Logging stuff
   def Pdfmdmethods.log(status = 'info', message)
-
-    # Setting the loglevel
-    case @loglevel
-    when /info/i
-      level = 'Logger::INFO'
-    when /warn/i
-      level = 'Logger::WARN'
-    when /error/i
-      level = 'Logger::ERROR'
-    when /debug/i
-      level = 'Logger::DEBUG'
-    else
-      level = 'Logger::INFO'
-    end
-    logger = Logger.new(@logfile)
-    logger.level = eval level
-    logger.send(status, message)
-    logger.close
-
   end
-
 
 
   #

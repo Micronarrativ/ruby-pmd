@@ -145,6 +145,7 @@ end
 class DOC < Thor
 
   @@hieradata = Pdfmd.hieradata
+  @verbose    = 'off'
 
   # Show the current metadata tags
   desc 'show', 'Show metadata of a file'
@@ -432,8 +433,8 @@ class DOC < Thor
   #
   # One parameter to show the current version
   #
-  map %w[--version -v] => :__print_version
-  desc "--version, -v", 'Show the current script version'
+  map %w[--version -V] => :__print_version
+  desc "--version, -V", 'Show the current script version'
   def __print_version
     puts VERSION
   end
@@ -443,6 +444,25 @@ class DOC < Thor
   def __print_revision
     metadata = YAML.load(`gem specification pdfmd metadata`)
     puts metadata['revision']
+  end
+
+  # Set the verbose level
+  # standard => info => debug
+  # Under dev.
+  map %w[--verbose -v] => :__enable_verbose_standard
+  map %w[-vv] => :__enable_verbose_info
+  map %w[-vvv] => :__enable_verbose_debug
+  desc "--verbose, -v", 'Enable verbose output (Standard).'
+  def __enable_verbose_standard
+    @verbose = 'standard'
+  end
+  desc '-vv', 'Enable verbose output (Info).'
+  def __enable_verbose_info
+    @verbose = 'info'
+  end
+  desc '-vvv', 'Enable verbose output (Debug).'
+  def __enable_verbose_debug
+    @verbose = 'debug'
   end
 
 end

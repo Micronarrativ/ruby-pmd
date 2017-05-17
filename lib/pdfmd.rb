@@ -35,9 +35,10 @@ class Pdfmd
 
   # Hiera configuration data
   @@hieradata          = Pdfmdmethods.queryHiera('pdfmd::config')
+  @hieradata           = Pdfmdmethods.queryHiera('pdfmd::config')
 
   def self.hieradata
-    @@hieradata
+    @hieradata
   end
 
   # Field seperator for edit tags
