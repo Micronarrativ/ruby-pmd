@@ -161,5 +161,9 @@ def readExifData(filepath)
   return exifdata
 end
 
+task :default do
+  system "rake --tasks"
+end
+
 
 
