@@ -254,6 +254,11 @@ class Pdfmd
   # If there is no manual setting, the value of 'manualSetting'
   #   should be set to 'nil'
   #
+  def determineValidSetting(manualSetting,key)
+    puts 'hi'
+    exit
+
+  end
   # def determineValidSetting(manualSetting,key)
 
   #   if !@hieradata.nil?
