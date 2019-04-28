@@ -255,7 +255,6 @@ class Pdfmd
   #   should be set to 'nil'
   #
   def determineValidSetting(manualSetting,key)
-    puts 'hi'
     exit
 
   end
