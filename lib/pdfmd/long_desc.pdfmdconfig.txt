@@ -1,0 +1,33 @@
+  Shows the current default configuration as available in Hiera.
+
+
+  
+  == Usage
+
+  
+  Example: `pdfmd config [<command>]`
+
+  
+  
+  == Parameter
+
+  
+  [<command>]
+
+  
+  Shows only the default configuration from hiera for the specified command.
+  The command parameter is not case-sensitive.
+ 
+ 
+  Example: `pdfmd config edit`
+
+
+
+--log, -l
+
+
+Enables/Disables logging.
+
+
+ Default: true
+

@@ -1,0 +1,30 @@
+== General
+
+Command will setup the environment for pdfmd if executed.
+At this moment only the installation of bash completion file is integrated.
+
+
+
+== Command
+
+bash_completion
+
+Installs or removes the bash completion file for pdfmd. Existing files will be
+overwritten after a file with the extension '.backup' has been created in the
+same directory.
+
+== Parameter
+
+--remove, -r
+
+Removes the bash completion file. Does not remove any existing backup file.
+
+== General example
+
+# Install the bash completion file
+
+$ pdfmd init bash_completion
+
+# Remove the bash completion file
+
+$ pdfmd init -r bash_completion

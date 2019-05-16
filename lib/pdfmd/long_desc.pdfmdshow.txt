@@ -1,0 +1,92 @@
+== General
+
+Show metatags of a PDF document.
+
+The following tags are being shown:
+
+* Author
+* CreateDate
+* Title
+* Subject
+* Keywords
+
+== Parameter
+
+--all, -a
+
+Show all relevant metatags for a document.
+
+Relevant tags are:  Author, CreateDate, Title, Subject, Keywords.
+
+This is the default action.
+
+
+
+--tag, -t
+
+Specify the metatag to show. The selected metatag must be one of the relevant tags. Other tags are ignored and nothing is returned.
+
+The value for the parameter is case insensitive: 'Author' == 'author'
+
+Multiple Tags can be specificed, separated by a comma.
+
+If multiple tags are specified in a different order than the default order, the specified order will be used. This has an impact on the order of the fields when e.g. the output is exported in CSV format.
+
+
+
+--format, -f
+
+Specify a different output format. Default: yaml
+
+Available formats are: json,yaml,csv,hash
+
+
+
+--includepdf, -i
+
+Include the filename of the PDF document in the output if this option is set to true. Default: false
+
+
+
+--log, -l
+
+Enable/Disable logging. Default: true
+
+
+
+--logfile, -p
+
+Specify path to logfile. Default: `./.pdfmd.log`
+
+
+
+== Example
+
+# Show default metatags for a pdf document
+
+$ pdfmd show <filename>
+
+# Show default metatags for example.pdf
+
+$ pdfmd show example.pdf
+
+# Show value for metatag 'Author' for the file example.pdf
+
+$ pdfmd show -t author example.pdf
+
+# Show value for metatags 'Author','Title' for the file example.pdf
+
+$ pdfmd show -t author,title example.pdf
+
+
+
+== Hiera
+
+--- # YAML
+pdfmd::config
+  show:
+    format    : yaml|json|csv|hash
+    tag       : author,subject,createdate,title,keywords
+    includepdf: true|false
+    log       : true|false
+
