@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
     and re-uses them for renaming the file with to a human-readable identifier.
   EOF
   s.post_install_message  = '. Run `pdfmd` to see the command help.'
-  s.authors               = ['Daniel Roos']
+  s.authors               = ['Daniel Buøy-Vehn']
   s.email                 = 'pdfmd@micronarrativ.org'
   s.require_paths         = ['lib']
   s.requirements          << '[exiftools](http://www.sno.phy.queensu.ca/~phil/exiftool/)'
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.license               = 'MIT'
   s.add_dependency "thor", '~>0.19', '>= 0.19.1'
   s.add_dependency 'highline', '~>1.7', '>= 1.7.1'
-  s.add_dependency 'fileutils', '~>0.7','>= 0.7'
+  s.add_dependency 'fileutils', '>0.7','>= 0.7'
   s.add_dependency 'i18n', '~>0.6', '>= 0.6.11'
   s.add_dependency 'fuzzy-string-match', '~>0.9', '>=0.9.7'
 end
