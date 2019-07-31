@@ -52,7 +52,7 @@ class Pdfmd
     Pdfmdmethods.log('debug','---')
     Pdfmdmethods.log('info',"Starting with file '#{filename}'.")
     @filename  = filename
-    @hieradata = Pdfmdmethods.queryHiera('pdfmd::config')
+    @hieradata = Pdfmdmethods.readConfig() # Read any available external configuration setting.
     if ! filename.empty?
       read_metatags(@filename)
     end
@@ -132,6 +132,7 @@ class Pdfmd
       puts "Error with document '#{filename}'."
       metastrings = Array.new
     end
+    puts metastrings
 
     # Assume an error (to enter the loop)
     metaPasswordError = true
@@ -205,7 +206,7 @@ class Pdfmd
   # Read user input
   def readUserInput(textstring = 'Enter value: ')
 
-    self.log('info','Waiting for user input.')
+    #self.log('info','Waiting for user input.')
     if textstring.match(/password/i)
       print textstring
       STDIN.noecho(&:gets).chomp + "\n"
@@ -247,15 +248,44 @@ class Pdfmd
 
 
   #
+  # This function will figure out the valid setting and weigh the manual
+  # setting against a setting it might find in a configuration file.
+  #
   # Determine the valid setting
   # 1. Priority: manual setting
-  # 2. Priority: Hiera setting
+  # 2. Priority: Config setting
   #
   # If there is no manual setting, the value of 'manualSetting'
   #   should be set to 'nil'
   #
   def determineValidSetting(manualSetting,key)
-    exit
+
+    current_config = @hieradata
+    config_contains_key = false
+
+    # See if the manual setting is there
+    if !manualSetting.nil?
+      return manualSetting # Return and exit function
+    end
+
+    # See if the config data has some info about the requested key.
+    key.split(':').each do |keyname|
+      if current_config.has_key?(keyname)
+        current_config = current_config[keyname]
+        config_contains_key = true
+      else
+        # Key has not been found, exit the loop
+        config_contains_key = false
+        break
+      end
+    end
+
+    # Return either false or the value of the key found in the config.
+    if !config_contains_key
+      return false
+    else
+      return current_config
+    end
 
   end
   # def determineValidSetting(manualSetting,key)

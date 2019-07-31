@@ -77,54 +77,89 @@ module Pdfmdmethods
     logger.level = eval level
     logger.send(status, message)
     logger.close
-
   end
 
 
-
   #
-  # Query hiera for settings if available
-  def Pdfmdmethods.queryHiera(keyword, facts = 'UNSET')
-
-    pathHieraConfig = [
-      '/etc/hiera.yaml',
-      '/etc/puppet/hiera.yaml',
-      '/etc/puppetlabs/puppet/hiera.yaml',
+  # Method to return the configuration 
+  def Pdfmdmethods.readConfig()
+    
+    # This hierarchy is important!
+    # These are yaml files for god sake.
+    # Can't get it to work in ini format.
+    defaultLocations = [
+      '~/.pdfmd.cfg',
+      '~/.pdfmd.yml',
+      '~/.pdfmd.yaml',
+      '~/.config/pdfmd/config',
+      '~/.config/pdfmd/pdfmd.cfg',
+      '~/.config/pdfmd/pdfmd.yml',
+      '~/.config/pdfmd/pdfmd.yaml',
+      '/etc/pdfmd.cfg',
+      '/etc/pdfmd.yml',
+      '/etc/pdfmd.yaml',
+      '/etc/pdfmd/pdfmd.cfg',
+      '/etc/pdfmd/pdfmd.yml',
+      '/etc/pdfmd/pdfmd.yaml'
     ]
-    hieraConfig = ''
-    pathHieraConfig.each do |path|
-      if File.exist? path
-        hieraConfig = path
+
+    # Find the first config file
+    for location in defaultLocations.each do
+
+      if File.file?(File.expand_path(location))
+        path_configfile = File.expand_path(location)
         break
       end
     end
 
-    # Set default facts
-    facts == 'UNSET' ? facts = "fqdn=#{`hostname`}".chomp : ''.chomp
+    return YAML.load_file(File.expand_path(path_configfile))
+  end
 
-    # If Hiera is not found (damn cat, get of my keyboard!), return false,
-    # otherwise return the hash from Hiera
-    if !system('which hiera > /dev/null 2>&1')
-      self.log('warn','Cannot find hiera command in $path.')
-      puts 'Cannot find "hiera" command in $path.'
-      return eval('{}')
-    else
 
-      self.log('debug', 'Reading hiera values for pdfmd::config.')
-      commandreturn = ''
-      commandreturn = `hiera -c #{hieraConfig} #{keyword} #{facts} 2>/dev/null`
-
-      if $?.exitstatus == 1
-        self.log('warn', 'Could not retrieve configuration from with hiera.')
-        eval('{}')
-      else
-        self.log('debug', 'Could retrieve configuration from hiera.')
-        eval(commandreturn)
-      end
-
-    end
-
-  end # End of queryHiera
+# Has been replaced by a general configuration file support
+#   #
+#   # Query hiera for settings if available
+#   def Pdfmdmethods.queryHiera(keyword, facts = 'UNSET')
+# 
+#     pathHieraConfig = [
+#       '/etc/hiera.yaml',
+#       '/etc/puppet/hiera.yaml',
+#       '/etc/puppetlabs/puppet/hiera.yaml',
+#     ]
+#     hieraConfig = ''
+#     pathHieraConfig.each do |path|
+#       if File.exist? path
+#         hieraConfig = path
+#         break
+#       end
+#     end
+# 
+#     # Set default facts
+#     facts == 'UNSET' ? facts = "fqdn=#{`hostname`}".chomp : ''.chomp
+# 
+#     # If Hiera is not found (damn cat, get of my keyboard!), return false,
+#     # otherwise return the hash from Hiera
+#     if !system('which hiera > /dev/null 2>&1')
+#       self.log('warn','Cannot find hiera command in $path!')
+#       puts 'Cannot find "hiera" command in $path!'
+#       return eval('{}')
+#     else
+# 
+#       self.log('debug', 'Reading hiera values for pdfmd::config.')
+#       commandreturn = ''
+#       commandreturn = `hiera -c #{hieraConfig} #{keyword} #{facts} 2>/dev/null`
+# 
+#       if $?.exitstatus == 1
+#         self.log('warn', 'Could not retrieve configuration from with hiera.')
+#         eval('{}')
+#       else
+#         self.log('debug', 'Could retrieve configuration from hiera.')
+#         eval(commandreturn)
+#       end
+# 
+#     end
+# 
+#   end # End of queryHiera
 
 end
 

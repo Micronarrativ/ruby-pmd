@@ -9,7 +9,7 @@ require "fileutils"
 require "i18n"
 require 'pathname'
 
-VERSION = '2.7.0'
+VERSION = '3.0.0'
 NAME    = 'pdfmd'
 
 # Read the content of the long description from an external file
@@ -257,7 +257,7 @@ class DOC < Thor
       if pdfdoc.determineValidSetting(options[:rename], 'edit:rename')
 
         #rename filename
-        pdfdoc.log('info', 'Running rename command.')
+        #pdfdoc.log('info', 'Running rename command.')
         rename current_file
 
       end

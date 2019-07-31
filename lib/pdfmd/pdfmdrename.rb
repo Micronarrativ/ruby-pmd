@@ -58,14 +58,14 @@ class Pdfmdrename < Pdfmd
     puts filetarget
     if @dryrun # Do nothing on dryrun
       if @filename == filetarget
-        self.log('info', "Dryrun: File '#{@filename}' already has the correct name. Doing nothing.")
+        #self.log('info', "Dryrun: File '#{@filename}' already has the correct name. Doing nothing.")
       else
-        self.log('info',"Dryrun: Renaming '#{@filename}' to '#{get_filename(newFilename)}'.")
+        #self.log('info',"Dryrun: Renaming '#{@filename}' to '#{get_filename(newFilename)}'.")
       end
     elsif @filename == filetarget # Do nothing when name is already correct.
-      self.log('info',"File '#{@filename}' already has the correct name. Doing nothing.")
+      #self.log('info',"File '#{@filename}' already has the correct name. Doing nothing.")
     else
-      self.log('info',"Renaming '#{@filename}' to '#{filetarget}'.")
+      #self.log('info',"Renaming '#{@filename}' to '#{filetarget}'.")
       command     = command + " '#{@filename}' #{filetarget} 2>/dev/null"
       system(command)
       if !$?.exitstatus
@@ -137,11 +137,11 @@ class Pdfmdrename < Pdfmd
   def get_outputdir(outputdir = '')
 
     if !outputdir # outputdir is set to false, assume pwd
-      self.log('debug','No outputdir specified. Taking current pwd of file.')
+      #self.log('debug','No outputdir specified. Taking current pwd of file.')
       outputdir = File.dirname(@filename)
     elsif outputdir and !File.exist?(outputdir)
       puts "Error: output directory '#{outputdir}' not found. Abort."
-      self.log('error',"Output directory '#{outputdir}' not accessible. Abort.")
+      #self.log('error',"Output directory '#{outputdir}' not accessible. Abort.")
       exit 1
     elsif outputdir and File.exist?(outputdir)
       outputdir

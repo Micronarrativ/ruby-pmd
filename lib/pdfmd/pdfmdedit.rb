@@ -17,9 +17,10 @@ class Pdfmdedit < Pdfmd
   # Start a viewer
   def start_viewer(filename = '', viewer = '')
     if File.exists?(filename) and !viewer.empty?
+      puts 'hiere'
 
       pid = IO.popen("#{viewer} '#{filename}' 2>&1")
-      self.log('debug', "Application '#{viewer}' with PID #{pid.pid} started to show file '#{filename}'.")
+      #self.log('debug', "Application '#{viewer}' with PID #{pid.pid} started to show file '#{filename}'.")
       pid.pid
 
     elsif viewer.empty?
@@ -112,7 +113,7 @@ class Pdfmdedit < Pdfmd
         # => Start the viewer
         if @opendoc and viewerPID.to_s.empty?
           viewerPID = start_viewer(@filename, @pdfviewer)
-          self.log('debug', "Started external viewer '#{@pdfviewer}' with file '#{@filename}' and PID: #{viewerPID}")
+          #self.log('debug', "Started external viewer '#{@pdfviewer}' with file '#{@filename}' and PID: #{viewerPID}")
         end
 
         puts 'Changing ' + key.capitalize + ', current value: ' + @@metadata[key].to_s
@@ -130,7 +131,7 @@ class Pdfmdedit < Pdfmd
 
             if userInput.empty? and !current_value.empty?
               @@metadata[key] = current_value
-              self.log('debug', "User decided to take over old value for #{key}.")
+              #self.log('debug', "User decided to take over old value for #{key}.")
               puts 'Date is needed. Setting old value: ' + current_value
               break
             end
@@ -162,7 +163,7 @@ class Pdfmdedit < Pdfmd
     if !viewerPID.to_s.empty?
       `kill #{viewerPID}`
       `pkill -f "#{@pdfviewer} #{@filename}"` # Double kill
-      self.log('debug', "Viewer process with PID #{viewerPID} killed.")
+      #self.log('debug', "Viewer process with PID #{viewerPID} killed.")
     end
 
   end
@@ -216,7 +217,7 @@ class Pdfmdedit < Pdfmd
 
     command = "exiftool #{commandparameter} '#{filename}'"
     `#{command}`
-    self.log('info',"Updating '#{filename}' with " + commandparameter.gsub(/\s\-password\s\'.*\'/,'').gsub(/\-overwrite\_original\s/,'').gsub(/\'\s\-/,"', ").gsub(/\-/,' ') )
+    #self.log('info',"Updating '#{filename}' with " + commandparameter.gsub(/\s\-password\s\'.*\'/,'').gsub(/\-overwrite\_original\s/,'').gsub(/\'\s\-/,"', ").gsub(/\-/,' ') )
 
   end
 
