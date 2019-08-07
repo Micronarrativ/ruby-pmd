@@ -244,7 +244,6 @@ class DOC < Thor
 
       # Skip non-pdf documents
       ! File.extname(current_file).match(/\.pdf/i) ? next : ''
-
       pdfdoc            = Pdfmdedit.new current_file
       tags              = pdfdoc.determineValidSetting(options[:tag],'edit:tags')
       pdfdoc.opendoc    = pdfdoc.determineValidSetting(options[:opendoc], 'edit:opendoc')

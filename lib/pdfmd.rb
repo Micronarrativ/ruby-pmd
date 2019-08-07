@@ -132,7 +132,6 @@ class Pdfmd
       puts "Error with document '#{filename}'."
       metastrings = Array.new
     end
-    puts metastrings
 
     # Assume an error (to enter the loop)
     metaPasswordError = true
@@ -288,43 +287,5 @@ class Pdfmd
     end
 
   end
-  # def determineValidSetting(manualSetting,key)
-
-  #   if !@hieradata.nil?
-  #     hieraKey    = '@hieradata'
-  #     hieraValue  = ''
-
-  #     key.split(':').each do |keyname|
-
-  #       hieraKeyCheck = eval(hieraKey)
-  #       if !hieraKeyCheck.nil? and hieraKeyCheck.has_key?(keyname)
-  #         hieraKey = hieraKey + "['#{keyname}']"
-  #       else
-  #         # Key has not been found
-  #         hieraKey = ''
-  #         break
-  #       end
-  #     end
-
-  #     hieraValue = eval(hieraKey)
-  #   else
-  #     hieraValue = nil
-  #   end
-
-  #   if !manualSetting.nil?
-  #     self.log('debug', "Chosing manual setting '#{key} = #{manualSetting}'.")
-  #     manualSetting
-  #   elsif !hieraValue.nil? or
-  #     !hieraValue == ''
-
-  #     self.log('debug', "Chosing hiera setting '#{key} = #{hieraValue}'.")
-  #     hieraValue
-
-  #   else
-  #     self.log('debug', "No setting chosen for '#{key}' in hiera.")
-  #     false
-  #   end
-
-  # end
 
 end # End of Class

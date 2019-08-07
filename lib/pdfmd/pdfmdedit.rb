@@ -17,16 +17,15 @@ class Pdfmdedit < Pdfmd
   # Start a viewer
   def start_viewer(filename = '', viewer = '')
     if File.exists?(filename) and !viewer.empty?
-      puts 'hiere'
 
       pid = IO.popen("#{viewer} '#{filename}' 2>&1")
       #self.log('debug', "Application '#{viewer}' with PID #{pid.pid} started to show file '#{filename}'.")
       pid.pid
 
     elsif viewer.empty?
-      self.log('error', 'No viewer specified. Aborting document view.')
+      # # self.log('error', 'No viewer specified. Aborting document view.')
     else
-      self.log('error', "Could not find file '#{filename}' for viewing.")
+      # self.log('error', "Could not find file '#{filename}' for viewing.")
     end
 
   end
@@ -62,21 +61,21 @@ class Pdfmdedit < Pdfmd
           separator = @@edit_separator
           if value.match(/#{separator}/)
 
-            self.log('debug', 'Found tag value assignment.')
+            #self.log('debug', 'Found tag value assignment.')
             tagmatching = value.split(separator)
 
             # Check date for validity
             if tagmatching[0] == 'createdate'
               validatedDate = validateDate(tagmatching[1])
               if !validatedDate
-                self.log('error',"Date not recognized: '#{tagmatching[1]}'.")
+                # self.log('error',"Date not recognized: '#{tagmatching[1]}'.")
                 abort 'Date format not recognized. Abort.'
               else
-                self.log('debug',"Identified date: #{validatedDate} ")
+                # self.log('debug',"Identified date: #{validatedDate} ")
                 @@edit_tags[tagmatching[0]] = validatedDate
               end
             else
-              self.log('debug', "Identified key #{tagmatching[0]} with value '#{tagmatching[1]}'.")
+              # self.log('debug', "Identified key #{tagmatching[0]} with value '#{tagmatching[1]}'.")
               @@edit_tags[tagmatching[0]] = tagmatching[1]
             end
           else
