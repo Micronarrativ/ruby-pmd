@@ -2,37 +2,7 @@
 #
 # General methods for supporting smaller tasks of the Thor commands
 
-#
-# Query Hiera installation
-# I don't give a sh** about cross platform at this point.
-#
-# Return the hash of the hiera values or false (if no hiera is found)
-#
-def queryHiera(keyword,facts = 'UNSET')
 
-  # Set default facts
-  facts == 'UNSET' ? facts = "fqdn=#{`hostname`}" : ''
-
-  # If hiera isn't found, return false
-  # otherwise return the hash
-  if !system('which hiera > /dev/null 2>&1') 
-    puts 'Cannot find "hiera" command in $path.'
-    return eval('{}')
-  else
-    commandreturn = ''
-    commandreturn = `hiera #{keyword} #{facts} 2>/dev/null`
-    if $?.exitstatus == 1
-      return eval('{}')
-    else
-      return eval(commandreturn)
-    end
-  end
-
-end
-
-
-
-#
 # Set Keywords Preface based on title and subject
 # If subject matches a number/character combination and contains no spaces,
 # the preface will be combined with the doktype.

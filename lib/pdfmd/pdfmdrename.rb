@@ -25,7 +25,7 @@ class Pdfmdrename < Pdfmd
     @nrkeywords     ||= 3
 
     # Find the valid keymapping
-    # Use @@keymapping as default and only overwrite when provided by hiera.
+    # Use @@keymapping as default and only overwrite when provided by the configfile.
     hierakeymapping = self.determineValidSetting(nil, 'rename:keys')
     hierakeymapping ?  @@keymapping = hierakeymapping : ''
 
@@ -54,8 +54,8 @@ class Pdfmdrename < Pdfmd
 
     command = @copy ? 'cp' : 'mv'
 
+    # Get the filename from the current meta information.
     filetarget  = get_filename(newFilename)
-    puts filetarget
     if @dryrun # Do nothing on dryrun
       if @filename == filetarget
         #self.log('info', "Dryrun: File '#{@filename}' already has the correct name. Doing nothing.")
@@ -67,12 +67,12 @@ class Pdfmdrename < Pdfmd
     else
       #self.log('info',"Renaming '#{@filename}' to '#{filetarget}'.")
       command     = command + " '#{@filename}' #{filetarget} 2>/dev/null"
-      system(command)
+    #  system(command)
       if !$?.exitstatus
-        log('error', "Error renaming '#{@filename}' to '#{filetarget}'.")
+#        log('error', "Error renaming '#{@filename}' to '#{filetarget}'.")
         abort
       else
-        log('info', "Successfully renamed file to '#{filetarget}'.")
+#        log('info', "Successfully renamed file to '#{filetarget}'.")
       end
 
     end
@@ -122,13 +122,12 @@ class Pdfmdrename < Pdfmd
           filedata[:keywords] + '.' +
           filedata[:extension]
       else
-        filedata[:outputdir] + '/' + filedata.except(:extension, :title, :subject, :outputdir).values.join('-') + '.' + filedata[:extension]
+        filedata_extract = filedata.reject { |k, v| [:extension, :title, :subject, :outputdir].include? k }.values.join('-')
+        return filedata[:outputdir] + '/' + filedata_extract + '.' + filedata[:extension]
       end
 
     else
-
       false
-
     end
 
   end
@@ -169,6 +168,7 @@ class Pdfmdrename < Pdfmd
       keywordsarray.each_with_index do |value,index|
         value = value.lstrip.chomp
 
+        # This replaces keywords with defined abbreviations
         @@keymapping.each do |abbreviation,keyvaluearray|
           if keyvaluearray.kind_of?(String)
             keyvaluearray = keyvaluearray.split(',')
@@ -180,7 +180,7 @@ class Pdfmdrename < Pdfmd
         end
 
         # Remove special characters from string
-        keywordsarray[index] = value.gsub(/\s|\/|\-|\./,'_').gsub(/_+/,'_')
+        keywordsarray[index] = value.gsub(/\s|\/|\-|\&|\./,'_').gsub(/_+/,'_')
 
         # If the current value matches some of the replacement abbreviations,
         # put the value at index 0 in the array. It will then be listed earlier in the filename.
@@ -204,6 +204,9 @@ class Pdfmdrename < Pdfmd
       else
         keywords = keywordsarraySorted.join('-')
       end
+
+      # Final check for correct synxtax
+      keywords = keywords.gsub(/(\-|\_)+$/,'')
 
       # Normalize all keywords and return value
       I18n.enforce_available_locales = false
